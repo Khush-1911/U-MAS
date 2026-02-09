@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>U-MAS | Log in</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{% static "plugins/fontawesome-free/css/all.min.css" %}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="{% static "ui/app.css" %}">
+</head>
+<body class="app">
+<div class="login-shell">
+  <div class="login-card">
+    <div class="login-title">Welcome to U-MAS</div>
+    <div class="login-subtitle">Sign in to access your dashboard.</div>
+
+    <form action="/doLogin" method="post" id="demo-form">
+      {% csrf_token %}
+      <div class="form-group">
+        <label>Email</label>
+        <div class="topbar-search" style="width:100%; margin-top:6px;">
+          <i class="fas fa-envelope"></i>
+          <input type="email" name="email" placeholder="you@example.com" required>
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:14px;">
+        <label>Password</label>
+        <div class="topbar-search" style="width:100%; margin-top:6px;">
+          <i class="fas fa-lock"></i>
+          <input type="password" name="password" placeholder="••••••••" required>
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:14px;">
+        <div class="g-recaptcha" data-sitekey="6LeWtqUZAAAAAMO6YmxX5_XWel9hLWrb_iEiff26"></div>
+      </div>
+      <div class="form-group" style="margin-top:16px;">
+        <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+      </div>
+
+      <div class="link-list">
+        <a href="{% url 'password_reset' %}">Reset Password</a>
+        <a href="{% url 'signup_admin' %}">Admin Signup</a>
+        <a href="{% url 'signup_staff' %}">Staff Signup</a>
+        <a href="{% url 'signup_student' %}">Student Signup</a>
+      </div>
+
+      {% if messages %}
+        {% for message in messages %}
+          {% if message.tags == 'error' %}
+            <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+          {% endif %}
+          {% if message.tags == 'success' %}
+            <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </form>
+  </div>
+</div>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+{% load static %}
+<aside class="app-sidebar">
+  <button class="sidebar-toggle" type="button" onclick="toggleSidebarLock()" aria-label="Toggle sidebar">
+    <i class="fas fa-angle-double-left"></i>
+  </button>
+  <nav class="sidebar-nav">
+    {% url 'admin_home' as admin_home %}
+    <a href="{{ admin_home }}" class="sidebar-link {% if request.path == admin_home %}active{% endif %}">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+
+    {% url 'add_staff' as add_staff %}
+    <a href="{{ add_staff }}" class="sidebar-link {% if request.path == add_staff %}active{% endif %}">
+      <i class="fas fa-user-plus"></i>
+      <span>Add Staff</span>
+    </a>
+
+    {% url 'manage_staff' as manage_staff %}
+    {% url 'edit_staff' staff_id=id as edit_staff %}
+    <a href="{% url 'manage_staff' %}" class="sidebar-link {% if request.path == manage_staff %}active{% endif %} {% if request.path == edit_staff %}active{% endif %}">
+      <i class="fas fa-users-cog"></i>
+      <span>Manage Staff</span>
+    </a>
+
+    {% url 'add_student' as add_student %}
+    <a href="{% url 'add_student' %}" class="sidebar-link {% if request.path == add_student %}active{% endif %}">
+      <i class="fas fa-user-graduate"></i>
+      <span>Add Student</span>
+    </a>
+
+    {% url 'manage_student' as manage_student %}
+    {% url 'edit_student' student_id=id as edit_student %}
+    <a href="{% url 'manage_student' %}" class="sidebar-link {% if request.path == manage_student %}active{% endif %} {% if request.path == edit_student %}active{% endif %}">
+      <i class="fas fa-users"></i>
+      <span>Manage Students</span>
+    </a>
+
+    {% url 'add_course' as add_course %}
+    <a href="{% url 'add_course' %}" class="sidebar-link {% if request.path == add_course %}active{% endif %}">
+      <i class="fas fa-book"></i>
+      <span>Add Course</span>
+    </a>
+
+    {% url 'manage_course' as manage_course %}
+    {% url 'edit_course' course_id=id as edit_course %}
+    <a href="{% url 'manage_course' %}" class="sidebar-link {% if request.path == manage_course %}active{% endif %} {% if request.path == edit_course %}active{% endif %}">
+      <i class="fas fa-layer-group"></i>
+      <span>Manage Course</span>
+    </a>
+
+    {% url 'add_subject' as add_subject %}
+    <a href="{% url 'add_subject' %}" class="sidebar-link {% if request.path == add_subject %}active{% endif %}">
+      <i class="fas fa-pen"></i>
+      <span>Add Subject</span>
+    </a>
+
+    {% url 'manage_subject' as manage_subject %}
+    {% url 'edit_subject' subject_id=id as edit_subject %}
+    <a href="{% url 'manage_subject' %}" class="sidebar-link {% if request.path == manage_subject %}active{% endif %} {% if request.path == edit_subject %}active{% endif %}">
+      <i class="fas fa-book-open"></i>
+      <span>Manage Subject</span>
+    </a>
+
+    {% url 'manage_session' as manage_session %}
+    <a href="{% url 'manage_session' %}" class="sidebar-link {% if request.path == manage_session %}active{% endif %}">
+      <i class="fas fa-calendar-alt"></i>
+      <span>Sessions</span>
+    </a>
+
+    {% url 'student_leave_view' as student_leave_view %}
+    <a href="{% url 'student_leave_view' %}" class="sidebar-link {% if request.path == student_leave_view %}active{% endif %}">
+      <i class="fas fa-pray"></i>
+      <span>Student Leave</span>
+    </a>
+
+    {% url 'staff_leave_view' as staff_leave_view %}
+    <a href="{% url 'staff_leave_view' %}" class="sidebar-link {% if request.path == staff_leave_view %}active{% endif %}">
+      <i class="fas fa-hand-paper"></i>
+      <span>Staff Leave</span>
+    </a>
+  </nav>
+</aside>

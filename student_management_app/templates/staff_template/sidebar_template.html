@@ -1,0 +1,43 @@
+{% load static %}
+<aside class="app-sidebar">
+  <button class="sidebar-toggle" type="button" onclick="toggleSidebarLock()" aria-label="Toggle sidebar">
+    <i class="fas fa-angle-double-left"></i>
+  </button>
+  <nav class="sidebar-nav">
+    {% url 'staff_home' as staff_home %}
+    <a href="{{ staff_home }}" class="sidebar-link {% if request.path == staff_home %}active{% endif %}">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+
+    {% url 'staff_take_attendance' as staff_take_attendance %}
+    <a href="{% url 'staff_take_attendance' %}" class="sidebar-link {% if request.path == staff_take_attendance %}active{% endif %}">
+      <i class="fas fa-clipboard-check"></i>
+      <span>Take Attendance</span>
+    </a>
+
+    {% url 'staff_update_attendance' as staff_update_attendance %}
+    <a href="{% url 'staff_update_attendance' %}" class="sidebar-link {% if request.path == staff_update_attendance %}active{% endif %}">
+      <i class="fas fa-clipboard-list"></i>
+      <span>Update Attendance</span>
+    </a>
+
+    {% url 'staff_apply_leave' as staff_apply_leave %}
+    <a href="{% url 'staff_apply_leave' %}" class="sidebar-link {% if request.path == staff_apply_leave %}active{% endif %}">
+      <i class="fas fa-plane-departure"></i>
+      <span>Apply Leave</span>
+    </a>
+
+    {% url 'staff_feedback' as staff_feedback %}
+    <a href="{% url 'staff_feedback' %}" class="sidebar-link {% if request.path == staff_feedback %}active{% endif %}">
+      <i class="fas fa-comment-dots"></i>
+      <span>Feedback</span>
+    </a>
+
+    {% url 'staff_profile' as staff_profile %}
+    <a href="{% url 'staff_profile' %}" class="sidebar-link {% if request.path == staff_profile %}active{% endif %}">
+      <i class="fas fa-user"></i>
+      <span>Profile</span>
+    </a>
+  </nav>
+</aside>

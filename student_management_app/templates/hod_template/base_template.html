@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>U-MAS | HOD Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{% static "plugins/fontawesome-free/css/all.min.css" %}">
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="{% static "ui/app.css" %}">
+  {% block custom_css %}{% endblock custom_css %}
+</head>
+<body class="app">
+<div class="app-shell">
+  {% include 'hod_template/sidebar_template.html' with user=user id=id %}
+  <div class="app-content">
+    <header class="app-topbar">
+      <div class="topbar-left">
+        <div class="topbar-title">U-MAS HOD</div>
+        <div class="topbar-search">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search">
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="profile-pill">
+          <div class="profile-avatar">{{ request.user.username|slice:":1"|upper }}</div>
+          <div>{{ request.user.username }}</div>
+        </div>
+        <a class="logout-btn" href="{% url 'logout' %}">Logout</a>
+      </div>
+    </header>
+
+    <main class="app-main">
+      {% block main_content %}{% endblock main_content %}
+    </main>
+
+    {% include 'hod_template/footer.html' %}
+  </div>
+</div>
+
+<script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script>
+{% block custom_js %}
+{% endblock custom_js %}
+<script>
+  function toggleSidebarLock() {
+    document.body.classList.toggle('sidebar-locked');
+  }
+</script>
+</body>
+</html>

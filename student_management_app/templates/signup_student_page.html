@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>U-MAS | Student Signup</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{% static "plugins/fontawesome-free/css/all.min.css" %}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="{% static "ui/app.css" %}">
+</head>
+<body class="app">
+<div class="login-shell">
+  <div class="login-card">
+    <div class="login-title">Student Signup</div>
+    <div class="login-subtitle">Create a student account for U-MAS.</div>
+
+    <form action="/do_signup_student" method="post" id="demo-form">
+      {% csrf_token %}
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" class="form-control" placeholder="you@example.com" name="email" required>
+      </div>
+      <div class="form-group" style="margin-top:12px;">
+        <label>Username</label>
+        <input onkeydown="return /[a-z]/i.test(event.key)" class="form-control" placeholder="username" name="username" required>
+      </div>
+      <div class="form-group" style="margin-top:12px;">
+        <label>Password</label>
+        <input type="password" class="form-control" placeholder="••••••••" name="password" required>
+      </div>
+      <div class="form-group" style="margin-top:16px;">
+        <button type="submit" class="btn btn-primary btn-block">Signup Student</button>
+      </div>
+      {% if messages %}
+        {% for message in messages %}
+          {% if message.tags == 'error' %}
+            <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </form>
+  </div>
+</div>
+</body>
+</html>
