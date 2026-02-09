@@ -74,15 +74,21 @@ Notes:
 
 ## 5. How to Run Locally
 
-### Step 1: Create and activate virtual environment
+### Step 1: Clone the repository
 
 ```bash
-cd "/Users/buntie/Desktop/Project ETC/U-MAS"
+git clone https://github.com/Khush-1911/U-MAS.git
+cd U-MAS
+```
+
+### Step 2: Create and activate virtual environment
+
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-### Step 2: Install dependencies
+### Step 3: Install requirements
 
 No `requirements.txt` is currently committed. Install minimum required packages:
 
@@ -96,20 +102,20 @@ If you use MySQL, also install an appropriate DB driver (example):
 pip install mysqlclient
 ```
 
-### Step 3: Export environment variables (or use your shell profile)
+### Step 4: Export environment variables (or use your shell profile)
 
 ```bash
 export DJANGO_SECRET_KEY="change-this"
 export DJANGO_DEBUG="True"
 ```
 
-### Step 4: Apply migrations
+### Step 5: Apply migrations
 
 ```bash
 python3 manage.py migrate
 ```
 
-### Step 5: Run server
+### Step 6: Run server
 
 ```bash
 python3 manage.py runserver
