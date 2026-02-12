@@ -23,9 +23,9 @@ def doLogin(request):
     else:
         captcha_token=request.POST.get("g-recaptcha-response")
         cap_url="https://www.google.com/recaptcha/api/siteverify"
-        cap_secret="6LeWtqUZAAAAANlv3se4uw5WAg-p0X61CJjHPxKT"
+        cap_secret=os.getenv("RECAPTCHA_SECRET_KEY", "6LeWtqUZAAAAANlv3se4uw5WAg-p0X61CJjHPxKT")
         cap_data={"secret":cap_secret,"response":captcha_token}
-        cap_server_response=requests.post(url=cap_url,data=cap_data)
+        cap_server_response=requests.post(url=cap_url,data=cap_data,timeout=10)
         cap_json=json.loads(cap_server_response.text)
 
         if cap_json['success']==False:

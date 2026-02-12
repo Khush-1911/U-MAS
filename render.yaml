@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: u-mas
+    env: python
+    plan: free
+    buildCommand: ./build.sh
+    startCommand: gunicorn student_management_system.wsgi:application --workers=2 --threads=4 --timeout=120
+    envVars:
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: u-mas.onrender.com
+      - key: DJANGO_CSRF_TRUSTED_ORIGINS
+        value: https://u-mas.onrender.com
+      - key: DATABASE_URL
+        sync: false
+      - key: DJANGO_SECRET_KEY
+        sync: false

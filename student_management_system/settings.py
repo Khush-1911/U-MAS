@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,15 +26,25 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'dev-insecure-secret-key-change-me')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DJANGO_DEBUG', 'True').lower() == 'true'
 
-#HEROKU LIVE PROJECT LINK
-#ALLOWED_HOSTS = ["studentmanagementsystem22.herokuapp.com"]
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [
+    host.strip() for host in os.getenv(
+        'DJANGO_ALLOWED_HOSTS',
+        '127.0.0.1,localhost'
+    ).split(',') if host.strip()
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip() for origin in os.getenv(
+        'DJANGO_CSRF_TRUSTED_ORIGINS',
+        ''
+    ).split(',') if origin.strip()
+]
 
 MEDIA_URL="/media/"
 MEDIA_ROOT=os.path.join(BASE_DIR,"media")
 
 STATIC_URL="/static/"
-STATIC_ROOT=os.path.join(BASE_DIR,"static")
+STATIC_ROOT=os.path.join(BASE_DIR,"staticfiles")
 
 # Application definition
 
@@ -48,9 +59,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    #===Enable Only Making Project Live on Heroku==
-     #'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -85,15 +95,10 @@ WSGI_APPLICATION = 'student_management_system.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        # sqlite defaults for local development, override via env for production/public repos
-        'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.sqlite3'),
-        'NAME': os.getenv('DB_NAME', os.path.join(BASE_DIR, 'db.sqlite3')),
-        'USER': os.getenv('DB_USER', ''),
-        'PASSWORD': os.getenv('DB_PASSWORD', ''),
-        'HOST': os.getenv('DB_HOST', ''),
-        'PORT': os.getenv('DB_PORT', ''),
-    }
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_URL', f"sqlite:///{os.path.join(BASE_DIR, 'db.sqlite3')}"),
+        conn_max_age=600,
+    )
 }
 
 
@@ -134,6 +139,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 AUTH_USER_MODEL="student_management_app.CustomUser"
 AUTHENTICATION_BACKENDS=['student_management_app.EmailBackEnd.EmailBackEnd']
 
@@ -150,6 +156,10 @@ EMAIL_FILE_PATH=os.path.join(BASE_DIR,"sent_mails")
 
 #Enable Only Making Project Live on Heroku
 # STATICFILES_STORAGE='whitenoise.storage.CompressedManifestStaticFilesStorage'
-# import dj_database_url
 # prod_db=dj_database_url.config(conn_max_age=500)
 # DATABASES['default'].update(prod_db)
+
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
