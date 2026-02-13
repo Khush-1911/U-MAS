@@ -98,9 +98,16 @@ def signup_staff(request):
     return render(request,"signup_staff_page.html")
 
 def do_admin_signup(request):
-    username=request.POST.get("username")
-    email=request.POST.get("email")
+    username=request.POST.get("username", "").strip()
+    email=request.POST.get("email", "").strip().lower()
     password=request.POST.get("password")
+
+    if CustomUser.objects.filter(username__iexact=username).exists():
+        messages.error(request, "Username already exists")
+        return HttpResponseRedirect(reverse("show_login"))
+    if CustomUser.objects.filter(email__iexact=email).exists():
+        messages.error(request, "Email already exists")
+        return HttpResponseRedirect(reverse("show_login"))
 
     try:
         user=CustomUser.objects.create_user(username=username,password=password,email=email,user_type=1)
@@ -112,10 +119,17 @@ def do_admin_signup(request):
         return HttpResponseRedirect(reverse("show_login"))
 
 def do_staff_signup(request):
-    username=request.POST.get("username")
-    email=request.POST.get("email")
+    username=request.POST.get("username", "").strip()
+    email=request.POST.get("email", "").strip().lower()
     password=request.POST.get("password")
     address=request.POST.get("address")
+
+    if CustomUser.objects.filter(username__iexact=username).exists():
+        messages.error(request, "Username already exists")
+        return HttpResponseRedirect(reverse("show_login"))
+    if CustomUser.objects.filter(email__iexact=email).exists():
+        messages.error(request, "Email already exists")
+        return HttpResponseRedirect(reverse("show_login"))
 
     try:
         user=CustomUser.objects.create_user(username=username,password=password,email=email,user_type=2)
@@ -130,13 +144,20 @@ def do_staff_signup(request):
 def do_signup_student(request):
     first_name = request.POST.get("first_name")
     last_name = request.POST.get("last_name")
-    username = request.POST.get("username")
-    email = request.POST.get("email")
+    username = request.POST.get("username", "").strip()
+    email = request.POST.get("email", "").strip().lower()
     password = request.POST.get("password")
     address = request.POST.get("address")
     session_year_id = request.POST.get("session_year")
     course_id = request.POST.get("course")
     sex = request.POST.get("sex")
+
+    if CustomUser.objects.filter(username__iexact=username).exists():
+        messages.error(request, "Username already exists")
+        return HttpResponseRedirect(reverse("show_login"))
+    if CustomUser.objects.filter(email__iexact=email).exists():
+        messages.error(request, "Email already exists")
+        return HttpResponseRedirect(reverse("show_login"))
 
     profile_pic = request.FILES['profile_pic']
     fs = FileSystemStorage()
