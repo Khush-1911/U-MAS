@@ -122,7 +122,11 @@ def do_staff_signup(request):
     username=request.POST.get("username", "").strip()
     email=request.POST.get("email", "").strip().lower()
     password=request.POST.get("password")
-    address=request.POST.get("address")
+    address=request.POST.get("address", "").strip()
+
+    if not username or not email or not password:
+        messages.error(request, "Username, email, and password are required")
+        return HttpResponseRedirect(reverse("show_login"))
 
     if CustomUser.objects.filter(username__iexact=username).exists():
         messages.error(request, "Username already exists")
