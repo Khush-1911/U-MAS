@@ -134,6 +134,9 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Keep legacy AutoField IDs to avoid unwanted implicit PK migrations.
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
@@ -163,3 +166,9 @@ if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+
+LIVE_SIGNALING_URL = os.getenv("LIVE_SIGNALING_URL", "https://rtcmulticonnection.herokuapp.com:443/")
+LIVE_TURN_URL = os.getenv("LIVE_TURN_URL", "")
+LIVE_TURN_USERNAME = os.getenv("LIVE_TURN_USERNAME", "")
+LIVE_TURN_PASSWORD = os.getenv("LIVE_TURN_PASSWORD", "")
+LIVE_TOKEN_SECRET = os.getenv("LIVE_TOKEN_SECRET", SECRET_KEY)

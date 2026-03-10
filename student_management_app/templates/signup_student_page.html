@@ -16,11 +16,19 @@
     <div class="login-title">Student Signup</div>
     <div class="login-subtitle">Create a student account for U-MAS.</div>
 
-    <form action="/do_signup_student" method="post" id="demo-form">
+    <form action="/do_signup_student" method="post" id="demo-form" enctype="multipart/form-data">
       {% csrf_token %}
       <div class="form-group">
         <label>Email</label>
         <input type="email" class="form-control" placeholder="you@example.com" name="email" required>
+      </div>
+      <div class="form-group" style="margin-top:12px;">
+        <label>First Name</label>
+        <input class="form-control" placeholder="First name" name="first_name" required>
+      </div>
+      <div class="form-group" style="margin-top:12px;">
+        <label>Last Name</label>
+        <input class="form-control" placeholder="Last name" name="last_name" required>
       </div>
       <div class="form-group" style="margin-top:12px;">
         <label>Username</label>
@@ -29,6 +37,49 @@
       <div class="form-group" style="margin-top:12px;">
         <label>Password</label>
         <input type="password" class="form-control" placeholder="••••••••" name="password" required>
+      </div>
+      <div class="form-group" style="margin-top:12px;">
+        <label>Address</label>
+        <input class="form-control" placeholder="Address" name="address" required>
+      </div>
+      <div class="form-group" style="margin-top:12px;">
+        <label>Course</label>
+        <select class="form-control" name="course" required>
+          <option value="">Select course</option>
+          {% for course in courses %}
+          <option value="{{ course.id }}">{{ course.course_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group" style="margin-top:12px;">
+        <label>Session Year</label>
+        <select class="form-control" name="session_year" required>
+          <option value="">Select session</option>
+          {% for session in session_years %}
+          <option value="{{ session.id }}">{{ session.session_start_year }} TO {{ session.session_end_year }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group" style="margin-top:12px;">
+        <label>Assigned Staff</label>
+        <select class="form-control" name="assigned_staff" required>
+          <option value="">Select staff</option>
+          {% for staff in staffs %}
+          <option value="{{ staff.id }}">{{ staff.profile_id|default:staff.id }} - {{ staff.admin.get_full_name|default:staff.admin.username }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group" style="margin-top:12px;">
+        <label>Sex</label>
+        <select class="form-control" name="sex" required>
+          <option value="">Select sex</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin-top:12px;">
+        <label>Profile Picture</label>
+        <input type="file" class="form-control" name="profile_pic" required>
       </div>
       <div class="form-group" style="margin-top:16px;">
         <button type="submit" class="btn btn-primary btn-block">Signup Student</button>

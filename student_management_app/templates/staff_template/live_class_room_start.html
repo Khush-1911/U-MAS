@@ -188,14 +188,15 @@ hr {
     params["publicRoomIdentifier"]="dashboard";
     params["password"]="{{ password }}";
     params["sessionid"]="{{ roomid }}";
+    params["roomPk"]="{{ room_pk }}";
+    params["socketURL"]="{{ socket_url|default:'https://rtcmulticonnection.herokuapp.com:443/' }}";
     params["open"]=true;
     window.params = params;
 })();
 
 var connection = new RTCMultiConnection();
 
-//connection.socketURL = '/';
-connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
+connection.socketURL = params.socketURL;
 
 connection.extra.userFullName = params.userFullName;
 

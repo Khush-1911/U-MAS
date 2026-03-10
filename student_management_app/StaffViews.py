@@ -1,41 +1,55 @@
 import json
-from datetime import datetime
-from uuid import uuid4
 
+from django.conf import settings
 from django.contrib import messages
 from django.core import serializers
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import transaction
 from django.forms import model_to_dict
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 from student_management_app.models import Subjects, SessionYearModel, Students, Attendance, AttendanceReport, \
     LeaveReportStaff, Staffs, FeedBackStaffs, CustomUser, Courses, NotificationStaffs, StudentResult, OnlineClassRoom
+from student_management_app.services.live_class_service import (
+    create_or_get_active_room,
+    end_room,
+    issue_realtime_token,
+    mark_participant_joined,
+    serialize_room_state,
+)
+
+
+def _logged_in_staff(request):
+    return Staffs.objects.get(admin=request.user.id)
+
+
+def _subject_for_staff_or_none(subject_id, request_user_id):
+    return Subjects.objects.filter(id=subject_id, staff_id=request_user_id).first()
+
+
+def _assigned_student_or_none(student_admin_id, staff_obj):
+    return Students.objects.filter(
+        admin=student_admin_id,
+        assigned_staff=staff_obj,
+    ).first()
 
 
 def staff_home(request):
     #For Fetch All Student Under Staff
+    staff_obj = _logged_in_staff(request)
     subjects=Subjects.objects.filter(staff_id=request.user.id)
-    course_id_list=[]
-    for subject in subjects:
-        course=Courses.objects.get(id=subject.course_id.id)
-        course_id_list.append(course.id)
-
-    final_course=[]
-    #removing Duplicate Course ID
-    for course_id in course_id_list:
-        if course_id not in final_course:
-            final_course.append(course_id)
-
-    students_count=Students.objects.filter(course_id__in=final_course).count()
+    students_qs=Students.objects.filter(assigned_staff=staff_obj)
+    students_count=students_qs.count()
 
     #Fetch All Attendance Count
     attendance_count=Attendance.objects.filter(subject_id__in=subjects).count()
 
     #Fetch All Approve Leave
-    staff=Staffs.objects.get(admin=request.user.id)
-    leave_count=LeaveReportStaff.objects.filter(staff_id=staff.id,leave_status=1).count()
+    leave_count=LeaveReportStaff.objects.filter(staff_id=staff_obj.id,leave_status=1).count()
     subject_count=subjects.count()
 
     #Fetch Attendance Data by Subject
@@ -46,7 +60,7 @@ def staff_home(request):
         subject_list.append(subject.subject_name)
         attendance_list.append(attendance_count1)
 
-    students_attendance=Students.objects.filter(course_id__in=final_course)
+    students_attendance=students_qs
     student_list=[]
     student_list_attendance_present=[]
     student_list_attendance_absent=[]
@@ -69,9 +83,20 @@ def get_students(request):
     subject_id=request.POST.get("subject")
     session_year=request.POST.get("session_year")
 
-    subject=Subjects.objects.get(id=subject_id)
-    session_model=SessionYearModel.object.get(id=session_year)
-    students=Students.objects.filter(course_id=subject.course_id,session_year_id=session_model)
+    subject=_subject_for_staff_or_none(subject_id, request.user.id)
+    if not subject:
+        return JsonResponse({"error": "Invalid subject for this staff"}, status=403)
+
+    session_model=SessionYearModel.object.filter(id=session_year).first()
+    if not session_model:
+        return JsonResponse({"error": "Session not found"}, status=404)
+
+    staff_obj = _logged_in_staff(request)
+    students=Students.objects.filter(
+        course_id=subject.course_id,
+        session_year_id=session_model,
+        assigned_staff=staff_obj,
+    )
     list_data=[]
 
     for student in students:
@@ -86,22 +111,27 @@ def save_attendance_data(request):
     attendance_date=request.POST.get("attendance_date")
     session_year_id=request.POST.get("session_year_id")
 
-    subject_model=Subjects.objects.get(id=subject_id)
-    session_model=SessionYearModel.object.get(id=session_year_id)
-    json_sstudent=json.loads(student_ids)
-    #print(data[0]['id'])
+    subject_model=_subject_for_staff_or_none(subject_id, request.user.id)
+    session_model=SessionYearModel.object.filter(id=session_year_id).first()
+    if not subject_model or not session_model:
+        return HttpResponse("ERR")
 
+    staff_obj = _logged_in_staff(request)
+    json_sstudent=json.loads(student_ids)
 
     try:
-        attendance=Attendance(subject_id=subject_model,attendance_date=attendance_date,session_year_id=session_model)
-        attendance.save()
+        with transaction.atomic():
+            attendance=Attendance(subject_id=subject_model,attendance_date=attendance_date,session_year_id=session_model)
+            attendance.save()
 
-        for stud in json_sstudent:
-             student=Students.objects.get(admin=stud['id'])
-             attendance_report=AttendanceReport(student_id=student,attendance_id=attendance,status=stud['status'])
-             attendance_report.save()
+            for stud in json_sstudent:
+                 student=_assigned_student_or_none(stud['id'], staff_obj)
+                 if student is None:
+                     raise ValueError("Unauthorized student in attendance payload")
+                 attendance_report=AttendanceReport(student_id=student,attendance_id=attendance,status=stud['status'])
+                 attendance_report.save()
         return HttpResponse("OK")
-    except:
+    except Exception:
         return HttpResponse("ERR")
 
 def staff_update_attendance(request):
@@ -113,8 +143,11 @@ def staff_update_attendance(request):
 def get_attendance_dates(request):
     subject=request.POST.get("subject")
     session_year_id=request.POST.get("session_year_id")
-    subject_obj=Subjects.objects.get(id=subject)
-    session_year_obj=SessionYearModel.object.get(id=session_year_id)
+    subject_obj=_subject_for_staff_or_none(subject, request.user.id)
+    session_year_obj=SessionYearModel.object.filter(id=session_year_id).first()
+    if not subject_obj or not session_year_obj:
+        return JsonResponse(json.dumps([]),safe=False)
+
     attendance=Attendance.objects.filter(subject_id=subject_obj,session_year_id=session_year_obj)
     attendance_obj=[]
     for attendance_single in attendance:
@@ -126,12 +159,17 @@ def get_attendance_dates(request):
 @csrf_exempt
 def get_attendance_student(request):
     attendance_date=request.POST.get("attendance_date")
-    attendance=Attendance.objects.get(id=attendance_date)
+    attendance=Attendance.objects.filter(id=attendance_date).first()
+    if not attendance or attendance.subject_id.staff_id_id != request.user.id:
+        return JsonResponse(json.dumps([]),content_type="application/json",safe=False)
 
     attendance_data=AttendanceReport.objects.filter(attendance_id=attendance)
+    staff_obj = _logged_in_staff(request)
     list_data=[]
 
     for student in attendance_data:
+        if student.student_id.assigned_staff_id != staff_obj.id:
+            continue
         data_small={"id":student.student_id.admin.id,"name":student.student_id.admin.first_name+" "+student.student_id.admin.last_name,"status":student.status}
         list_data.append(data_small)
     return JsonResponse(json.dumps(list_data),content_type="application/json",safe=False)
@@ -140,14 +178,19 @@ def get_attendance_student(request):
 def save_updateattendance_data(request):
     student_ids=request.POST.get("student_ids")
     attendance_date=request.POST.get("attendance_date")
-    attendance=Attendance.objects.get(id=attendance_date)
+    attendance=Attendance.objects.filter(id=attendance_date).first()
+    if not attendance or attendance.subject_id.staff_id_id != request.user.id:
+        return HttpResponse("ERR")
 
     json_sstudent=json.loads(student_ids)
+    staff_obj = _logged_in_staff(request)
 
 
     try:
         for stud in json_sstudent:
-             student=Students.objects.get(admin=stud['id'])
+             student=_assigned_student_or_none(stud['id'], staff_obj)
+             if student is None:
+                 raise ValueError("Unauthorized student in attendance payload")
              attendance_report=AttendanceReport.objects.get(student_id=student,attendance_id=attendance)
              attendance_report.status=stud['status']
              attendance_report.save()
@@ -259,8 +302,12 @@ def save_student_result(request):
     subject_id=request.POST.get('subject')
 
 
-    student_obj=Students.objects.get(admin=student_admin_id)
-    subject_obj=Subjects.objects.get(id=subject_id)
+    staff_obj = _logged_in_staff(request)
+    student_obj=_assigned_student_or_none(student_admin_id, staff_obj)
+    subject_obj=_subject_for_staff_or_none(subject_id, request.user.id)
+    if student_obj is None or subject_obj is None:
+        messages.error(request, "Invalid student or subject assignment")
+        return HttpResponseRedirect(reverse("staff_add_result"))
 
     try:
         check_exist=StudentResult.objects.filter(subject_id=subject_obj,student_id=student_obj).exists()
@@ -284,10 +331,14 @@ def save_student_result(request):
 def fetch_result_student(request):
     subject_id=request.POST.get('subject_id')
     student_id=request.POST.get('student_id')
-    student_obj=Students.objects.get(admin=student_id)
-    result=StudentResult.objects.filter(student_id=student_obj.id,subject_id=subject_id).exists()
+    staff_obj = _logged_in_staff(request)
+    student_obj=_assigned_student_or_none(student_id, staff_obj)
+    subject_obj=_subject_for_staff_or_none(subject_id, request.user.id)
+    if student_obj is None or subject_obj is None:
+        return HttpResponse("False")
+    result=StudentResult.objects.filter(student_id=student_obj.id,subject_id=subject_obj.id).exists()
     if result:
-        result=StudentResult.objects.get(student_id=student_obj.id,subject_id=subject_id)
+        result=StudentResult.objects.get(student_id=student_obj.id,subject_id=subject_obj.id)
         result_data={"exam_marks":result.subject_exam_marks,"assign_marks":result.subject_assignment_marks}
         return HttpResponse(json.dumps(result_data))
     else:
@@ -302,21 +353,93 @@ def start_live_classroom_process(request):
     session_year=request.POST.get("session_year")
     subject=request.POST.get("subject")
 
-    subject_obj=Subjects.objects.get(id=subject)
-    session_obj=SessionYearModel.object.get(id=session_year)
-    checks=OnlineClassRoom.objects.filter(subject=subject_obj,session_years=session_obj,is_active=True).exists()
-    if checks:
-        data=OnlineClassRoom.objects.get(subject=subject_obj,session_years=session_obj,is_active=True)
-        room_pwd=data.room_pwd
-        roomname=data.room_name
-    else:
-        room_pwd=datetime.now().strftime('%Y%m-%d%H-%M%S-') + str(uuid4())
-        roomname=datetime.now().strftime('%Y%m-%d%H-%M%S-') + str(uuid4())
-        staff_obj=Staffs.objects.get(admin=request.user.id)
-        onlineClass=OnlineClassRoom(room_name=roomname,room_pwd=room_pwd,subject=subject_obj,session_years=session_obj,started_by=staff_obj,is_active=True)
-        onlineClass.save()
+    room = create_or_get_active_room(request.user, subject, session_year)
+    mark_participant_joined(request.user, room, "STAFF", is_publisher=True)
+    return render(
+        request,
+        "staff_template/live_class_room_start.html",
+        {
+            "username": request.user.username,
+            "password": room.room_pwd,
+            "roomid": room.room_name,
+            "subject": room.subject.subject_name,
+            "session_year": room.session_years,
+            "room_pk": room.id,
+            "socket_url": settings.LIVE_SIGNALING_URL,
+        },
+    )
 
-    return render(request,"staff_template/live_class_room_start.html",{"username":request.user.username,"password":room_pwd,"roomid":roomname,"subject":subject_obj.subject_name,"session_year":session_obj})
+
+@require_POST
+def start_live_classroom_api(request):
+    if str(request.user.user_type) != "2":
+        return JsonResponse({"ok": False, "error": "Only staff can start class"}, status=403)
+
+    subject = request.POST.get("subject")
+    session_year = request.POST.get("session_year")
+    if not subject or not session_year:
+        return JsonResponse({"ok": False, "error": "subject and session_year are required"}, status=400)
+
+    try:
+        room = create_or_get_active_room(request.user, subject, session_year)
+        mark_participant_joined(request.user, room, "STAFF", is_publisher=True)
+    except ObjectDoesNotExist:
+        return JsonResponse({"ok": False, "error": "Invalid subject/session"}, status=404)
+
+    token = issue_realtime_token(request.user, room, role="STAFF")
+    return JsonResponse(
+        {
+            "ok": True,
+            "room": serialize_room_state(room),
+            "room_name": room.room_name,
+            "room_password": room.room_pwd,
+            "token": token,
+            "socket_url": settings.LIVE_SIGNALING_URL,
+        }
+    )
+
+
+@require_POST
+def end_live_classroom_api(request, room_id):
+    if str(request.user.user_type) != "2":
+        return JsonResponse({"ok": False, "error": "Only staff can end class"}, status=403)
+
+    try:
+        room = OnlineClassRoom.objects.get(id=room_id)
+        if room.started_by.admin_id != request.user.id:
+            return JsonResponse({"ok": False, "error": "Only class owner can end this room"}, status=403)
+        end_room(request.user, room)
+    except ObjectDoesNotExist:
+        return JsonResponse({"ok": False, "error": "Room not found"}, status=404)
+
+    return JsonResponse({"ok": True, "room": serialize_room_state(room)})
+
+
+@require_POST
+@csrf_exempt
+def save_live_class_snapshot_api(request, room_id):
+    if str(request.user.user_type) != "2":
+        return JsonResponse({"ok": False, "error": "Only staff can save snapshot"}, status=403)
+
+    try:
+        room = OnlineClassRoom.objects.get(id=room_id)
+        if room.started_by.admin_id != request.user.id:
+            return JsonResponse({"ok": False, "error": "Only class owner can save snapshot"}, status=403)
+    except ObjectDoesNotExist:
+        return JsonResponse({"ok": False, "error": "Room not found"}, status=404)
+
+    try:
+        payload = json.loads(request.body.decode("utf-8"))
+    except (TypeError, ValueError, json.JSONDecodeError):
+        return JsonResponse({"ok": False, "error": "Invalid JSON body"}, status=400)
+
+    snapshot = payload.get("snapshot")
+    if snapshot is None:
+        return JsonResponse({"ok": False, "error": "snapshot is required"}, status=400)
+
+    room.last_board_snapshot = json.dumps(snapshot)
+    room.save(update_fields=["last_board_snapshot"])
+    return JsonResponse({"ok": True})
 
 
 def returnHtmlWidget(request):

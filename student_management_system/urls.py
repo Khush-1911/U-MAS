@@ -110,6 +110,10 @@ urlpatterns = [
     path('fetch_result_student',StaffViews.fetch_result_student, name="fetch_result_student"),
     path('start_live_classroom',StaffViews.start_live_classroom, name="start_live_classroom"),
     path('start_live_classroom_process',StaffViews.start_live_classroom_process, name="start_live_classroom_process"),
+    path('api/live-class/start', StaffViews.start_live_classroom_api, name="start_live_classroom_api"),
+    path('api/live-class/<int:room_id>/end', StaffViews.end_live_classroom_api, name="end_live_classroom_api"),
+    path('api/live-class/<int:room_id>/snapshot', StaffViews.save_live_class_snapshot_api, name="save_live_class_snapshot_api"),
+    path('api/live-class/<int:room_id>/state', views.live_class_room_state_api, name="live_class_room_state_api"),
 
                 #  Student URL Path
 
@@ -127,5 +131,6 @@ urlpatterns = [
     path('student_all_notification',StudentViews.student_all_notification,name="student_all_notification"),
     path('student_view_result',StudentViews.student_view_result,name="student_view_result"),
     path('join_class_room/<int:subject_id>/<int:session_year_id>',StudentViews.join_class_room,name="join_class_room"),
+    path('api/live-class/<int:room_id>/join-token', StudentViews.live_class_join_token_api, name="live_class_join_token_api"),
     path('testurl/',views.Testurl)
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)+static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)

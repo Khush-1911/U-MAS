@@ -2,8 +2,8 @@ import json
 
 import requests
 from django.contrib import messages
-from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
+from django.db import IntegrityError, transaction
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
@@ -13,6 +13,30 @@ from student_management_app.forms import AddStudentForm, EditStudentForm
 from student_management_app.models import CustomUser, Staffs, Courses, Subjects, Students, SessionYearModel, \
     FeedBackStudent, FeedBackStaffs, LeaveReportStudent, LeaveReportStaff, Attendance, AttendanceReport, \
     NotificationStudent, NotificationStaffs
+
+
+def _normalize_email(value):
+    return (value or "").strip().lower()
+
+
+def _credentials_error(username, email, exclude_user_id=None):
+    username = (username or "").strip()
+    email = _normalize_email(email)
+
+    if not username or not email:
+        return "Username and email are required"
+
+    username_qs = CustomUser.objects.filter(username__iexact=username)
+    email_qs = CustomUser.objects.filter(email__iexact=email)
+    if exclude_user_id:
+        username_qs = username_qs.exclude(id=exclude_user_id)
+        email_qs = email_qs.exclude(id=exclude_user_id)
+
+    if username_qs.exists():
+        return "Username already exists"
+    if email_qs.exists():
+        return "Email already exists"
+    return None
 
 
 def admin_home(request):
@@ -75,19 +99,39 @@ def add_staff_save(request):
     if request.method!="POST":
         return HttpResponse("Method Not Allowed")
     else:
-        first_name=request.POST.get("first_name")
-        last_name=request.POST.get("last_name")
-        username=request.POST.get("username")
-        email=request.POST.get("email")
+        first_name=request.POST.get("first_name", "").strip()
+        last_name=request.POST.get("last_name", "").strip()
+        username=request.POST.get("username", "").strip()
+        email=_normalize_email(request.POST.get("email"))
         password=request.POST.get("password")
-        address=request.POST.get("address")
+        address=request.POST.get("address", "").strip()
+        if not all([first_name, last_name, username, email, password, address]):
+            messages.error(request,"All fields are required")
+            return HttpResponseRedirect(reverse("add_staff"))
+
+        error = _credentials_error(username, email)
+        if error:
+            messages.error(request, error)
+            return HttpResponseRedirect(reverse("add_staff"))
+
         try:
-            user=CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=2)
-            user.staffs.address=address
-            user.save()
+            with transaction.atomic():
+                user=CustomUser.objects.create_user(
+                    username=username,
+                    password=password,
+                    email=email,
+                    last_name=last_name,
+                    first_name=first_name,
+                    user_type=2,
+                )
+                user.staffs.address=address
+                user.staffs.save(update_fields=["address"])
             messages.success(request,"Successfully Added Staff")
             return HttpResponseRedirect(reverse("add_staff"))
-        except:
+        except IntegrityError:
+            messages.error(request,"Email already exists")
+            return HttpResponseRedirect(reverse("add_staff"))
+        except Exception:
             messages.error(request,"Failed to Add Staff")
             return HttpResponseRedirect(reverse("add_staff"))
 
@@ -110,6 +154,8 @@ def add_course_save(request):
             return HttpResponseRedirect(reverse("add_course"))
 
 def add_student(request):
+    if not Staffs.objects.exists():
+        messages.error(request, "Add at least one staff before creating students")
     form=AddStudentForm()
     return render(request,"hod_template/add_student_template.html",{"form":form})
 
@@ -122,31 +168,61 @@ def add_student_save(request):
             first_name=form.cleaned_data["first_name"]
             last_name=form.cleaned_data["last_name"]
             username=form.cleaned_data["username"]
-            email=form.cleaned_data["email"]
+            email=_normalize_email(form.cleaned_data["email"])
             password=form.cleaned_data["password"]
             address=form.cleaned_data["address"]
             session_year_id=form.cleaned_data["session_year_id"]
             course_id=form.cleaned_data["course"]
             sex=form.cleaned_data["sex"]
+            assigned_staff_id=form.cleaned_data["assigned_staff"]
 
-            profile_pic=request.FILES['profile_pic']
+            if not password:
+                messages.error(request, "Password is required")
+                return HttpResponseRedirect(reverse("add_student"))
+
+            error = _credentials_error(username, email)
+            if error:
+                messages.error(request, error)
+                return HttpResponseRedirect(reverse("add_student"))
+
+            profile_pic=request.FILES.get("profile_pic")
+            if not profile_pic:
+                messages.error(request, "Profile picture is required")
+                return HttpResponseRedirect(reverse("add_student"))
             fs=FileSystemStorage()
             filename=fs.save(profile_pic.name,profile_pic)
             profile_pic_url=fs.url(filename)
 
             try:
-                user=CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=3)
-                user.students.address=address
-                course_obj=Courses.objects.get(id=course_id)
-                user.students.course_id=course_obj
-                session_year=SessionYearModel.object.get(id=session_year_id)
-                user.students.session_year_id=session_year
-                user.students.gender=sex
-                user.students.profile_pic=profile_pic_url
-                user.save()
+                with transaction.atomic():
+                    course_obj=Courses.objects.get(id=course_id)
+                    session_year=SessionYearModel.object.get(id=session_year_id)
+                    assigned_staff=Staffs.objects.get(id=assigned_staff_id)
+
+                    user=CustomUser.objects.create_user(
+                        username=username,
+                        password=password,
+                        email=email,
+                        last_name=last_name,
+                        first_name=first_name,
+                        user_type=3,
+                    )
+                    user.students.address=address
+                    user.students.course_id=course_obj
+                    user.students.session_year_id=session_year
+                    user.students.gender=sex
+                    user.students.profile_pic=profile_pic_url
+                    user.students.assigned_staff=assigned_staff
+                    user.students.save()
                 messages.success(request,"Successfully Added Student")
                 return HttpResponseRedirect(reverse("add_student"))
-            except:
+            except (Courses.DoesNotExist, SessionYearModel.DoesNotExist, Staffs.DoesNotExist):
+                messages.error(request,"Invalid course, session year, or assigned staff")
+                return HttpResponseRedirect(reverse("add_student"))
+            except IntegrityError:
+                messages.error(request,"Email already exists")
+                return HttpResponseRedirect(reverse("add_student"))
+            except Exception:
                 messages.error(request,"Failed to Add Student")
                 return HttpResponseRedirect(reverse("add_student"))
         else:
@@ -240,26 +316,39 @@ def edit_staff_save(request):
         return HttpResponse("<h2>Method Not Allowed</h2>")
     else:
         staff_id=request.POST.get("staff_id")
-        first_name=request.POST.get("first_name")
-        last_name=request.POST.get("last_name")
-        email=request.POST.get("email")
-        username=request.POST.get("username")
-        address=request.POST.get("address")
+        first_name=request.POST.get("first_name", "").strip()
+        last_name=request.POST.get("last_name", "").strip()
+        email=_normalize_email(request.POST.get("email"))
+        username=request.POST.get("username", "").strip()
+        address=request.POST.get("address", "").strip()
+
+        if not all([first_name, last_name, email, username, address]):
+            messages.error(request,"All fields are required")
+            return HttpResponseRedirect(reverse("edit_staff",kwargs={"staff_id":staff_id}))
+
+        error = _credentials_error(username, email, exclude_user_id=staff_id)
+        if error:
+            messages.error(request, error)
+            return HttpResponseRedirect(reverse("edit_staff",kwargs={"staff_id":staff_id}))
 
         try:
-            user=CustomUser.objects.get(id=staff_id)
-            user.first_name=first_name
-            user.last_name=last_name
-            user.email=email
-            user.username=username
-            user.save()
+            with transaction.atomic():
+                user=CustomUser.objects.get(id=staff_id)
+                user.first_name=first_name
+                user.last_name=last_name
+                user.email=email
+                user.username=username
+                user.save()
 
-            staff_model=Staffs.objects.get(admin=staff_id)
-            staff_model.address=address
-            staff_model.save()
+                staff_model=Staffs.objects.get(admin=staff_id)
+                staff_model.address=address
+                staff_model.save()
             messages.success(request,"Successfully Edited Staff")
             return HttpResponseRedirect(reverse("edit_staff",kwargs={"staff_id":staff_id}))
-        except:
+        except IntegrityError:
+            messages.error(request,"Email already exists")
+            return HttpResponseRedirect(reverse("edit_staff",kwargs={"staff_id":staff_id}))
+        except Exception:
             messages.error(request,"Failed to Edit Staff")
             return HttpResponseRedirect(reverse("edit_staff",kwargs={"staff_id":staff_id}))
 
@@ -275,6 +364,7 @@ def edit_student(request,student_id):
     form.fields['course'].initial=student.course_id.id
     form.fields['sex'].initial=student.gender
     form.fields['session_year_id'].initial=student.session_year_id.id
+    form.fields['assigned_staff'].initial=student.assigned_staff_id
     return render(request,"hod_template/edit_student_template.html",{"form":form,"id":student_id,"username":student.admin.username})
 
 def edit_student_save(request):
@@ -290,11 +380,17 @@ def edit_student_save(request):
             first_name = form.cleaned_data["first_name"]
             last_name = form.cleaned_data["last_name"]
             username = form.cleaned_data["username"]
-            email = form.cleaned_data["email"]
+            email = _normalize_email(form.cleaned_data["email"])
             address = form.cleaned_data["address"]
             session_year_id=form.cleaned_data["session_year_id"]
             course_id = form.cleaned_data["course"]
             sex = form.cleaned_data["sex"]
+            assigned_staff_id = form.cleaned_data["assigned_staff"]
+
+            error = _credentials_error(username, email, exclude_user_id=student_id)
+            if error:
+                messages.error(request, error)
+                return HttpResponseRedirect(reverse("edit_student",kwargs={"student_id":student_id}))
 
             if request.FILES.get('profile_pic',False):
                 profile_pic=request.FILES['profile_pic']
@@ -306,27 +402,36 @@ def edit_student_save(request):
 
 
             try:
-                user=CustomUser.objects.get(id=student_id)
-                user.first_name=first_name
-                user.last_name=last_name
-                user.username=username
-                user.email=email
-                user.save()
+                with transaction.atomic():
+                    user=CustomUser.objects.get(id=student_id)
+                    user.first_name=first_name
+                    user.last_name=last_name
+                    user.username=username
+                    user.email=email
+                    user.save()
 
-                student=Students.objects.get(admin=student_id)
-                student.address=address
-                session_year = SessionYearModel.object.get(id=session_year_id)
-                student.session_year_id = session_year
-                student.gender=sex
-                course=Courses.objects.get(id=course_id)
-                student.course_id=course
-                if profile_pic_url!=None:
-                    student.profile_pic=profile_pic_url
-                student.save()
+                    student=Students.objects.get(admin=student_id)
+                    student.address=address
+                    session_year = SessionYearModel.object.get(id=session_year_id)
+                    student.session_year_id = session_year
+                    student.gender=sex
+                    course=Courses.objects.get(id=course_id)
+                    assigned_staff=Staffs.objects.get(id=assigned_staff_id)
+                    student.course_id=course
+                    student.assigned_staff=assigned_staff
+                    if profile_pic_url!=None:
+                        student.profile_pic=profile_pic_url
+                    student.save()
                 del request.session['student_id']
                 messages.success(request,"Successfully Edited Student")
                 return HttpResponseRedirect(reverse("edit_student",kwargs={"student_id":student_id}))
-            except:
+            except (Courses.DoesNotExist, SessionYearModel.DoesNotExist, Staffs.DoesNotExist):
+                messages.error(request,"Invalid course, session year, or assigned staff")
+                return HttpResponseRedirect(reverse("edit_student",kwargs={"student_id":student_id}))
+            except IntegrityError:
+                messages.error(request,"Email already exists")
+                return HttpResponseRedirect(reverse("edit_student",kwargs={"student_id":student_id}))
+            except Exception:
                 messages.error(request,"Failed to Edit Student")
                 return HttpResponseRedirect(reverse("edit_student",kwargs={"student_id":student_id}))
         else:
@@ -419,8 +524,8 @@ def add_session_save(request):
 
 @csrf_exempt
 def check_email_exist(request):
-    email=request.POST.get("email")
-    user_obj=CustomUser.objects.filter(email=email).exists()
+    email=_normalize_email(request.POST.get("email"))
+    user_obj=CustomUser.objects.filter(email__iexact=email).exists()
     if user_obj:
         return HttpResponse(True)
     else:
@@ -429,7 +534,7 @@ def check_email_exist(request):
 @csrf_exempt
 def check_username_exist(request):
     username=request.POST.get("username")
-    user_obj=CustomUser.objects.filter(username=username).exists()
+    user_obj=CustomUser.objects.filter(username__iexact=username).exists()
     if user_obj:
         return HttpResponse(True)
     else:

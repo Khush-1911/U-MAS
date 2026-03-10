@@ -1,13 +1,24 @@
 import datetime
+import json
 
 from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import JsonResponse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from django.conf import settings
 
 from student_management_app.models import Students, Courses, Subjects, CustomUser, Attendance, AttendanceReport, \
     LeaveReportStudent, FeedBackStudent, NotificationStudent, StudentResult, OnlineClassRoom, SessionYearModel
+from student_management_app.services.live_class_service import (
+    LiveClassError,
+    issue_realtime_token,
+    mark_participant_joined,
+    validate_student_can_join,
+)
 
 
 def student_home(request):
@@ -18,6 +29,8 @@ def student_home(request):
     course=Courses.objects.get(id=student_obj.course_id.id)
     subjects=Subjects.objects.filter(course_id=course).count()
     subjects_data=Subjects.objects.filter(course_id=course)
+    if student_obj.assigned_staff_id:
+        subjects_data = subjects_data.filter(staff_id=student_obj.assigned_staff.admin_id)
     session_obj=SessionYearModel.object.get(id=student_obj.session_year_id.id)
     class_room=OnlineClassRoom.objects.filter(subject__in=subjects_data,is_active=True,session_years=session_obj)
 
@@ -43,12 +56,33 @@ def join_class_room(request,subject_id,session_year_id):
         if session.exists():
             subject_obj=Subjects.objects.get(id=subject_id)
             course=Courses.objects.get(id=subject_obj.course_id.id)
-            check_course=Students.objects.filter(admin=request.user.id,course_id=course.id)
-            if check_course.exists():
+            student_obj = Students.objects.filter(admin=request.user.id,course_id=course.id).first()
+            check_course=student_obj is not None
+            if student_obj and student_obj.assigned_staff_id and subject_obj.staff_id_id != student_obj.assigned_staff.admin_id:
+                return HttpResponse("This Subject is Not For You")
+            if check_course:
                 session_check=Students.objects.filter(admin=request.user.id,session_year_id=session_year_obj.id)
                 if session_check.exists():
-                    onlineclass=OnlineClassRoom.objects.get(session_years=session_year_id,subject=subject_id)
-                    return render(request,"student_template/join_class_room_start.html",{"username":request.user.username,"password":onlineclass.room_pwd,"roomid":onlineclass.room_name})
+                    onlineclass_qs = OnlineClassRoom.objects.filter(
+                        session_years=session_year_id,
+                        subject=subject_id,
+                        is_active=True,
+                        status="ACTIVE",
+                    )
+                    if not onlineclass_qs.exists():
+                        return HttpResponse("This Online Session Has Ended")
+                    onlineclass = onlineclass_qs.first()
+                    return render(
+                        request,
+                        "student_template/join_class_room_start.html",
+                        {
+                            "username": request.user.username,
+                            "password": onlineclass.room_pwd,
+                            "roomid": onlineclass.room_name,
+                            "room_pk": onlineclass.id,
+                            "socket_url": settings.LIVE_SIGNALING_URL,
+                        },
+                    )
 
                 else:
                     return HttpResponse("This Online Session is Not For You")
@@ -175,3 +209,31 @@ def student_view_result(request):
     student=Students.objects.get(admin=request.user.id)
     studentresult=StudentResult.objects.filter(student_id=student.id)
     return render(request,"student_template/student_result.html",{"studentresult":studentresult})
+
+
+@require_POST
+@csrf_exempt
+def live_class_join_token_api(request, room_id):
+    if str(request.user.user_type) != "3":
+        return JsonResponse({"ok": False, "error": "Only students can join"}, status=403)
+
+    try:
+        room = OnlineClassRoom.objects.get(id=room_id)
+        validate_student_can_join(request.user, room)
+    except ObjectDoesNotExist:
+        return JsonResponse({"ok": False, "error": "Room not found"}, status=404)
+    except LiveClassError as exc:
+        return JsonResponse({"ok": False, "error": str(exc)}, status=403)
+
+    token = issue_realtime_token(request.user, room, role="STUDENT")
+    mark_participant_joined(request.user, room, "STUDENT", is_publisher=False)
+    return JsonResponse(
+        {
+            "ok": True,
+            "token": token,
+            "room_id": room.id,
+            "room_name": room.room_name,
+            "socket_url": settings.LIVE_SIGNALING_URL,
+            "snapshot": json.loads(room.last_board_snapshot) if room.last_board_snapshot else None,
+        }
+    )

@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.views import View
 
 from student_management_app.forms import EditResultForm
-from student_management_app.models import Students, Subjects, StudentResult
+from student_management_app.models import Staffs, Students, Subjects, StudentResult
 
 
 class EditResultViewClass(View):
@@ -22,8 +22,12 @@ class EditResultViewClass(View):
             exam_marks = form.cleaned_data['exam_marks']
             subject_id = form.cleaned_data['subject_id']
 
-            student_obj = Students.objects.get(admin=student_admin_id)
-            subject_obj = Subjects.objects.get(id=subject_id)
+            staff_obj = Staffs.objects.get(admin=request.user.id)
+            student_obj = Students.objects.filter(admin=student_admin_id, assigned_staff=staff_obj).first()
+            subject_obj = Subjects.objects.filter(id=subject_id, staff_id=request.user.id).first()
+            if student_obj is None or subject_obj is None:
+                messages.error(request, "Invalid student or subject assignment")
+                return HttpResponseRedirect(reverse("edit_student_result"))
             result=StudentResult.objects.get(subject_id=subject_obj,student_id=student_obj)
             result.subject_assignment_marks=assignment_marks
             result.subject_exam_marks=exam_marks
@@ -34,5 +38,4 @@ class EditResultViewClass(View):
             messages.error(request, "Failed to Update Result")
             form=EditResultForm(request.POST,staff_id=request.user.id)
             return render(request,"staff_template/edit_student_result.html",{"form":form})
-
 
