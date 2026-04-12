@@ -1,6 +1,6 @@
 {% extends 'staff_template/base_template.html' %}
 {% block page_title %}
-Take Attendance
+Take Day-Wise Attendance
 {% endblock page_title %}
 {% block main_content %}
     <!-- Main content -->
@@ -11,7 +11,7 @@ Take Attendance
             <!-- general form elements -->
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Take Attendance</h3>
+                <h3 class="card-title">Take Day-Wise Attendance</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
@@ -25,12 +25,14 @@ Take Attendance
                     </select>
                   </div>
                   <div class="form-group">
-                    <label>Session Year</label>
-                    <select class="form-control" name="session_year" id="session_year">
-                        {% for session_year in session_years %}
-                          <option value="{{ session_year.id }}">{{ session_year.session_start_year }} TO {{ session_year.session_end_year }}</option>
-                        {% endfor %}
-                    </select>
+                    <label>Attendance Date</label>
+                    <input
+                      type="date"
+                      class="form-control"
+                      name="attendance_date"
+                      id="attendance_date"
+                      value="{{ today_date }}"
+                    >
                   </div>
                    <div class="form-group">
                       {% if messages %}
@@ -70,17 +72,27 @@ Take Attendance
     $(document).ready(function(){
         $("#fetch_student").click(function(){
             var subject=$("#subject").val()
-            var session_year=$("#session_year").val()
+            var attendance_date=$("#attendance_date").val()
+
+            if(!attendance_date){
+                alert("Please select attendance date");
+                return;
+            }
 
             $.ajax({
                 url:'{% url 'get_students' %}',
                 type:'POST',
-                data:{subject:subject,session_year:session_year},
+                data:{subject:subject,attendance_date:attendance_date},
             })
             .done(function(response){
                 var json_data=JSON.parse(response);
                 console.log(json_data)
-                var div_data="<div class='form-group'><label>Attendance Date : </label><input type='date' name='attendance_date' id='attendance_date' class='form-control'></div><div class='form-group'><div class='row'>";
+                if(json_data.length===0){
+                    $("#student_data").html("<div class='alert alert-warning mb-0'>No students found for selected date.</div>");
+                    return;
+                }
+
+                var div_data="<div class='form-group'><div class='row'>";
                 for(key in json_data)
                 {
                     div_data+="<div class='col-lg-2'><div class='form-check'><input type='checkbox' checked='checked' name='student_data[]' value='"+json_data[key]['id']+"'><label class='form-check-label'>"+json_data[key]['name']+"</label></div></div>";
@@ -109,17 +121,16 @@ Take Attendance
                         else{
                             return {"id":$(this).val(),"status":0};
                         }
-                 }).get()
+                }).get()
                 var attendance_date=$("#attendance_date").val();
                 var subject_id=$("#subject").val();
-                var session_year_id=$("#session_year").val();
                 console.log(student_data)
                 student_data=JSON.stringify(student_data)
 
                 $.ajax({
                         url:'{% url 'save_attendance_data' %}',
                         type:'POST',
-                        data:{student_ids:student_data,attendance_date:attendance_date,subject_id:subject_id,session_year_id:session_year_id},
+                        data:{student_ids:student_data,attendance_date:attendance_date,subject_id:subject_id},
                     })
                     .done(function(response){
 

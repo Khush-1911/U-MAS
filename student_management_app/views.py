@@ -49,16 +49,27 @@ def doLogin(request):
     if request.method!="POST":
         return HttpResponse("<h2>Method Not Allowed</h2>")
     else:
-        captcha_token=request.POST.get("g-recaptcha-response")
-        cap_url="https://www.google.com/recaptcha/api/siteverify"
-        cap_secret=os.getenv("RECAPTCHA_SECRET_KEY", "6LeWtqUZAAAAANlv3se4uw5WAg-p0X61CJjHPxKT")
-        cap_data={"secret":cap_secret,"response":captcha_token}
-        cap_server_response=requests.post(url=cap_url,data=cap_data,timeout=10)
-        cap_json=json.loads(cap_server_response.text)
+        captcha_token = (request.POST.get("g-recaptcha-response") or "").strip()
+        should_verify_captcha = bool(captcha_token) or not settings.DEBUG
 
-        if cap_json['success']==False:
-            messages.error(request,"Invalid Captcha Try Again")
-            return HttpResponseRedirect("/")
+        if should_verify_captcha:
+            cap_url = "https://www.google.com/recaptcha/api/siteverify"
+            cap_secret = os.getenv("RECAPTCHA_SECRET_KEY", "6LeWtqUZAAAAANlv3se4uw5WAg-p0X61CJjHPxKT")
+            cap_data = {"secret": cap_secret, "response": captcha_token}
+            try:
+                cap_server_response = requests.post(url=cap_url, data=cap_data, timeout=10)
+                cap_json = cap_server_response.json()
+            except (requests.RequestException, json.JSONDecodeError, ValueError):
+                if settings.DEBUG:
+                    messages.warning(request, "Captcha verification unavailable in debug mode. Continuing login.")
+                    cap_json = {"success": True}
+                else:
+                    messages.error(request, "Captcha verification failed. Please try again.")
+                    return HttpResponseRedirect("/")
+
+            if not cap_json.get("success", False):
+                messages.error(request,"Invalid Captcha Try Again")
+                return HttpResponseRedirect("/")
 
         user=EmailBackEnd.authenticate(request,username=request.POST.get("email"),password=request.POST.get("password"))
         if user!=None:
@@ -267,7 +278,7 @@ def do_signup_student(request):
         messages.success(request, "Successfully Added Student")
         return HttpResponseRedirect(reverse("show_login"))
     except (Courses.DoesNotExist, SessionYearModel.DoesNotExist, Staffs.DoesNotExist):
-        messages.error(request, "Invalid course, session year, or assigned staff")
+        messages.error(request, "Invalid department, session year, or assigned staff")
         return HttpResponseRedirect(reverse("show_login"))
     except IntegrityError:
         messages.error(request, "Email already exists")

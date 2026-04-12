@@ -39,6 +39,52 @@ def _credentials_error(username, email, exclude_user_id=None):
     return None
 
 
+def _notification_sender_name(user):
+    if not user:
+        return "HOD"
+
+    full_name = user.get_full_name().strip()
+    return full_name or user.username or "HOD"
+
+
+def _normalize_course_name(value):
+    return " ".join((value or "").strip().lower().split())
+
+
+def _contains_word_sequence(full_name, sub_name):
+    full_tokens = _normalize_course_name(full_name).split()
+    sub_tokens = _normalize_course_name(sub_name).split()
+    if not full_tokens or not sub_tokens or len(sub_tokens) > len(full_tokens):
+        return False
+    for idx in range(len(full_tokens) - len(sub_tokens) + 1):
+        if full_tokens[idx : idx + len(sub_tokens)] == sub_tokens:
+            return True
+    return False
+
+
+def _course_name_conflict(course_name, exclude_course_id=None):
+    normalized_new = _normalize_course_name(course_name)
+    if not normalized_new:
+        return "Department name is required"
+
+    existing_courses = Courses.objects.all()
+    if exclude_course_id:
+        existing_courses = existing_courses.exclude(id=exclude_course_id)
+
+    for existing in existing_courses:
+        normalized_existing = _normalize_course_name(existing.course_name)
+        if (
+            normalized_new == normalized_existing
+            or _contains_word_sequence(normalized_existing, normalized_new)
+            or _contains_word_sequence(normalized_new, normalized_existing)
+        ):
+            return (
+                f'Department "{existing.course_name}" already exists or overlaps '
+                "with this name. Please use a distinct name."
+            )
+    return None
+
+
 def admin_home(request):
     student_count1=Students.objects.all().count()
     staff_count=Staffs.objects.all().count()
@@ -93,7 +139,15 @@ def admin_home(request):
     return render(request,"hod_template/home_content.html",{"student_count":student_count1,"staff_count":staff_count,"subject_count":subject_count,"course_count":course_count,"course_name_list":course_name_list,"subject_count_list":subject_count_list,"student_count_list_in_course":student_count_list_in_course,"student_count_list_in_subject":student_count_list_in_subject,"subject_list":subject_list,"staff_name_list":staff_name_list,"attendance_present_list_staff":attendance_present_list_staff,"attendance_absent_list_staff":attendance_absent_list_staff,"student_name_list":student_name_list,"attendance_present_list_student":attendance_present_list_student,"attendance_absent_list_student":attendance_absent_list_student})
 
 def add_staff(request):
-    return render(request,"hod_template/add_staff_template.html")
+    students = (
+        Students.objects.select_related("admin", "assigned_staff")
+        .order_by("admin__first_name", "admin__last_name", "admin__username")
+    )
+    return render(
+        request,
+        "hod_template/add_staff_template.html",
+        {"students": students},
+    )
 
 def add_staff_save(request):
     if request.method!="POST":
@@ -105,6 +159,8 @@ def add_staff_save(request):
         email=_normalize_email(request.POST.get("email"))
         password=request.POST.get("password")
         address=request.POST.get("address", "").strip()
+        selected_student_ids = request.POST.getlist("assigned_students")
+
         if not all([first_name, last_name, username, email, password, address]):
             messages.error(request,"All fields are required")
             return HttpResponseRedirect(reverse("add_staff"))
@@ -126,6 +182,10 @@ def add_staff_save(request):
                 )
                 user.staffs.address=address
                 user.staffs.save(update_fields=["address"])
+                if selected_student_ids:
+                    Students.objects.filter(admin_id__in=selected_student_ids).update(
+                        assigned_staff=user.staffs
+                    )
             messages.success(request,"Successfully Added Staff")
             return HttpResponseRedirect(reverse("add_staff"))
         except IntegrityError:
@@ -142,15 +202,19 @@ def add_course_save(request):
     if request.method!="POST":
         return HttpResponse("Method Not Allowed")
     else:
-        course=request.POST.get("course")
+        course = (request.POST.get("course") or "").strip()
+        conflict_error = _course_name_conflict(course)
+        if conflict_error:
+            messages.error(request, conflict_error)
+            return HttpResponseRedirect(reverse("add_course"))
         try:
             course_model=Courses(course_name=course)
             course_model.save()
-            messages.success(request,"Successfully Added Course")
+            messages.success(request,"Successfully Added Department")
             return HttpResponseRedirect(reverse("add_course"))
         except Exception as e:
             print(e)
-            messages.error(request,"Failed To Add Course")
+            messages.error(request,"Failed To Add Department")
             return HttpResponseRedirect(reverse("add_course"))
 
 def add_student(request):
@@ -217,7 +281,7 @@ def add_student_save(request):
                 messages.success(request,"Successfully Added Student")
                 return HttpResponseRedirect(reverse("add_student"))
             except (Courses.DoesNotExist, SessionYearModel.DoesNotExist, Staffs.DoesNotExist):
-                messages.error(request,"Invalid course, session year, or assigned staff")
+                messages.error(request,"Invalid department, session year, or assigned staff")
                 return HttpResponseRedirect(reverse("add_student"))
             except IntegrityError:
                 messages.error(request,"Email already exists")
@@ -302,14 +366,30 @@ def delete_course(request,course_id):
     try:
         course=Courses.objects.get(id=course_id)
         course.delete()
-        messages.success(request,"Successfully Deleted Course")
+        messages.success(request,"Successfully Deleted Department")
     except:
-        messages.error(request,"Failed to Delete Course")
+        messages.error(request,"Failed to Delete Department")
     return HttpResponseRedirect(reverse("manage_course"))
 
 def edit_staff(request,staff_id):
     staff=Staffs.objects.get(admin=staff_id)
-    return render(request,"hod_template/edit_staff_template.html",{"staff":staff,"id":staff_id})
+    students = (
+        Students.objects.select_related("admin", "assigned_staff")
+        .order_by("admin__first_name", "admin__last_name", "admin__username")
+    )
+    selected_student_ids = set(
+        Students.objects.filter(assigned_staff=staff).values_list("admin_id", flat=True)
+    )
+    return render(
+        request,
+        "hod_template/edit_staff_template.html",
+        {
+            "staff": staff,
+            "id": staff_id,
+            "students": students,
+            "selected_student_ids": selected_student_ids,
+        },
+    )
 
 def edit_staff_save(request):
     if request.method!="POST":
@@ -321,6 +401,11 @@ def edit_staff_save(request):
         email=_normalize_email(request.POST.get("email"))
         username=request.POST.get("username", "").strip()
         address=request.POST.get("address", "").strip()
+        selected_student_ids = {
+            int(student_id)
+            for student_id in request.POST.getlist("assigned_students")
+            if student_id.isdigit()
+        }
 
         if not all([first_name, last_name, email, username, address]):
             messages.error(request,"All fields are required")
@@ -343,6 +428,14 @@ def edit_staff_save(request):
                 staff_model=Staffs.objects.get(admin=staff_id)
                 staff_model.address=address
                 staff_model.save()
+
+                Students.objects.filter(assigned_staff=staff_model).exclude(
+                    admin_id__in=selected_student_ids
+                ).update(assigned_staff=None)
+                if selected_student_ids:
+                    Students.objects.filter(admin_id__in=selected_student_ids).update(
+                        assigned_staff=staff_model
+                    )
             messages.success(request,"Successfully Edited Staff")
             return HttpResponseRedirect(reverse("edit_staff",kwargs={"staff_id":staff_id}))
         except IntegrityError:
@@ -426,7 +519,7 @@ def edit_student_save(request):
                 messages.success(request,"Successfully Edited Student")
                 return HttpResponseRedirect(reverse("edit_student",kwargs={"student_id":student_id}))
             except (Courses.DoesNotExist, SessionYearModel.DoesNotExist, Staffs.DoesNotExist):
-                messages.error(request,"Invalid course, session year, or assigned staff")
+                messages.error(request,"Invalid department, session year, or assigned staff")
                 return HttpResponseRedirect(reverse("edit_student",kwargs={"student_id":student_id}))
             except IntegrityError:
                 messages.error(request,"Email already exists")
@@ -479,17 +572,21 @@ def edit_course_save(request):
         return HttpResponse("<h2>Method Not Allowed</h2>")
     else:
         course_id=request.POST.get("course_id")
-        course_name=request.POST.get("course")
+        course_name=(request.POST.get("course") or "").strip()
+
+        conflict_error = _course_name_conflict(course_name, exclude_course_id=course_id)
+        if conflict_error:
+            messages.error(request, conflict_error)
+            return HttpResponseRedirect(reverse("edit_course",kwargs={"course_id":course_id}))
 
         try:
             course=Courses.objects.get(id=course_id)
-            print(Courses.course_name)
             course.course_name=course_name
             course.save()
-            messages.success(request,"Successfully Edited Course")
+            messages.success(request,"Successfully Edited Department")
             return HttpResponseRedirect(reverse("edit_course",kwargs={"course_id":course_id}))
         except:
-            messages.error(request,"Failed to Edit Course")
+            messages.error(request,"Failed to Edit Department")
             return HttpResponseRedirect(reverse("edit_course",kwargs={"course_id":course_id}))
 
 
@@ -545,7 +642,11 @@ def staff_feedback_message(request):
     return render(request,"hod_template/staff_feedback_template.html",{"feedbacks":feedbacks})
 
 def student_feedback_message(request):
-    feedbacks=FeedBackStudent.objects.all()
+    feedbacks = (
+        FeedBackStudent.objects.filter(forwarded_to_hod=True)
+        .select_related("student_id__admin", "student_id__session_year_id", "staff_id__admin")
+        .order_by("-forwarded_at", "-created_at")
+    )
     return render(request,"hod_template/student_feedback_template.html",{"feedbacks":feedbacks})
 
 @csrf_exempt
@@ -555,8 +656,8 @@ def student_feedback_message_replied(request):
 
     try:
         feedback=FeedBackStudent.objects.get(id=feedback_id)
-        feedback.feedback_reply=feedback_message
-        feedback.save()
+        feedback.hod_reply = feedback_message
+        feedback.save(update_fields=["hod_reply"])
         return HttpResponse("True")
     except:
         return HttpResponse("False")
@@ -672,16 +773,134 @@ def admin_send_notification_staff(request):
     staffs=Staffs.objects.all()
     return render(request,"hod_template/staff_notification.html",{"staffs":staffs})
 
+
+def admin_send_notification(request):
+    staffs = Staffs.objects.select_related("admin").order_by("admin__first_name", "admin__last_name", "id")
+    students = Students.objects.select_related("admin", "course_id").order_by("admin__first_name", "admin__last_name", "id")
+    departments = Courses.objects.order_by("course_name")
+    admin_to_staff = {staff.admin_id: staff.id for staff in staffs}
+    staff_department_map = {staff.id: [] for staff in staffs}
+    for staff_admin_id, department_id in Subjects.objects.values_list("staff_id", "course_id").distinct():
+        staff_id = admin_to_staff.get(staff_admin_id)
+        if staff_id:
+            staff_department_map[staff_id].append(department_id)
+    return render(
+        request,
+        "hod_template/send_notification.html",
+        {
+            "staffs": staffs,
+            "students": students,
+            "departments": departments,
+            "staff_department_map_json": json.dumps(staff_department_map),
+        },
+    )
+
+
+def send_bulk_notification(request):
+    if request.method != "POST":
+        return HttpResponseRedirect(reverse("admin_send_notification"))
+
+    title = (request.POST.get("title") or "").strip()
+    message = (request.POST.get("message") or "").strip()
+    target_group = (request.POST.get("target_group") or "").strip().lower()
+    sender_name = _notification_sender_name(request.user)
+    selected_staff_ids = request.POST.getlist("staff_ids")
+    selected_student_ids = request.POST.getlist("student_ids")
+    selected_department_id = (request.POST.get("department_id") or "").strip()
+    selected_staff_department_id = (request.POST.get("staff_department_id") or "").strip()
+
+    if not title:
+        messages.error(request, "Notification title is required")
+        return HttpResponseRedirect(reverse("admin_send_notification"))
+
+    if not message:
+        messages.error(request, "Notification body is required")
+        return HttpResponseRedirect(reverse("admin_send_notification"))
+
+    if target_group not in {"staff", "student", "all"}:
+        messages.error(request, "Please select whom to send")
+        return HttpResponseRedirect(reverse("admin_send_notification"))
+
+    staff_qs = Staffs.objects.none()
+    student_qs = Students.objects.none()
+
+    if target_group == "all":
+        staff_qs = Staffs.objects.all()
+        student_qs = Students.objects.all()
+    elif target_group == "staff":
+        filtered_staff_qs = Staffs.objects.all()
+        if selected_staff_department_id and selected_staff_department_id != "all_departments":
+            filtered_staff_qs = filtered_staff_qs.filter(
+                admin_id__in=Subjects.objects.filter(course_id_id=selected_staff_department_id)
+                .values_list("staff_id", flat=True)
+                .distinct()
+            )
+        if not selected_staff_ids:
+            messages.error(request, "Please select at least one staff member")
+            return HttpResponseRedirect(reverse("admin_send_notification"))
+        staff_qs = filtered_staff_qs.filter(id__in=selected_staff_ids)
+    else:
+        if not selected_department_id:
+            messages.error(request, "Please select a department for students")
+            return HttpResponseRedirect(reverse("admin_send_notification"))
+        department_students = Students.objects.all()
+        if selected_department_id != "all_departments":
+            department_students = department_students.filter(course_id_id=selected_department_id)
+        if not selected_student_ids:
+            messages.error(request, "Please select at least one student")
+            return HttpResponseRedirect(reverse("admin_send_notification"))
+        student_qs = department_students.filter(id__in=selected_student_ids)
+
+    staff_recipients = list(staff_qs)
+    student_recipients = list(student_qs)
+
+    if not staff_recipients and not student_recipients:
+        messages.error(request, "No recipients found for selected options")
+        return HttpResponseRedirect(reverse("admin_send_notification"))
+
+    if staff_recipients:
+        NotificationStaffs.objects.bulk_create(
+            [
+                NotificationStaffs(
+                    staff_id=staff,
+                    sender_name=sender_name,
+                    title=title,
+                    message=message,
+                )
+                for staff in staff_recipients
+            ]
+        )
+    if student_recipients:
+        NotificationStudent.objects.bulk_create(
+            [
+                NotificationStudent(
+                    student_id=student,
+                    sender_name=sender_name,
+                    title=title,
+                    message=message,
+                )
+                for student in student_recipients
+            ]
+        )
+
+    messages.success(
+        request,
+        f"Notification sent to {len(staff_recipients)} staff and {len(student_recipients)} students.",
+    )
+    return HttpResponseRedirect(reverse("admin_send_notification"))
+
 @csrf_exempt
 def send_student_notification(request):
     id=request.POST.get("id")
+    title = (request.POST.get("title") or "Student Management System").strip()
     message=request.POST.get("message")
+    sender_name = _notification_sender_name(request.user)
     student=Students.objects.get(admin=id)
     token=student.fcm_token
     url="https://fcm.googleapis.com/fcm/send"
     body={
         "notification":{
-            "title":"Student Management System",
+            "title": title,
             "body":message,
             "click_action": "https://studentmanagementsystem22.herokuapp.com/student_all_notification",
             "icon": "http://studentmanagementsystem22.herokuapp.com/static/dist/img/user2-160x160.jpg"
@@ -690,7 +909,7 @@ def send_student_notification(request):
     }
     headers={"Content-Type":"application/json","Authorization":"key=SERVER_KEY_HERE"}
     data=requests.post(url,data=json.dumps(body),headers=headers)
-    notification=NotificationStudent(student_id=student,message=message)
+    notification=NotificationStudent(student_id=student,sender_name=sender_name,title=title,message=message)
     notification.save()
     print(data.text)
     return HttpResponse("True")
@@ -698,13 +917,15 @@ def send_student_notification(request):
 @csrf_exempt
 def send_staff_notification(request):
     id=request.POST.get("id")
+    title = (request.POST.get("title") or "Student Management System").strip()
     message=request.POST.get("message")
+    sender_name = _notification_sender_name(request.user)
     staff=Staffs.objects.get(admin=id)
     token=staff.fcm_token
     url="https://fcm.googleapis.com/fcm/send"
     body={
         "notification":{
-            "title":"Student Management System",
+            "title": title,
             "body":message,
             "click_action":"https://studentmanagementsystem22.herokuapp.com/staff_all_notification",
             "icon":"http://studentmanagementsystem22.herokuapp.com/static/dist/img/user2-160x160.jpg"
@@ -713,7 +934,7 @@ def send_staff_notification(request):
     }
     headers={"Content-Type":"application/json","Authorization":"key=SERVER_KEY_HERE"}
     data=requests.post(url,data=json.dumps(body),headers=headers)
-    notification=NotificationStaffs(staff_id=staff,message=message)
+    notification=NotificationStaffs(staff_id=staff,sender_name=sender_name,title=title,message=message)
     notification.save()
     print(data.text)
     return HttpResponse("True")

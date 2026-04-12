@@ -101,19 +101,42 @@ def student_view_attendance(request):
     return render(request,"student_template/student_view_attendance.html",{"subjects":subjects})
 
 def student_view_attendance_post(request):
-    subject_id=request.POST.get("subject")
-    start_date=request.POST.get("start_date")
-    end_date=request.POST.get("end_date")
+    subject_id = request.POST.get("subject")
+    start_date = (request.POST.get("start_date") or "").strip()
+    end_date = (request.POST.get("end_date") or "").strip()
 
-    start_data_parse=datetime.datetime.strptime(start_date,"%Y-%m-%d").date()
-    end_data_parse=datetime.datetime.strptime(end_date,"%Y-%m-%d").date()
-    subject_obj=Subjects.objects.get(id=subject_id)
-    user_object=CustomUser.objects.get(id=request.user.id)
-    stud_obj=Students.objects.get(admin=user_object)
+    if not start_date or not end_date:
+        messages.error(request, "Please select both start date and end date.")
+        return HttpResponseRedirect(reverse("student_view_attendance"))
 
-    attendance=Attendance.objects.filter(attendance_date__range=(start_data_parse,end_data_parse),subject_id=subject_obj)
-    attendance_reports=AttendanceReport.objects.filter(attendance_id__in=attendance,student_id=stud_obj)
-    return render(request,"student_template/student_attendance_data.html",{"attendance_reports":attendance_reports})
+    try:
+        start_data_parse = datetime.date.fromisoformat(start_date)
+        end_data_parse = datetime.date.fromisoformat(end_date)
+    except ValueError:
+        messages.error(request, "Invalid date format. Please choose valid dates.")
+        return HttpResponseRedirect(reverse("student_view_attendance"))
+
+    if start_data_parse > end_data_parse:
+        messages.error(request, "Start date cannot be after end date.")
+        return HttpResponseRedirect(reverse("student_view_attendance"))
+
+    subject_obj = Subjects.objects.filter(id=subject_id).first()
+    if not subject_obj:
+        messages.error(request, "Selected subject was not found.")
+        return HttpResponseRedirect(reverse("student_view_attendance"))
+
+    user_object = CustomUser.objects.get(id=request.user.id)
+    stud_obj = Students.objects.get(admin=user_object)
+    if subject_obj.course_id_id != stud_obj.course_id_id:
+        messages.error(request, "You are not allowed to view attendance for this subject.")
+        return HttpResponseRedirect(reverse("student_view_attendance"))
+
+    attendance = Attendance.objects.filter(
+        attendance_date__range=(start_data_parse, end_data_parse),
+        subject_id=subject_obj,
+    )
+    attendance_reports = AttendanceReport.objects.filter(attendance_id__in=attendance, student_id=stud_obj)
+    return render(request, "student_template/student_attendance_data.html", {"attendance_reports":attendance_reports})
 
 def student_apply_leave(request):
     staff_obj = Students.objects.get(admin=request.user.id)
@@ -139,21 +162,46 @@ def student_apply_leave_save(request):
 
 
 def student_feedback(request):
-    staff_id=Students.objects.get(admin=request.user.id)
-    feedback_data=FeedBackStudent.objects.filter(student_id=staff_id)
-    return render(request,"student_template/student_feedback.html",{"feedback_data":feedback_data})
+    student_obj = Students.objects.select_related("assigned_staff__admin").get(admin=request.user.id)
+    feedback_data = (
+        FeedBackStudent.objects.filter(student_id=student_obj)
+        .select_related("staff_id__admin")
+        .order_by("-created_at")
+    )
+    return render(
+        request,
+        "student_template/student_feedback.html",
+        {
+            "feedback_data": feedback_data,
+            "assigned_staff": student_obj.assigned_staff,
+        },
+    )
 
 def student_feedback_save(request):
     if request.method!="POST":
         return HttpResponseRedirect(reverse("student_feedback"))
     else:
-        feedback_msg=request.POST.get("feedback_msg")
+        feedback_msg = (request.POST.get("feedback_msg") or "").strip()
 
-        student_obj=Students.objects.get(admin=request.user.id)
+        student_obj = Students.objects.select_related("assigned_staff").get(admin=request.user.id)
+        if not feedback_msg:
+            messages.error(request, "Feedback message cannot be empty")
+            return HttpResponseRedirect(reverse("student_feedback"))
+
+        if student_obj.assigned_staff is None:
+            messages.error(request, "No faculty is assigned to you yet. Please contact HOD.")
+            return HttpResponseRedirect(reverse("student_feedback"))
+
         try:
-            feedback=FeedBackStudent(student_id=student_obj,feedback=feedback_msg,feedback_reply="")
+            feedback = FeedBackStudent(
+                student_id=student_obj,
+                staff_id=student_obj.assigned_staff,
+                feedback=feedback_msg,
+                feedback_reply="",
+                hod_reply="",
+            )
             feedback.save()
-            messages.success(request, "Successfully Sent Feedback")
+            messages.success(request, "Successfully sent feedback to your assigned faculty")
             return HttpResponseRedirect(reverse("student_feedback"))
         except:
             messages.error(request, "Failed To Send Feedback")
@@ -202,8 +250,23 @@ def student_fcmtoken_save(request):
 
 def student_all_notification(request):
     student=Students.objects.get(admin=request.user.id)
-    notifications=NotificationStudent.objects.filter(student_id=student.id)
+    notifications=NotificationStudent.objects.filter(student_id=student.id).order_by("is_read", "-created_at")
     return render(request,"student_template/all_notification.html",{"notifications":notifications})
+
+
+@require_POST
+def student_notification_mark_read(request, notification_id):
+    student = Students.objects.get(admin=request.user.id)
+    updated = NotificationStudent.objects.filter(
+        id=notification_id,
+        student_id=student.id,
+        is_read=False,
+    ).update(is_read=True)
+    unread_count = NotificationStudent.objects.filter(
+        student_id=student.id,
+        is_read=False,
+    ).count()
+    return JsonResponse({"ok": True, "marked_read": bool(updated), "unread_count": unread_count})
 
 def student_view_result(request):
     student=Students.objects.get(admin=request.user.id)

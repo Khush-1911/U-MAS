@@ -18,7 +18,7 @@ Home
               <div class="icon">
                 <i class="ion ion-stats-bars"></i>
               </div>
-              <a href="{% url 'staff_take_attendance' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="{% url 'staff_students_under_me' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -33,7 +33,7 @@ Home
               <div class="icon">
                 <i class="ion ion-stats-bars"></i>
               </div>
-              <a href="{% url 'staff_take_attendance' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="{% url 'staff_daily_attendance_graph' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -63,7 +63,7 @@ Home
               <div class="icon">
                 <i class="ion ion-stats-bars"></i>
               </div>
-              <a href="#" class="small-box-footer">&nbsp;<i class="fas fa-arrow-circle-right"></i></a>
+              <a href="{% url 'start_live_classroom' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -73,12 +73,6 @@ Home
                   <div class="card card-danger">
                   <div class="card-header">
                     <h3 class="card-title">Attendance VS Leave Chart</h3>
-
-                    <div class="card-tools">
-                      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-                      </button>
-                      <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
-                    </div>
                   </div>
                   <div class="card-body">
                     <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
@@ -90,12 +84,6 @@ Home
                <div class="card card-success">
                   <div class="card-header">
                     <h3 class="card-title">Attend Subject</h3>
-
-                    <div class="card-tools">
-                      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-                      </button>
-                      <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
-                    </div>
                   </div>
                   <div class="card-body">
                     <div class="chart">
@@ -111,12 +99,6 @@ Home
                    <div class="card card-info">
                   <div class="card-header">
                     <h3 class="card-title">Student Attendance Data</h3>
-
-                    <div class="card-tools">
-                      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-                      </button>
-                      <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
-                    </div>
                   </div>
                   <div class="card-body">
                     <div class="chart">
@@ -131,4 +113,3 @@ Home
     </section>
     <!-- /.content -->
 {% endblock main_content %}
-

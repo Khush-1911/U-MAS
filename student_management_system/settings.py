@@ -26,19 +26,23 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'dev-insecure-secret-key-change-me')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DJANGO_DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = [
-    host.strip() for host in os.getenv(
-        'DJANGO_ALLOWED_HOSTS',
-        '127.0.0.1,localhost'
-    ).split(',') if host.strip()
-]
+def _split_csv_env(name, default=""):
+    return [
+        value.strip() for value in os.getenv(name, default).split(",") if value.strip()
+    ]
 
-CSRF_TRUSTED_ORIGINS = [
-    origin.strip() for origin in os.getenv(
-        'DJANGO_CSRF_TRUSTED_ORIGINS',
-        ''
-    ).split(',') if origin.strip()
-]
+
+ALLOWED_HOSTS = _split_csv_env('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost')
+CSRF_TRUSTED_ORIGINS = _split_csv_env('DJANGO_CSRF_TRUSTED_ORIGINS', '')
+
+render_external_hostname = os.getenv("RENDER_EXTERNAL_HOSTNAME", "").strip()
+if render_external_hostname and render_external_hostname not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(render_external_hostname)
+
+if render_external_hostname:
+    render_origin = f"https://{render_external_hostname}"
+    if render_origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(render_origin)
 
 MEDIA_URL="/media/"
 MEDIA_ROOT=os.path.join(BASE_DIR,"media")
@@ -83,6 +87,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'student_management_app.context_processors.student_notification_badge',
             ],
         },
     },

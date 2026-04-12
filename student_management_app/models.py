@@ -95,6 +95,14 @@ class Attendance(models.Model):
     updated_at=models.DateTimeField(auto_now_add=True)
     objects = models.Manager()
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["subject_id", "attendance_date"],
+                name="attendance_unique_subject_date",
+            ),
+        ]
+
 class AttendanceReport(models.Model):
     id=models.AutoField(primary_key=True)
     student_id=models.ForeignKey(Students,on_delete=models.DO_NOTHING)
@@ -128,8 +136,18 @@ class LeaveReportStaff(models.Model):
 class FeedBackStudent(models.Model):
     id = models.AutoField(primary_key=True)
     student_id = models.ForeignKey(Students, on_delete=models.CASCADE)
+    staff_id = models.ForeignKey(
+        Staffs,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="student_feedback_messages",
+    )
     feedback = models.TextField()
-    feedback_reply = models.TextField()
+    feedback_reply = models.TextField(blank=True, default="")
+    hod_reply = models.TextField(blank=True, default="")
+    forwarded_to_hod = models.BooleanField(default=False)
+    forwarded_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     objects = models.Manager()
@@ -148,7 +166,10 @@ class FeedBackStaffs(models.Model):
 class NotificationStudent(models.Model):
     id = models.AutoField(primary_key=True)
     student_id = models.ForeignKey(Students, on_delete=models.CASCADE)
+    sender_name = models.CharField(max_length=255, default="HOD")
+    title = models.CharField(max_length=255, default="Notification")
     message = models.TextField()
+    is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     objects = models.Manager()
@@ -157,6 +178,8 @@ class NotificationStudent(models.Model):
 class NotificationStaffs(models.Model):
     id = models.AutoField(primary_key=True)
     staff_id = models.ForeignKey(Staffs, on_delete=models.CASCADE)
+    sender_name = models.CharField(max_length=255, default="HOD")
+    title = models.CharField(max_length=255, default="Notification")
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)

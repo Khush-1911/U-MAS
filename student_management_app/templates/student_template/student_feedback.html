@@ -6,22 +6,36 @@ Feedback Message
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
-                    <div class="row">
+          <div class="row">
               <div class="col-md-12">
             <!-- general form elements -->
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Leave a Feedback Message</h3>
+                <h3 class="card-title">Send Feedback to Your Faculty</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
                <form action="{% url 'student_feedback_save' %}" method="post">
                 <div class="card-body">
-
                     {% csrf_token %}
                   <div class="form-group">
+                    {% if assigned_staff %}
+                      <div class="alert alert-info" style="margin-bottom:15px">
+                        Your feedback will be sent to
+                        <strong>
+                          {{ assigned_staff.profile_id|default:assigned_staff.id }} -
+                          {{ assigned_staff.admin.get_full_name|default:assigned_staff.admin.username }}
+                        </strong>.
+                      </div>
+                    {% else %}
+                      <div class="alert alert-warning" style="margin-bottom:15px">
+                        No faculty is assigned to you yet, so feedback cannot be sent right now.
+                      </div>
+                    {% endif %}
+                  </div>
+                  <div class="form-group">
                     <label>Feedback Message</label>
-                    <textarea class="form-control" rows="6" name="feedback_msg"></textarea>
+                    <textarea class="form-control" rows="6" name="feedback_msg" {% if not assigned_staff %}disabled{% endif %}></textarea>
                   </div>
                    <div class="form-group">
                       {% if messages %}
@@ -40,7 +54,7 @@ Feedback Message
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary btn-block" id="fetch_student">Leave a Feedback Message</button>
+                  <button type="submit" class="btn btn-primary btn-block" id="fetch_student" {% if not assigned_staff %}disabled{% endif %}>Send Feedback</button>
                 </div>
                </form>
             </div>
@@ -55,14 +69,41 @@ Feedback Message
                <table class="table">
                    <tr>
                        <th>ID</th>
+                       <th>Sent To</th>
                        <th>Feedback Message</th>
-                       <th>Feedback Reply</th>
+                       <th>Faculty Reply</th>
+                       <th>HOD Reply</th>
+                       <th>Status</th>
                    </tr>
                    {% for row in feedback_data %}
                         <tr>
                             <td>{{ row.id }}</td>
+                            <td>
+                              {% if row.staff_id %}
+                                {{ row.staff_id.profile_id|default:row.staff_id.id }} -
+                                {{ row.staff_id.admin.get_full_name|default:row.staff_id.admin.username }}
+                              {% else %}
+                                Not assigned
+                              {% endif %}
+                            </td>
                             <td>{{ row.feedback }}</td>
-                            <td>{{ row.feedback_reply }}</td>
+                            <td>{{ row.feedback_reply|default:"Pending" }}</td>
+                            <td>{{ row.hod_reply|default:"Not forwarded / no reply" }}</td>
+                            <td>
+                              {% if row.hod_reply %}
+                                Replied by HOD
+                              {% elif row.forwarded_to_hod %}
+                                Forwarded to HOD
+                              {% elif row.feedback_reply %}
+                                Replied by Faculty
+                              {% else %}
+                                Sent to Faculty
+                              {% endif %}
+                            </td>
+                        </tr>
+                   {% empty %}
+                        <tr>
+                            <td colspan="6">No feedback sent yet.</td>
                         </tr>
                    {% endfor %}
                </table>

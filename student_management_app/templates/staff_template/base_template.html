@@ -19,10 +19,6 @@
     <header class="app-topbar">
       <div class="topbar-left">
         <div class="topbar-title">U-MAS Staff</div>
-        <div class="topbar-search">
-          <i class="fas fa-search"></i>
-          <input type="text" placeholder="Search">
-        </div>
       </div>
       <div class="topbar-right">
         <div class="profile-pill">
@@ -32,6 +28,8 @@
         <a class="logout-btn" href="{% url 'logout' %}">Logout</a>
       </div>
     </header>
+
+    {% include 'includes/toast_messages.html' %}
 
     <main class="app-main">
       {% block main_content %}{% endblock main_content %}

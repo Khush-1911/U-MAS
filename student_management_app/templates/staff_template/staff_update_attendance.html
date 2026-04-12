@@ -25,14 +25,6 @@ View Attendance
                     </select>
                   </div>
                   <div class="form-group">
-                    <label>Session Year </label>
-                    <select class="form-control" name="session_year_id" id="session_year_id">
-                        {% for session_year in session_year_id %}
-                          <option value="{{ session_year.id }}">{{ session_year.session_start_year }} TO {{ session_year.session_end_year }}</option>
-                        {% endfor %}
-                    </select>
-                  </div>
-                  <div class="form-group">
                      <button type="button" class="btn btn-primary btn-block" id="fetch_attendance">Fetch Attendance Date</button>
                    </div>
                    <div class="form-group" id="attendance_block" style="display:none">
@@ -75,12 +67,11 @@ View Attendance
 
         $("#fetch_attendance").click(function(){
                var subject=$("#subject").val();
-               var session_year=$("#session_year_id").val();
 
             $.ajax({
                     url:'{% url "get_attendance_dates" %}',
                     type:'POST',
-                    data:{subject:subject,session_year_id:session_year},
+                    data:{subject:subject},
                 })
                 .done(function(response){
                     var json_data=JSON.parse(response);

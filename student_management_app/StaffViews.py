@@ -1,4 +1,5 @@
 import json
+from datetime import date, timedelta
 
 from django.conf import settings
 from django.contrib import messages
@@ -11,9 +12,10 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from django.utils import timezone
 
 from student_management_app.models import Subjects, SessionYearModel, Students, Attendance, AttendanceReport, \
-    LeaveReportStaff, Staffs, FeedBackStaffs, CustomUser, Courses, NotificationStaffs, StudentResult, OnlineClassRoom
+    LeaveReportStaff, Staffs, FeedBackStaffs, FeedBackStudent, CustomUser, Courses, NotificationStaffs, StudentResult, OnlineClassRoom
 from student_management_app.services.live_class_service import (
     create_or_get_active_room,
     end_room,
@@ -36,6 +38,96 @@ def _assigned_student_or_none(student_admin_id, staff_obj):
         admin=student_admin_id,
         assigned_staff=staff_obj,
     ).first()
+
+def _resolve_session_for_date(target_date):
+    return SessionYearModel.object.filter(
+        session_start_year__lte=target_date,
+        session_end_year__gte=target_date,
+    ).order_by("id").first()
+
+def _resolve_session_from_students(subject, staff_obj):
+    session_ids = list(
+        Students.objects.filter(
+            course_id=subject.course_id,
+            assigned_staff=staff_obj,
+        ).values_list("session_year_id", flat=True).distinct()
+    )
+    if len(session_ids) == 1:
+        return SessionYearModel.object.filter(id=session_ids[0]).first()
+    return None
+
+def _resolve_fallback_session(attendance_date_obj, subject_model, staff_obj, selected_student_admin_ids=None):
+    session_model = _resolve_session_for_date(attendance_date_obj)
+    if session_model:
+        return session_model
+
+    students_qs = Students.objects.filter(
+        assigned_staff=staff_obj,
+        course_id=subject_model.course_id,
+    )
+    if selected_student_admin_ids:
+        students_qs = students_qs.filter(admin_id__in=selected_student_admin_ids)
+
+    session_id = students_qs.values_list("session_year_id", flat=True).order_by("session_year_id").first()
+    if session_id:
+        return SessionYearModel.object.filter(id=session_id).first()
+
+    session_model = SessionYearModel.object.order_by("id").first()
+    if session_model:
+        return session_model
+
+    year = attendance_date_obj.year
+    return SessionYearModel.object.create(
+        session_start_year=f"{year}-01-01",
+        session_end_year=f"{year}-12-31",
+    )
+
+def _daily_attendance_payload_for_staff(staff_user_id, selected_date):
+    staff_obj = Staffs.objects.get(admin=staff_user_id)
+    students = Students.objects.filter(assigned_staff=staff_obj).select_related("admin").order_by("id")
+    reports = AttendanceReport.objects.filter(
+        attendance_id__subject_id__staff_id=staff_user_id,
+        attendance_id__attendance_date=selected_date,
+        student_id__in=students,
+    )
+    status_map = {}
+    for report in reports.select_related("student_id"):
+        sid = report.student_id_id
+        # If any subject report is absent for the day, treat the student as absent.
+        if sid not in status_map:
+            status_map[sid] = bool(report.status)
+        elif not report.status:
+            status_map[sid] = False
+
+    present_students = []
+    absent_students = []
+    for student in students:
+        display_name = (
+            student.admin.get_full_name().strip()
+            or student.admin.username
+            or student.profile_id
+        )
+        if student.id not in status_map:
+            continue
+        is_present = status_map[student.id]
+        if is_present:
+            present_students.append(display_name)
+        else:
+            absent_students.append(display_name)
+
+    present_students.sort()
+    absent_students.sort()
+    marked_total = len(present_students) + len(absent_students)
+
+    return {
+        "selected_date": selected_date,
+        "previous_date": selected_date - timedelta(days=1),
+        "next_date": selected_date + timedelta(days=1),
+        "present_count": len(present_students),
+        "total_students": marked_total,
+        "present_students": present_students,
+        "absent_students": absent_students,
+    }
 
 
 def staff_home(request):
@@ -73,30 +165,109 @@ def staff_home(request):
 
     return render(request,"staff_template/staff_home_template.html",{"students_count":students_count,"attendance_count":attendance_count,"leave_count":leave_count,"subject_count":subject_count,"subject_list":subject_list,"attendance_list":attendance_list,"student_list":student_list,"present_list":student_list_attendance_present,"absent_list":student_list_attendance_absent})
 
+def staff_students_under_me(request):
+    staff_obj = _logged_in_staff(request)
+    students = (
+        Students.objects.filter(assigned_staff=staff_obj)
+        .select_related("admin", "course_id", "session_year_id")
+        .order_by("id")
+    )
+    return render(
+        request,
+        "staff_template/staff_students_under_me.html",
+        {"students": students},
+    )
+
+def staff_daily_attendance_graph(request):
+    selected_date_raw = (request.GET.get("date") or "").strip()
+
+    try:
+        selected_date = date.fromisoformat(selected_date_raw) if selected_date_raw else timezone.localdate()
+    except ValueError:
+        selected_date = timezone.localdate()
+
+    payload = _daily_attendance_payload_for_staff(request.user.id, selected_date)
+    context = {
+        "selected_date": payload["selected_date"],
+        "previous_date": payload["previous_date"],
+        "next_date": payload["next_date"],
+        "present_count": payload["present_count"],
+        "total_students": payload["total_students"],
+        "present_students_json": json.dumps(payload["present_students"]),
+        "absent_students_json": json.dumps(payload["absent_students"]),
+    }
+    return render(request, "staff_template/staff_daily_attendance_graph.html", context)
+
+def staff_daily_attendance_graph_data(request):
+    selected_date_raw = (request.GET.get("date") or "").strip()
+    try:
+        selected_date = date.fromisoformat(selected_date_raw) if selected_date_raw else timezone.localdate()
+    except ValueError:
+        return JsonResponse({"ok": False, "error": "Invalid date format"}, status=400)
+
+    payload = _daily_attendance_payload_for_staff(request.user.id, selected_date)
+    return JsonResponse(
+        {
+            "ok": True,
+            "selected_date": payload["selected_date"].isoformat(),
+            "selected_date_display": payload["selected_date"].strftime("%d-%m-%Y"),
+            "previous_date": payload["previous_date"].isoformat(),
+            "next_date": payload["next_date"].isoformat(),
+            "present_count": payload["present_count"],
+            "total_students": payload["total_students"],
+            "present_students": payload["present_students"],
+            "absent_students": payload["absent_students"],
+        }
+    )
+
 def staff_take_attendance(request):
     subjects=Subjects.objects.filter(staff_id=request.user.id)
-    session_years=SessionYearModel.object.all()
-    return render(request,"staff_template/staff_take_attendance.html",{"subjects":subjects,"session_years":session_years})
+    return render(
+        request,
+        "staff_template/staff_take_attendance.html",
+        {
+            "subjects": subjects,
+            "today_date": timezone.localdate().isoformat(),
+        },
+    )
 
 @csrf_exempt
 def get_students(request):
     subject_id=request.POST.get("subject")
     session_year=request.POST.get("session_year")
+    attendance_date_raw = (request.POST.get("attendance_date") or "").strip()
 
     subject=_subject_for_staff_or_none(subject_id, request.user.id)
     if not subject:
         return JsonResponse({"error": "Invalid subject for this staff"}, status=403)
 
-    session_model=SessionYearModel.object.filter(id=session_year).first()
-    if not session_model:
-        return JsonResponse({"error": "Session not found"}, status=404)
-
+    session_model = None
     staff_obj = _logged_in_staff(request)
-    students=Students.objects.filter(
-        course_id=subject.course_id,
-        session_year_id=session_model,
-        assigned_staff=staff_obj,
-    )
+    if attendance_date_raw:
+        try:
+            date.fromisoformat(attendance_date_raw)
+        except ValueError:
+            return JsonResponse({"error": "Invalid attendance date"}, status=400)
+        students=Students.objects.filter(
+            course_id=subject.course_id,
+            assigned_staff=staff_obj,
+        )
+    elif session_year:
+        session_model = SessionYearModel.object.filter(id=session_year).first()
+        if not session_model:
+            session_model = _resolve_session_from_students(subject, staff_obj)
+        if not session_model:
+            return JsonResponse(json.dumps([]), content_type="application/json", safe=False)
+        students=Students.objects.filter(
+            course_id=subject.course_id,
+            session_year_id=session_model,
+            assigned_staff=staff_obj,
+        )
+    else:
+        students=Students.objects.filter(
+            course_id=subject.course_id,
+            assigned_staff=staff_obj,
+        )
     list_data=[]
 
     for student in students:
@@ -109,46 +280,66 @@ def save_attendance_data(request):
     student_ids=request.POST.get("student_ids")
     subject_id=request.POST.get("subject_id")
     attendance_date=request.POST.get("attendance_date")
-    session_year_id=request.POST.get("session_year_id")
-
     subject_model=_subject_for_staff_or_none(subject_id, request.user.id)
-    session_model=SessionYearModel.object.filter(id=session_year_id).first()
-    if not subject_model or not session_model:
+    try:
+        attendance_date_obj = date.fromisoformat(attendance_date)
+    except (TypeError, ValueError):
         return HttpResponse("ERR")
 
     staff_obj = _logged_in_staff(request)
     json_sstudent=json.loads(student_ids)
+    selected_student_admin_ids = [int(stud["id"]) for stud in json_sstudent]
+    session_model = _resolve_fallback_session(
+        attendance_date_obj,
+        subject_model,
+        staff_obj,
+        selected_student_admin_ids=selected_student_admin_ids,
+    ) if subject_model else None
+    if not subject_model or not session_model:
+        return HttpResponse("ERR")
 
     try:
         with transaction.atomic():
-            attendance=Attendance(subject_id=subject_model,attendance_date=attendance_date,session_year_id=session_model)
-            attendance.save()
+            attendance, _ = Attendance.objects.get_or_create(
+                subject_id=subject_model,
+                attendance_date=attendance_date_obj,
+                defaults={"session_year_id": session_model},
+            )
+            if attendance.session_year_id_id != session_model.id:
+                attendance.session_year_id = session_model
+                attendance.save(update_fields=["session_year_id"])
 
             for stud in json_sstudent:
                  student=_assigned_student_or_none(stud['id'], staff_obj)
                  if student is None:
                      raise ValueError("Unauthorized student in attendance payload")
-                 attendance_report=AttendanceReport(student_id=student,attendance_id=attendance,status=stud['status'])
-                 attendance_report.save()
+                 if student.course_id_id != subject_model.course_id_id:
+                     raise ValueError("Student-course mismatch for this subject")
+                 status_value = bool(int(stud['status']))
+                 attendance_report, created = AttendanceReport.objects.get_or_create(
+                     student_id=student,
+                     attendance_id=attendance,
+                     defaults={"status": status_value},
+                 )
+                 if not created:
+                     attendance_report.status = status_value
+                     attendance_report.save(update_fields=["status"])
         return HttpResponse("OK")
     except Exception:
         return HttpResponse("ERR")
 
 def staff_update_attendance(request):
     subjects=Subjects.objects.filter(staff_id=request.user.id)
-    session_year_id=SessionYearModel.object.all()
-    return render(request,"staff_template/staff_update_attendance.html",{"subjects":subjects,"session_year_id":session_year_id})
+    return render(request,"staff_template/staff_update_attendance.html",{"subjects":subjects})
 
 @csrf_exempt
 def get_attendance_dates(request):
     subject=request.POST.get("subject")
-    session_year_id=request.POST.get("session_year_id")
     subject_obj=_subject_for_staff_or_none(subject, request.user.id)
-    session_year_obj=SessionYearModel.object.filter(id=session_year_id).first()
-    if not subject_obj or not session_year_obj:
+    if not subject_obj:
         return JsonResponse(json.dumps([]),safe=False)
 
-    attendance=Attendance.objects.filter(subject_id=subject_obj,session_year_id=session_year_obj)
+    attendance=Attendance.objects.filter(subject_id=subject_obj).order_by("-attendance_date", "-id")
     attendance_obj=[]
     for attendance_single in attendance:
         data={"id":attendance_single.id,"attendance_date":str(attendance_single.attendance_date),"session_year_id":attendance_single.session_year_id.id}
@@ -222,9 +413,21 @@ def staff_apply_leave_save(request):
 
 
 def staff_feedback(request):
-    staff_id=Staffs.objects.get(admin=request.user.id)
-    feedback_data=FeedBackStaffs.objects.filter(staff_id=staff_id)
-    return render(request,"staff_template/staff_feedback.html",{"feedback_data":feedback_data})
+    staff_obj = Staffs.objects.get(admin=request.user.id)
+    feedback_data = FeedBackStaffs.objects.filter(staff_id=staff_obj).order_by("-created_at")
+    student_feedback_data = (
+        FeedBackStudent.objects.filter(staff_id=staff_obj)
+        .select_related("student_id__admin", "staff_id__admin")
+        .order_by("-created_at")
+    )
+    return render(
+        request,
+        "staff_template/staff_feedback.html",
+        {
+            "feedback_data": feedback_data,
+            "student_feedback_data": student_feedback_data,
+        },
+    )
 
 def staff_feedback_save(request):
     if request.method!="POST":
@@ -241,6 +444,62 @@ def staff_feedback_save(request):
         except:
             messages.error(request, "Failed To Send Feedback")
             return HttpResponseRedirect(reverse("staff_feedback"))
+
+
+@require_POST
+def staff_student_feedback_reply(request):
+    staff_obj = Staffs.objects.get(admin=request.user.id)
+    feedback_id = request.POST.get("feedback_id")
+    reply_message = (request.POST.get("reply_message") or "").strip()
+
+    if not feedback_id or not reply_message:
+        messages.error(request, "Reply message cannot be empty")
+        return HttpResponseRedirect(reverse("staff_feedback"))
+
+    feedback = (
+        FeedBackStudent.objects.filter(id=feedback_id, staff_id=staff_obj)
+        .select_related("student_id__admin")
+        .first()
+    )
+    if feedback is None:
+        messages.error(request, "Student feedback not found")
+        return HttpResponseRedirect(reverse("staff_feedback"))
+
+    feedback.feedback_reply = reply_message
+    feedback.save(update_fields=["feedback_reply"])
+    messages.success(
+        request,
+        f"Reply saved for {feedback.student_id.admin.get_full_name() or feedback.student_id.admin.username}",
+    )
+    return HttpResponseRedirect(reverse("staff_feedback"))
+
+
+@require_POST
+def staff_student_feedback_forward(request):
+    staff_obj = Staffs.objects.get(admin=request.user.id)
+    feedback_id = request.POST.get("feedback_id")
+
+    feedback = (
+        FeedBackStudent.objects.filter(id=feedback_id, staff_id=staff_obj)
+        .select_related("student_id__admin")
+        .first()
+    )
+    if feedback is None:
+        messages.error(request, "Student feedback not found")
+        return HttpResponseRedirect(reverse("staff_feedback"))
+
+    if feedback.forwarded_to_hod:
+        messages.info(request, "This feedback has already been forwarded to HOD")
+        return HttpResponseRedirect(reverse("staff_feedback"))
+
+    feedback.forwarded_to_hod = True
+    feedback.forwarded_at = timezone.now()
+    feedback.save(update_fields=["forwarded_to_hod", "forwarded_at"])
+    messages.success(
+        request,
+        f"Forwarded {feedback.student_id.admin.get_full_name() or feedback.student_id.admin.username}'s feedback to HOD",
+    )
+    return HttpResponseRedirect(reverse("staff_feedback"))
 
 def staff_profile(request):
     user=CustomUser.objects.get(id=request.user.id)
@@ -285,7 +544,7 @@ def staff_fcmtoken_save(request):
 
 def staff_all_notification(request):
     staff=Staffs.objects.get(admin=request.user.id)
-    notifications=NotificationStaffs.objects.filter(staff_id=staff.id)
+    notifications=NotificationStaffs.objects.filter(staff_id=staff.id).order_by("-created_at")
     return render(request,"staff_template/all_notification.html",{"notifications":notifications})
 
 def staff_add_result(request):

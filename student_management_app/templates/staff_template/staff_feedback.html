@@ -6,12 +6,77 @@ Feedback Message
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
-                    <div class="row">
+          <div class="row">
               <div class="col-md-12">
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% else %}info{% endif %}" style="margin-top:10px">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Student Feedback Inbox</h3>
+              </div>
+              <div class="card-body table-responsive p-0">
+                <table class="table table-hover">
+                  <tr>
+                    <th>ID</th>
+                    <th>Student</th>
+                    <th>Message</th>
+                    <th>Faculty Reply</th>
+                    <th>HOD Status</th>
+                    <th>Actions</th>
+                  </tr>
+                  {% for row in student_feedback_data %}
+                    <tr>
+                      <td>{{ row.id }}</td>
+                      <td>
+                        {{ row.student_id.profile_id|default:row.student_id.id }} -
+                        {{ row.student_id.admin.get_full_name|default:row.student_id.admin.username }}
+                      </td>
+                      <td>{{ row.feedback }}</td>
+                      <td>{{ row.feedback_reply|default:"Pending" }}</td>
+                      <td>
+                        {% if row.hod_reply %}
+                          Replied by HOD
+                        {% elif row.forwarded_to_hod %}
+                          Forwarded to HOD{% if row.forwarded_at %} on {{ row.forwarded_at }}{% endif %}
+                        {% else %}
+                          Not forwarded
+                        {% endif %}
+                      </td>
+                      <td style="min-width: 280px;">
+                        <form action="{% url 'staff_student_feedback_reply' %}" method="post" style="margin-bottom:10px;">
+                          {% csrf_token %}
+                          <input type="hidden" name="feedback_id" value="{{ row.id }}">
+                          <textarea class="form-control" rows="2" name="reply_message" placeholder="Reply to the student">{{ row.feedback_reply }}</textarea>
+                          <button type="submit" class="btn btn-primary btn-sm" style="margin-top:8px;">Save Reply</button>
+                        </form>
+                        <form action="{% url 'staff_student_feedback_forward' %}" method="post">
+                          {% csrf_token %}
+                          <input type="hidden" name="feedback_id" value="{{ row.id }}">
+                          <button type="submit" class="btn btn-warning btn-sm" {% if row.forwarded_to_hod %}disabled{% endif %}>
+                            {% if row.forwarded_to_hod %}Already Forwarded{% else %}Forward to HOD{% endif %}
+                          </button>
+                        </form>
+                      </td>
+                    </tr>
+                  {% empty %}
+                    <tr>
+                      <td colspan="6">No student feedback has been assigned to you yet.</td>
+                    </tr>
+                  {% endfor %}
+                </table>
+              </div>
+            </div>
+
             <!-- general form elements -->
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Leave a Feedback Message</h3>
+                <h3 class="card-title">Send Your Own Feedback to HOD</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
@@ -23,24 +88,11 @@ Feedback Message
                     <label>Feedback Message</label>
                     <textarea class="form-control" rows="6" name="feedback_msg"></textarea>
                   </div>
-                   <div class="form-group">
-                      {% if messages %}
-                        {% for message in messages %}
-                        {% if message.tags == 'error' %}
-                        <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
-                        {% endif %}
-                        {% if message.tags == 'success' %}
-                        <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
-                        {% endif %}
-                        {% endfor %}
-                      {% endif %}
-                    </div>
-
                 </div>
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary btn-block" id="fetch_student">Leave a Feedback Message</button>
+                  <button type="submit" class="btn btn-primary btn-block" id="fetch_student">Send Feedback to HOD</button>
                 </div>
                </form>
             </div>
@@ -48,7 +100,7 @@ Feedback Message
             <!-- /.card -->
            <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Feedback History</h3>
+                <h3 class="card-title">Your Feedback History with HOD</h3>
               </div>
 
                <div class="table">
@@ -63,6 +115,10 @@ Feedback Message
                             <td>{{ row.id }}</td>
                             <td>{{ row.feedback }}</td>
                             <td>{{ row.feedback_reply }}</td>
+                        </tr>
+                   {% empty %}
+                        <tr>
+                            <td colspan="3">No feedback history available.</td>
                         </tr>
                    {% endfor %}
                </table>

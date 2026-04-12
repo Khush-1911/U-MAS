@@ -19,10 +19,6 @@
     <header class="app-topbar">
       <div class="topbar-left">
         <div class="topbar-title">U-MAS Student</div>
-        <div class="topbar-search">
-          <i class="fas fa-search"></i>
-          <input type="text" placeholder="Search">
-        </div>
       </div>
       <div class="topbar-right">
         <div class="profile-pill">
@@ -32,6 +28,25 @@
         <a class="logout-btn" href="{% url 'logout' %}">Logout</a>
       </div>
     </header>
+
+    {% include 'includes/toast_messages.html' %}
+    {% if student_latest_unread_notification_id and student_latest_unread_sender_name %}
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        if (!window.umasShowToast || !window.sessionStorage) return;
+
+        var notificationId = "{{ student_latest_unread_notification_id }}";
+        var storageKey = "studentLastUnreadNotificationToastId";
+        if (sessionStorage.getItem(storageKey) === notificationId) return;
+
+        window.umasShowToast({
+          tag: "info",
+          text: "New notification from {{ student_latest_unread_sender_name|escapejs }}"
+        });
+        sessionStorage.setItem(storageKey, notificationId);
+      });
+    </script>
+    {% endif %}
 
     <main class="app-main">
       {% block main_content %}{% endblock main_content %}

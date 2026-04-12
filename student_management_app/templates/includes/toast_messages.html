@@ -1,0 +1,76 @@
+<style>
+  .umas-toast-wrap {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 360px;
+    width: calc(100vw - 36px);
+    pointer-events: none;
+  }
+  .umas-toast {
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity .2s ease, transform .2s ease;
+  }
+  .umas-toast.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .umas-toast.success { background: #1b8f4a; }
+  .umas-toast.error { background: #c73434; }
+  .umas-toast.warning { background: #c38a1a; }
+  .umas-toast.info { background: #1f6bbf; }
+</style>
+<div class="umas-toast-wrap" id="umasToastWrap"></div>
+<script>
+  (function () {
+    var wrap = document.getElementById("umasToastWrap");
+    if (!wrap) return;
+
+    window.umasShowToast = function (item, idx) {
+      idx = idx || 0;
+      var tag = "info";
+      if (item.tag.indexOf("success") !== -1) tag = "success";
+      else if (item.tag.indexOf("error") !== -1) tag = "error";
+      else if (item.tag.indexOf("warning") !== -1) tag = "warning";
+
+      var toast = document.createElement("div");
+      toast.className = "umas-toast " + tag;
+      toast.textContent = item.text;
+      wrap.appendChild(toast);
+
+      setTimeout(function () {
+        toast.classList.add("show");
+      }, 30 + (idx * 50));
+
+      setTimeout(function () {
+        toast.classList.remove("show");
+        setTimeout(function () {
+          if (toast && toast.parentNode) toast.parentNode.removeChild(toast);
+        }, 220);
+      }, 5000 + (idx * 200));
+    };
+
+    var payload = [
+      {% if messages %}
+        {% for message in messages %}
+        { tag: "{{ message.tags|default:'info'|escapejs }}", text: "{{ message|escapejs }}" }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+      {% endif %}
+    ];
+
+    payload.forEach(function (item, idx) {
+      window.umasShowToast(item, idx);
+    });
+  })();
+</script>

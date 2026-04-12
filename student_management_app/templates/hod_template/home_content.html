@@ -43,7 +43,7 @@ Home
               <div class="inner">
                 <h3>{{ course_count }}</h3>
 
-                <p>Total Course</p>
+                <p>Total Department</p>
               </div>
               <div class="icon">
                 <i class="ion ion-pie-graph"></i>
@@ -73,12 +73,6 @@ Home
                 <div class="card card-danger">
                   <div class="card-header">
                     <h3 class="card-title">Student and Staff Chart</h3>
-
-                    <div class="card-tools">
-                      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-                      </button>
-                      <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
-                    </div>
                   </div>
                   <div class="card-body">
                     <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
@@ -89,13 +83,7 @@ Home
               <div class="col-lg-6">
                    <div class="card card-success">
                   <div class="card-header">
-                    <h3 class="card-title">Total Subject in Each Courses</h3>
-
-                    <div class="card-tools">
-                      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-                      </button>
-                      <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
-                    </div>
+                    <h3 class="card-title">Total Subject in Each Department</h3>
                   </div>
                   <div class="card-body">
                     <canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
@@ -108,13 +96,7 @@ Home
               <div class="col-lg-6">
                  <div class="card card-info">
                   <div class="card-header">
-                    <h3 class="card-title">Total Student in Each Course</h3>
-
-                    <div class="card-tools">
-                      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-                      </button>
-                      <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
-                    </div>
+                    <h3 class="card-title">Total Student in Each Department</h3>
                   </div>
                   <div class="card-body">
                     <canvas id="pieChart3" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
@@ -126,12 +108,6 @@ Home
                  <div class="card card-warning">
                   <div class="card-header">
                     <h3 class="card-title">Total Student in Each Subject</h3>
-
-                    <div class="card-tools">
-                      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-                      </button>
-                      <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
-                    </div>
                   </div>
                   <div class="card-body">
                     <canvas id="pieChart4" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
@@ -145,12 +121,6 @@ Home
                   <div class="card card-success">
                   <div class="card-header">
                     <h3 class="card-title">Staff Leaves vs Attendance</h3>
-
-                    <div class="card-tools">
-                      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-                      </button>
-                      <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
-                    </div>
                   </div>
                   <div class="card-body">
                     <div class="chart">
@@ -166,12 +136,6 @@ Home
                   <div class="card card-success">
                   <div class="card-header">
                     <h3 class="card-title">Student Leaves vs Attendance</h3>
-
-                    <div class="card-tools">
-                      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-                      </button>
-                      <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
-                    </div>
                   </div>
                   <div class="card-body">
                     <div class="chart">
@@ -189,6 +153,12 @@ Home
 {% block custom_js %}
 <script>
     $(document).ready(function(){
+            function createUniqueChartColors(count) {
+              return Array.from({ length: count }, function(_, index) {
+                var hue = Math.round((index * 360) / Math.max(count, 1));
+                return 'hsl(' + hue + ', 70%, 55%)';
+              });
+            }
 
             var pieData        = {
                   labels: [
@@ -198,7 +168,7 @@ Home
                   datasets: [
                     {
                       data: [{{ student_count }},{{ staff_count }}],
-                      backgroundColor : ['#f56954', '#00a65a'],
+                      backgroundColor : createUniqueChartColors(2),
                     }
                   ]
              };
@@ -216,7 +186,7 @@ Home
               options: pieOptions
             });
 
-            //Second Chart for Total Subject in Each Course
+            //Second Chart for Total Subject in Each Department
                 var subject_count_list={{ subject_count_list }};
                 var course_name_list={{ course_name_list|safe }};
                 var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
@@ -225,7 +195,7 @@ Home
                   datasets: [
                     {
                       data: subject_count_list,
-                      backgroundColor : ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+                      backgroundColor : createUniqueChartColors(subject_count_list.length),
                     }
                   ]
                 }
@@ -250,7 +220,7 @@ Home
                           datasets: [
                             {
                               data: student_count_list_in_course,
-                              backgroundColor : ['#f56954', '#00a65a','#aa00ff', '#ff3d00'],
+                              backgroundColor : createUniqueChartColors(student_count_list_in_course.length),
                             }
                           ]
                      };
@@ -275,7 +245,7 @@ Home
                           datasets: [
                             {
                               data: student_count_list_in_subject,
-                              backgroundColor : ['#f56954', '#00a65a','#aa00ff', '#ff3d00','#bf360c','#ffff00','#00e676','#40c4ff','#f56954', '#00a65a','#aa00ff', '#ff3d00','#bf360c','#ffff00','#00e676','#40c4ff'],
+                              backgroundColor : createUniqueChartColors(student_count_list_in_subject.length),
                             }
                           ]
                      };

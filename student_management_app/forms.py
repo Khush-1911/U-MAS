@@ -22,7 +22,7 @@ class AddStudentForm(forms.Form):
         ("Female","Female")
     )
 
-    course=forms.ChoiceField(label="Course",choices=[],widget=forms.Select(attrs={"class":"form-control"}))
+    course=forms.ChoiceField(label="Department",choices=[],widget=forms.Select(attrs={"class":"form-control"}))
     sex=forms.ChoiceField(label="Sex",choices=gender_choice,widget=forms.Select(attrs={"class":"form-control"}))
     session_year_id=forms.ChoiceField(label="Session Year",choices=[],widget=forms.Select(attrs={"class":"form-control"}))
     assigned_staff=forms.ChoiceField(label="Assigned Staff",choices=[],widget=forms.Select(attrs={"class":"form-control"}))
@@ -55,7 +55,7 @@ class EditStudentForm(forms.Form):
         ("Female","Female")
     )
 
-    course=forms.ChoiceField(label="Course",choices=[],widget=forms.Select(attrs={"class":"form-control"}))
+    course=forms.ChoiceField(label="Department",choices=[],widget=forms.Select(attrs={"class":"form-control"}))
     sex=forms.ChoiceField(label="Sex",choices=gender_choice,widget=forms.Select(attrs={"class":"form-control"}))
     session_year_id=forms.ChoiceField(label="Session Year",choices=[],widget=forms.Select(attrs={"class":"form-control"}))
     assigned_staff=forms.ChoiceField(label="Assigned Staff",choices=[],widget=forms.Select(attrs={"class":"form-control"}))

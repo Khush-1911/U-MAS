@@ -131,6 +131,30 @@ a {
   font-size: 18px;
 }
 
+.sidebar-icon-wrap {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+}
+
+.sidebar-badge {
+  position: absolute;
+  top: -10px;
+  right: -12px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #ff5b4d;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 20px;
+  text-align: center;
+  box-shadow: 0 8px 18px rgba(255, 91, 77, 0.35);
+}
+
 .sidebar-link.active,
 .sidebar-link:hover {
   background: #f0f2ff;
@@ -138,7 +162,7 @@ a {
   box-shadow: inset 0 0 0 1px rgba(75, 92, 255, 0.15);
 }
 
-.sidebar-link span {
+.sidebar-link .sidebar-label {
   opacity: 0;
   pointer-events: none;
   font-size: 13px;
@@ -151,7 +175,7 @@ a {
   padding: 18px 16px 24px;
 }
 
-.app-sidebar:hover .sidebar-link span {
+.app-sidebar:hover .sidebar-link .sidebar-label {
   opacity: 1;
   pointer-events: auto;
 }
@@ -514,7 +538,7 @@ label {
   width: 92px;
 }
 
-.sidebar-locked .sidebar-link span {
+.sidebar-locked .sidebar-link .sidebar-label {
   opacity: 0;
   pointer-events: none;
 }
@@ -584,7 +608,7 @@ label {
     justify-content: center;
   }
 
-  .sidebar-link span {
+  .sidebar-link .sidebar-label {
     display: none;
   }
 

@@ -1,0 +1,141 @@
+{% extends 'staff_template/base_template.html' %}
+{% load static %}
+{% block page_title %}
+Daily Attendance Graph
+{% endblock page_title %}
+{% block main_content %}
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card card-success">
+          <div class="card-header">
+            <h3 class="card-title" id="attendanceGraphTitle">
+              Students Present on {{ selected_date|date:'d-m-Y' }} ({{ present_count }}/{{ total_students }})
+            </h3>
+            <div class="card-tools">
+              <button class="btn btn-tool" id="prevDayBtn" type="button" title="Previous day">
+                <i class="fas fa-arrow-left"></i>
+              </button>
+              <button class="btn btn-tool" id="nextDayBtn" type="button" title="Next day">
+                <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <h5 class="mb-3">Present Students</h5>
+                <ul class="list-group" id="presentList"></ul>
+              </div>
+              <div class="col-md-6">
+                <h5 class="mb-3">Absent Students</h5>
+                <ul class="list-group" id="absentList"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock main_content %}
+
+{% block custom_js %}
+<script>
+  (function () {
+    var presentStudents = {{ present_students_json|safe }};
+    var absentStudents = {{ absent_students_json|safe }};
+    var currentDate = "{{ selected_date|date:'Y-m-d' }}";
+    var dataApiUrl = "{% url 'staff_daily_attendance_graph_data' %}";
+    var todayDate = "{{ today_date|default:'' }}";
+    if (!todayDate) {
+      var t = new Date();
+      todayDate = t.getFullYear() + "-" + String(t.getMonth() + 1).padStart(2, "0") + "-" + String(t.getDate()).padStart(2, "0");
+    }
+    var titleNode = document.getElementById("attendanceGraphTitle");
+    var prevBtn = document.getElementById("prevDayBtn");
+    var nextBtn = document.getElementById("nextDayBtn");
+    var presentList = document.getElementById("presentList");
+    var absentList = document.getElementById("absentList");
+    if (!presentList || !absentList) return;
+
+    function renderList(node, items) {
+      node.innerHTML = "";
+      if (!items || !items.length) {
+        var empty = document.createElement("li");
+        empty.className = "list-group-item";
+        empty.textContent = "No students";
+        node.appendChild(empty);
+        return;
+      }
+      items.forEach(function (name) {
+        var li = document.createElement("li");
+        li.className = "list-group-item";
+        li.textContent = name;
+        node.appendChild(li);
+      });
+    }
+
+    renderList(presentList, presentStudents);
+    renderList(absentList, absentStudents);
+
+    function renderWithPayload(payload) {
+      renderList(presentList, payload.present_students || []);
+      renderList(absentList, payload.absent_students || []);
+      titleNode.textContent =
+        "Students Present on " + payload.selected_date_display + " (" + payload.present_count + "/" + payload.total_students + ")";
+      currentDate = payload.selected_date;
+      updateArrowState();
+    }
+
+    function loadForDate(targetDate) {
+      if (targetDate > todayDate) {
+        return;
+      }
+      fetch(dataApiUrl + "?date=" + encodeURIComponent(targetDate), {
+        method: "GET",
+        headers: { "X-Requested-With": "XMLHttpRequest" }
+      })
+        .then(function (res) { return res.json(); })
+        .then(function (payload) {
+          if (!payload.ok) return;
+          renderWithPayload(payload);
+        })
+        .catch(function () {});
+    }
+
+    function shiftDate(days) {
+      var d = new Date(currentDate + "T00:00:00");
+      d.setDate(d.getDate() + days);
+      var yyyy = d.getFullYear();
+      var mm = String(d.getMonth() + 1).padStart(2, "0");
+      var dd = String(d.getDate()).padStart(2, "0");
+      return yyyy + "-" + mm + "-" + dd;
+    }
+
+    function updateArrowState() {
+      // Right arrow is forward navigation; disable on current day to block tomorrow.
+      if (nextBtn) {
+        var disableForward = currentDate >= todayDate;
+        nextBtn.disabled = disableForward;
+        nextBtn.style.opacity = disableForward ? "0.4" : "1";
+        nextBtn.style.cursor = disableForward ? "not-allowed" : "pointer";
+      }
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener("click", function () {
+        loadForDate(shiftDate(-1));
+      });
+    }
+    if (nextBtn) {
+      nextBtn.addEventListener("click", function () {
+        loadForDate(shiftDate(1));
+      });
+    }
+
+    updateArrowState();
+  })();
+</script>
+{% endblock custom_js %}

@@ -1,6 +1,6 @@
 {% extends 'hod_template/base_template.html' %}
 {% block page_title %}
-Student Feedback
+Forwarded Student Feedback
 {% endblock page_title %}
 {% block main_content %}
     <!-- Main content -->
@@ -11,7 +11,7 @@ Student Feedback
             <!-- general form elements -->
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Student Feedback</h3>
+                <h3 class="card-title">Forwarded Student Feedback</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
@@ -21,27 +21,42 @@ Student Feedback
                             <th>ID</th>
                             <th>Student ID</th>
                             <th>Student Name</th>
+                            <th>Assigned Faculty</th>
                             <th>Student Session</th>
                             <th>Message</th>
-                            <th>Sended On</th>
-                            <th>Reply</th>
+                            <th>Staff Reply</th>
+                            <th>Forwarded On</th>
+                            <th>HOD Reply</th>
                         </tr>
                         {% for feedback in feedbacks %}
                         <tr>
                             <td>{{ feedback.id }}</td>
                             <td>{{ feedback.student_id.admin.id }}</td>
                             <td>{{ feedback.student_id.admin.first_name }} {{ feedback.student_id.admin.last_name }}</td>
+                            <td>
+                                {% if feedback.staff_id %}
+                                  {{ feedback.staff_id.profile_id|default:feedback.staff_id.id }} -
+                                  {{ feedback.staff_id.admin.get_full_name|default:feedback.staff_id.admin.username }}
+                                {% else %}
+                                  Not assigned
+                                {% endif %}
+                            </td>
                             <td>{{ feedback.student_id.session_year_id.session_start_year }} - {{ feedback.student_id.session_year_id.session_end_year }}</td>
                             <td>{{ feedback.feedback }}</td>
-                            <td>{{ feedback.created_at }}</td>
+                            <td>{{ feedback.feedback_reply|default:"No faculty reply yet" }}</td>
+                            <td>{{ feedback.forwarded_at|default:feedback.created_at }}</td>
                             <td>
-                                {% if feedback.feedback_reply == "" %}
-                                <button class="btn btn-success reply_open_modal" data-toggle="modal" data-target="#reply_modal">Reply</button>
+                                {% if feedback.hod_reply == "" %}
+                                <button class="btn btn-success reply_open_modal" data-toggle="modal" data-target="#reply_modal" data-feedback-id="{{ feedback.id }}" data-student-name="{{ feedback.student_id.admin.first_name }} {{ feedback.student_id.admin.last_name }}">Reply</button>
                                 {% else %}
-                                {{ feedback.feedback_reply }}
+                                {{ feedback.hod_reply }}
                                 {% endif %}
                             </td>
 
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="9">No student feedback has been forwarded to HOD.</td>
                         </tr>
                         {% endfor %}
                     </table>
@@ -86,10 +101,11 @@ Student Feedback
 <script>
     $(document).ready(function(){
         $(".reply_open_modal").click(function(){
-            var id=$(this).parents("tr").children("td:eq(0)").text();
-            var name=$(this).parents("tr").children("td:eq(2)").text();
+            var id=$(this).data("feedback-id");
+            var name=$(this).data("student-name");
             $("#reply_id").val(id);
             $("#reply_name").text(name);
+            $("#reply_message").val("");
         });
 
 
