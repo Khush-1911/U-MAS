@@ -7,43 +7,43 @@
     {% url 'staff_home' as staff_home %}
     <a href="{{ staff_home }}" class="sidebar-link {% if request.path == staff_home %}active{% endif %}">
       <i class="fas fa-home"></i>
-      <span>Home</span>
+      <span class="sidebar-label">Home</span>
     </a>
 
     {% url 'staff_take_attendance' as staff_take_attendance %}
     <a href="{% url 'staff_take_attendance' %}" class="sidebar-link {% if request.path == staff_take_attendance %}active{% endif %}">
       <i class="fas fa-clipboard-check"></i>
-      <span>Take Attendance</span>
+      <span class="sidebar-label">Take Attendance</span>
     </a>
 
     {% url 'staff_update_attendance' as staff_update_attendance %}
     <a href="{% url 'staff_update_attendance' %}" class="sidebar-link {% if request.path == staff_update_attendance %}active{% endif %}">
       <i class="fas fa-clipboard-list"></i>
-      <span>Update Attendance</span>
+      <span class="sidebar-label">Update Attendance</span>
     </a>
 
     {% url 'staff_apply_leave' as staff_apply_leave %}
     <a href="{% url 'staff_apply_leave' %}" class="sidebar-link {% if request.path == staff_apply_leave %}active{% endif %}">
       <i class="fas fa-plane-departure"></i>
-      <span>Apply Leave</span>
+      <span class="sidebar-label">Apply Leave</span>
     </a>
 
     {% url 'staff_feedback' as staff_feedback %}
     <a href="{% url 'staff_feedback' %}" class="sidebar-link {% if request.path == staff_feedback %}active{% endif %}">
       <i class="fas fa-comment-dots"></i>
-      <span>Feedback</span>
+      <span class="sidebar-label">Feedback</span>
     </a>
 
     {% url 'staff_profile' as staff_profile %}
     <a href="{% url 'staff_profile' %}" class="sidebar-link {% if request.path == staff_profile %}active{% endif %}">
       <i class="fas fa-user"></i>
-      <span>Profile</span>
+      <span class="sidebar-label">Profile</span>
     </a>
 
     {% url 'staff_all_notification' as staff_all_notification %}
     <a href="{% url 'staff_all_notification' %}" class="sidebar-link {% if request.path == staff_all_notification %}active{% endif %}">
       <i class="fas fa-bell"></i>
-      <span>Notifications</span>
+      <span class="sidebar-label">Notifications</span>
     </a>
   </nav>
 </aside>
