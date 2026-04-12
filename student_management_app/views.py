@@ -43,19 +43,35 @@ def _credentials_error(username, email, exclude_user_id=None):
 
 
 def ShowLoginPage(request):
-    return render(request,"login_page.html")
+    return render(
+        request,
+        "login_page.html",
+        {
+            "recaptcha_site_key": settings.RECAPTCHA_SITE_KEY,
+            "recaptcha_login_action": settings.RECAPTCHA_LOGIN_ACTION,
+        },
+    )
 
 def doLogin(request):
     if request.method!="POST":
         return HttpResponse("<h2>Method Not Allowed</h2>")
     else:
         captcha_token = (request.POST.get("g-recaptcha-response") or "").strip()
-        should_verify_captcha = bool(captcha_token) or not settings.DEBUG
+        captcha_secret = os.getenv("RECAPTCHA_SECRET_KEY", "").strip()
+        captcha_enabled = bool(settings.RECAPTCHA_SITE_KEY and captcha_secret)
+        should_verify_captcha = captcha_enabled and (bool(captcha_token) or not settings.DEBUG)
+
+        if not settings.DEBUG and not captcha_enabled:
+            messages.error(request, "Captcha is not configured on the server.")
+            return HttpResponseRedirect("/")
+
+        if captcha_enabled and not captcha_token:
+            messages.error(request, "Captcha verification did not complete. Please try again.")
+            return HttpResponseRedirect("/")
 
         if should_verify_captcha:
             cap_url = "https://www.google.com/recaptcha/api/siteverify"
-            cap_secret = os.getenv("RECAPTCHA_SECRET_KEY", "6LeWtqUZAAAAANlv3se4uw5WAg-p0X61CJjHPxKT")
-            cap_data = {"secret": cap_secret, "response": captcha_token}
+            cap_data = {"secret": captcha_secret, "response": captcha_token}
             try:
                 cap_server_response = requests.post(url=cap_url, data=cap_data, timeout=10)
                 cap_json = cap_server_response.json()
@@ -68,7 +84,16 @@ def doLogin(request):
                     return HttpResponseRedirect("/")
 
             if not cap_json.get("success", False):
-                messages.error(request,"Invalid Captcha Try Again")
+                messages.error(request,"Invalid Captcha. Try again.")
+                return HttpResponseRedirect("/")
+
+            if cap_json.get("action") and cap_json.get("action") != settings.RECAPTCHA_LOGIN_ACTION:
+                messages.error(request, "Captcha action mismatch. Please refresh and try again.")
+                return HttpResponseRedirect("/")
+
+            score = cap_json.get("score")
+            if score is not None and score < settings.RECAPTCHA_MIN_SCORE:
+                messages.error(request, "Captcha score too low. Please try again.")
                 return HttpResponseRedirect("/")
 
         user=EmailBackEnd.authenticate(request,username=request.POST.get("email"),password=request.POST.get("password"))

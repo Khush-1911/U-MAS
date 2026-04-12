@@ -34,7 +34,7 @@
         </div>
       </div>
       <div class="form-group" style="margin-top:14px;">
-        <div class="g-recaptcha" data-sitekey="6LefEHspAAAAAMIMz9YdgvUYkMxz21WdOysOu4FN"></div>
+        <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
       </div>
       <div class="form-group" style="margin-top:16px;">
         <button type="submit" class="btn btn-primary btn-block">Sign In</button>
@@ -60,6 +60,40 @@
     </form>
   </div>
 </div>
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{% if recaptcha_site_key %}
+<script src="https://www.google.com/recaptcha/api.js?render={{ recaptcha_site_key }}" async defer></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var form = document.getElementById("demo-form");
+    var tokenInput = document.getElementById("g-recaptcha-response");
+    var siteKey = "{{ recaptcha_site_key|escapejs }}";
+    var action = "{{ recaptcha_login_action|escapejs }}";
+
+    if (!form || !tokenInput || !siteKey) {
+      return;
+    }
+
+    form.addEventListener("submit", function (event) {
+      if (tokenInput.value) {
+        return;
+      }
+
+      event.preventDefault();
+
+      if (!window.grecaptcha) {
+        form.submit();
+        return;
+      }
+
+      grecaptcha.ready(function () {
+        grecaptcha.execute(siteKey, {action: action}).then(function (token) {
+          tokenInput.value = token;
+          form.submit();
+        });
+      });
+    });
+  });
+</script>
+{% endif %}
 </body>
 </html>

@@ -16,3 +16,7 @@ services:
         sync: false
       - key: RECAPTCHA_SECRET_KEY
         sync: false
+      - key: RECAPTCHA_SITE_KEY
+        sync: false
+      - key: RECAPTCHA_MIN_SCORE
+        value: "0.5"
