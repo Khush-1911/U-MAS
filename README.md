@@ -43,7 +43,7 @@ U-MAS is a Django-based multi-role web application for managing university opera
 Main entities:
 - `CustomUser` with role type: HOD (`1`), Staff (`2`), Student (`3`)
 - `AdminHOD`, `Staffs`, `Students` (role profiles)
-- `Courses`, `Subjects`, `SessionYearModel`
+- `Courses`, `Subjects`, `SemesterModel`
 - `Attendance`, `AttendanceReport`
 - `LeaveReportStaff`, `LeaveReportStudent`
 - `FeedBackStaffs`, `FeedBackStudent`
@@ -132,16 +132,16 @@ Some code paths assume base records exist.
 1. Ensure at least one Course exists with ID `1`.
 2. Ensure at least one Session exists with ID `1`.
 
-Reason: `post_save` signal for student profile creation references `Courses.objects.get(id=1)` and `SessionYearModel.object.get(id=1)`.
+Reason: `post_save` signal for student profile creation references the first available `Courses` and `SemesterModel` records.
 
 Recommended order for first-time setup:
 1. Create HOD/Admin account (`/signup_admin`)
 2. Login as HOD
 3. Add course(s)
-4. Add session year(s)
+4. Add semester(s)
 5. Add staff
 6. Add subject(s)
-7. Add student(s)
+7. Add student(s) from staff or import them in bulk
 
 ## 7. Role-Based Features and How to Use Them
 
@@ -160,7 +160,6 @@ Entry page after login: `/admin_home`
 - Delete staff: `/delete_staff/<staff_id>`
 
 ### Student Management
-- Add student: `/add_student`
 - Manage students: `/manage_student`
 - Edit student: `/edit_student/<student_id>`
 - Delete student: `/delete_student/<student_id>`
@@ -177,9 +176,9 @@ Entry page after login: `/admin_home`
 - Edit subject: `/edit_subject/<subject_id>`
 - Delete subject: `/delete_subject/<subject_id>`
 
-### Session Management
-- Manage/add sessions: `/manage_session`
-- Delete session: `/delete_session/<session_id>`
+### Semester Management
+- Manage/add semesters: `/manage_semester`
+- Delete semester: `/delete_semester/<semester_id>`
 
 ### Leave Management
 - Student leave requests: `/student_leave_view`
@@ -201,7 +200,7 @@ Entry page after login: `/admin_home`
 Entry page after login: `/staff_home`
 
 ### Dashboard
-- View students under taught courses
+- View all students, with edit/delete available only for assigned students
 - Attendance counts and subject-wise analytics
 
 ### Attendance
@@ -240,7 +239,7 @@ Entry page after login: `/student_home`
 - Active live classroom list for current session
 
 ### Live Classroom
-- Join classroom: `/join_class_room/<subject_id>/<session_year_id>`
+- Join classroom: `/join_class_room/<subject_id>/<semester_id>`
 
 ### Attendance
 - Attendance filter by subject/date range: `/student_view_attendance`

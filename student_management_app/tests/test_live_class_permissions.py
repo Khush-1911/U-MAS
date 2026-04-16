@@ -2,16 +2,16 @@ import json
 
 from django.test import TestCase
 
-from student_management_app.models import Courses, SessionYearModel, Subjects
+from student_management_app.models import Courses, SemesterModel, Subjects
 from student_management_app.models import CustomUser
 from student_management_app.services.live_class_service import create_or_get_active_room, end_room
 
 
 class LiveClassPermissionTests(TestCase):
     def setUp(self):
-        self.session = SessionYearModel.object.create(
-            session_start_year="2025-01-01",
-            session_end_year="2025-12-31",
+        self.semester = SemesterModel.object.create(
+            semester_start_date="2025-01-01",
+            semester_end_date="2025-12-31",
         )
         self.course = Courses.objects.create(course_name="BTech")
         self.staff_user = CustomUser.objects.create_user(
@@ -33,7 +33,7 @@ class LiveClassPermissionTests(TestCase):
             user_type=3,
         )
         self.student_user.students.course_id = self.course
-        self.student_user.students.session_year_id = self.session
+        self.student_user.students.semester_id = self.semester
         self.student_user.students.save()
 
         self.subject = Subjects.objects.create(
@@ -41,7 +41,7 @@ class LiveClassPermissionTests(TestCase):
             course_id=self.course,
             staff_id=self.staff_user,
         )
-        self.room = create_or_get_active_room(self.staff_user, self.subject.id, self.session.id)
+        self.room = create_or_get_active_room(self.staff_user, self.subject.id, self.semester.id)
 
     def test_join_token_rejects_ended_room(self):
         end_room(self.staff_user, self.room)

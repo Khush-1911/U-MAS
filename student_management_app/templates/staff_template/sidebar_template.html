@@ -10,6 +10,18 @@
       <span class="sidebar-label">Home</span>
     </a>
 
+    {% url 'staff_manage_student' as staff_manage_student %}
+    <a href="{% url 'staff_manage_student' %}" class="sidebar-link {% if request.path == staff_manage_student or '/staff_edit_student/' in request.path %}active{% endif %}">
+      <i class="fas fa-users"></i>
+      <span class="sidebar-label">Students</span>
+    </a>
+
+    {% url 'staff_add_student' as staff_add_student %}
+    <a href="{% url 'staff_add_student' %}" class="sidebar-link {% if request.path == staff_add_student %}active{% endif %}">
+      <i class="fas fa-user-plus"></i>
+      <span class="sidebar-label">Add Students</span>
+    </a>
+
     {% url 'staff_take_attendance' as staff_take_attendance %}
     <a href="{% url 'staff_take_attendance' %}" class="sidebar-link {% if request.path == staff_take_attendance %}active{% endif %}">
       <i class="fas fa-clipboard-check"></i>

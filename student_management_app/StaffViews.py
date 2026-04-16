@@ -1,6 +1,9 @@
+import csv
+import io
 import json
 from datetime import date, timedelta
 
+from openpyxl import load_workbook
 from django.conf import settings
 from django.contrib import messages
 from django.core import serializers
@@ -14,7 +17,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.utils import timezone
 
-from student_management_app.models import Subjects, SessionYearModel, Students, Attendance, AttendanceReport, \
+from student_management_app.forms import StaffAddStudentForm, StaffEditStudentForm
+from student_management_app.models import Subjects, SemesterModel, Students, Attendance, AttendanceReport, \
     LeaveReportStaff, Staffs, FeedBackStaffs, FeedBackStudent, CustomUser, Courses, NotificationStaffs, StudentResult, OnlineClassRoom
 from student_management_app.services.live_class_service import (
     create_or_get_active_room,
@@ -25,8 +29,46 @@ from student_management_app.services.live_class_service import (
 )
 
 
+IMPORT_HEADERS = [
+    "first_name",
+    "last_name",
+    "username",
+    "email",
+    "password",
+    "address",
+    "gender",
+    "department",
+    "semester_start_date",
+    "semester_end_date",
+]
+
+
 def _logged_in_staff(request):
     return Staffs.objects.get(admin=request.user.id)
+
+
+def _normalize_email(value):
+    return (value or "").strip().lower()
+
+
+def _credentials_error(username, email, exclude_user_id=None):
+    username = (username or "").strip()
+    email = _normalize_email(email)
+
+    if not username or not email:
+        return "Username and email are required"
+
+    username_qs = CustomUser.objects.filter(username__iexact=username)
+    email_qs = CustomUser.objects.filter(email__iexact=email)
+    if exclude_user_id:
+        username_qs = username_qs.exclude(id=exclude_user_id)
+        email_qs = email_qs.exclude(id=exclude_user_id)
+
+    if username_qs.exists():
+        return "Username already exists"
+    if email_qs.exists():
+        return "Email already exists"
+    return None
 
 
 def _subject_for_staff_or_none(subject_id, request_user_id):
@@ -39,27 +81,44 @@ def _assigned_student_or_none(student_admin_id, staff_obj):
         assigned_staff=staff_obj,
     ).first()
 
-def _resolve_session_for_date(target_date):
-    return SessionYearModel.object.filter(
-        session_start_year__lte=target_date,
-        session_end_year__gte=target_date,
+
+def _student_for_staff_or_none(student_admin_id, staff_obj):
+    return Students.objects.filter(
+        admin=student_admin_id,
+        assigned_staff=staff_obj,
+    ).select_related("admin", "course_id", "semester_id", "assigned_staff__admin").first()
+
+
+def _student_queryset_for_staff_list():
+    return (
+        Students.objects.select_related("admin", "course_id", "semester_id", "assigned_staff__admin")
+        .order_by("admin__first_name", "admin__last_name", "admin__username", "id")
+    )
+
+
+def _resolve_semester_for_date(target_date):
+    return SemesterModel.object.filter(
+        semester_start_date__lte=target_date,
+        semester_end_date__gte=target_date,
     ).order_by("id").first()
 
-def _resolve_session_from_students(subject, staff_obj):
-    session_ids = list(
+
+def _resolve_semester_from_students(subject, staff_obj):
+    semester_ids = list(
         Students.objects.filter(
             course_id=subject.course_id,
             assigned_staff=staff_obj,
-        ).values_list("session_year_id", flat=True).distinct()
+        ).values_list("semester_id", flat=True).distinct()
     )
-    if len(session_ids) == 1:
-        return SessionYearModel.object.filter(id=session_ids[0]).first()
+    if len(semester_ids) == 1:
+        return SemesterModel.object.filter(id=semester_ids[0]).first()
     return None
 
-def _resolve_fallback_session(attendance_date_obj, subject_model, staff_obj, selected_student_admin_ids=None):
-    session_model = _resolve_session_for_date(attendance_date_obj)
-    if session_model:
-        return session_model
+
+def _resolve_fallback_semester(attendance_date_obj, subject_model, staff_obj, selected_student_admin_ids=None):
+    semester_model = _resolve_semester_for_date(attendance_date_obj)
+    if semester_model:
+        return semester_model
 
     students_qs = Students.objects.filter(
         assigned_staff=staff_obj,
@@ -68,19 +127,104 @@ def _resolve_fallback_session(attendance_date_obj, subject_model, staff_obj, sel
     if selected_student_admin_ids:
         students_qs = students_qs.filter(admin_id__in=selected_student_admin_ids)
 
-    session_id = students_qs.values_list("session_year_id", flat=True).order_by("session_year_id").first()
-    if session_id:
-        return SessionYearModel.object.filter(id=session_id).first()
+    semester_id = students_qs.values_list("semester_id", flat=True).order_by("semester_id").first()
+    if semester_id:
+        return SemesterModel.object.filter(id=semester_id).first()
 
-    session_model = SessionYearModel.object.order_by("id").first()
-    if session_model:
-        return session_model
+    semester_model = SemesterModel.object.order_by("id").first()
+    if semester_model:
+        return semester_model
 
     year = attendance_date_obj.year
-    return SessionYearModel.object.create(
-        session_start_year=f"{year}-01-01",
-        session_end_year=f"{year}-12-31",
+    return SemesterModel.object.create(
+        semester_start_date=f"{year}-01-01",
+        semester_end_date=f"{year}-12-31",
     )
+
+
+def _course_for_name(value):
+    normalized_value = " ".join((value or "").strip().lower().split())
+    if not normalized_value:
+        return None
+    for course in Courses.objects.all():
+        if " ".join(course.course_name.strip().lower().split()) == normalized_value:
+            return course
+    return None
+
+
+def _semester_for_dates(start_value, end_value):
+    try:
+        start_date = date.fromisoformat((start_value or "").strip())
+        end_date = date.fromisoformat((end_value or "").strip())
+    except ValueError:
+        return None
+
+    return SemesterModel.object.filter(
+        semester_start_date=start_date,
+        semester_end_date=end_date,
+    ).first()
+
+
+def _gender_value(value):
+    gender = (value or "").strip().lower()
+    if gender == "male":
+        return "Male"
+    if gender == "female":
+        return "Female"
+    return None
+
+
+def _create_student_user(*, first_name, last_name, username, email, password, address, course, semester, sex):
+    user = CustomUser.objects.create_user(
+        username=username,
+        password=password,
+        email=email,
+        last_name=last_name,
+        first_name=first_name,
+        user_type=3,
+    )
+    user.students.address = address
+    user.students.course_id = course
+    user.students.semester_id = semester
+    user.students.gender = sex
+    user.students.assigned_staff = None
+    user.students.save()
+    return user
+
+
+def _extract_import_rows(uploaded_file):
+    filename = (uploaded_file.name or "").lower()
+    if filename.endswith(".csv"):
+        uploaded_file.seek(0)
+        wrapper = io.TextIOWrapper(uploaded_file.file, encoding="utf-8-sig")
+        try:
+            reader = csv.DictReader(wrapper)
+            headers = [header.strip().lower() for header in (reader.fieldnames or [])]
+            rows = list(reader)
+        finally:
+            wrapper.detach()
+        return headers, rows
+
+    if filename.endswith(".xlsx"):
+        uploaded_file.seek(0)
+        workbook = load_workbook(uploaded_file, read_only=True, data_only=True)
+        sheet = workbook.active
+        raw_headers = next(sheet.iter_rows(min_row=1, max_row=1, values_only=True), None)
+        headers = [str(header or "").strip().lower() for header in (raw_headers or [])]
+        rows = []
+        for row in sheet.iter_rows(min_row=2, values_only=True):
+            if row is None or not any(value not in (None, "") for value in row):
+                continue
+            rows.append(
+                {
+                    headers[index]: "" if value is None else str(value).strip()
+                    for index, value in enumerate(row[: len(headers)])
+                }
+            )
+        workbook.close()
+        return headers, rows
+
+    raise ValueError("Only CSV and XLSX files are supported")
 
 def _daily_attendance_payload_for_staff(staff_user_id, selected_date):
     staff_obj = Staffs.objects.get(admin=staff_user_id)
@@ -165,18 +309,273 @@ def staff_home(request):
 
     return render(request,"staff_template/staff_home_template.html",{"students_count":students_count,"attendance_count":attendance_count,"leave_count":leave_count,"subject_count":subject_count,"subject_list":subject_list,"attendance_list":attendance_list,"student_list":student_list,"present_list":student_list_attendance_present,"absent_list":student_list_attendance_absent})
 
-def staff_students_under_me(request):
+def staff_manage_student(request):
     staff_obj = _logged_in_staff(request)
-    students = (
-        Students.objects.filter(assigned_staff=staff_obj)
-        .select_related("admin", "course_id", "session_year_id")
-        .order_by("id")
-    )
+    students = _student_queryset_for_staff_list()
     return render(
         request,
-        "staff_template/staff_students_under_me.html",
-        {"students": students},
+        "staff_template/staff_manage_student.html",
+        {"students": students, "staff_obj": staff_obj},
     )
+
+
+def staff_add_student(request):
+    form = StaffAddStudentForm()
+    return render(request, "staff_template/staff_add_student_template.html", {"form": form})
+
+
+def staff_add_student_save(request):
+    if request.method != "POST":
+        return HttpResponse("Method Not Allowed")
+
+    form = StaffAddStudentForm(request.POST)
+    if not form.is_valid():
+        return render(request, "staff_template/staff_add_student_template.html", {"form": form})
+
+    first_name = form.cleaned_data["first_name"]
+    last_name = form.cleaned_data["last_name"]
+    username = form.cleaned_data["username"]
+    email = _normalize_email(form.cleaned_data["email"])
+    password = form.cleaned_data["password"]
+    address = form.cleaned_data["address"]
+    semester_id = form.cleaned_data["semester_id"]
+    course_id = form.cleaned_data["course"]
+    sex = form.cleaned_data["sex"]
+
+    if not password:
+        messages.error(request, "Password is required")
+        return HttpResponseRedirect(reverse("staff_add_student"))
+
+    error = _credentials_error(username, email)
+    if error:
+        messages.error(request, error)
+        return HttpResponseRedirect(reverse("staff_add_student"))
+
+    try:
+        with transaction.atomic():
+            course_obj = Courses.objects.get(id=course_id)
+            semester = SemesterModel.object.get(id=semester_id)
+            _create_student_user(
+                first_name=first_name,
+                last_name=last_name,
+                username=username,
+                email=email,
+                password=password,
+                address=address,
+                course=course_obj,
+                semester=semester,
+                sex=sex,
+            )
+        messages.success(request, "Successfully Added Student")
+    except (Courses.DoesNotExist, SemesterModel.DoesNotExist):
+        messages.error(request, "Invalid department or semester")
+    except Exception:
+        messages.error(request, "Failed to Add Student")
+    return HttpResponseRedirect(reverse("staff_add_student"))
+
+
+def staff_edit_student(request, student_id):
+    staff_obj = _logged_in_staff(request)
+    student = _student_for_staff_or_none(student_id, staff_obj)
+    if student is None:
+        messages.error(request, "You can edit only students assigned to you")
+        return HttpResponseRedirect(reverse("staff_manage_student"))
+
+    request.session["staff_student_id"] = student_id
+    form = StaffEditStudentForm()
+    form.fields["email"].initial = student.admin.email
+    form.fields["first_name"].initial = student.admin.first_name
+    form.fields["last_name"].initial = student.admin.last_name
+    form.fields["username"].initial = student.admin.username
+    form.fields["address"].initial = student.address
+    form.fields["course"].initial = student.course_id.id
+    form.fields["sex"].initial = student.gender
+    form.fields["semester_id"].initial = student.semester_id.id
+    return render(
+        request,
+        "staff_template/staff_edit_student_template.html",
+        {"form": form, "id": student_id, "username": student.admin.username},
+    )
+
+
+def staff_edit_student_save(request):
+    if request.method != "POST":
+        return HttpResponse("<h2>Method Not Allowed</h2>")
+
+    student_id = request.session.get("staff_student_id")
+    if student_id is None:
+        return HttpResponseRedirect(reverse("staff_manage_student"))
+
+    staff_obj = _logged_in_staff(request)
+    student = _student_for_staff_or_none(student_id, staff_obj)
+    if student is None:
+        messages.error(request, "You can edit only students assigned to you")
+        return HttpResponseRedirect(reverse("staff_manage_student"))
+
+    form = StaffEditStudentForm(request.POST)
+    if not form.is_valid():
+        return render(
+            request,
+            "staff_template/staff_edit_student_template.html",
+            {"form": form, "id": student_id, "username": student.admin.username},
+        )
+
+    first_name = form.cleaned_data["first_name"]
+    last_name = form.cleaned_data["last_name"]
+    username = form.cleaned_data["username"]
+    email = _normalize_email(form.cleaned_data["email"])
+    address = form.cleaned_data["address"]
+    semester_id = form.cleaned_data["semester_id"]
+    course_id = form.cleaned_data["course"]
+    sex = form.cleaned_data["sex"]
+
+    error = _credentials_error(username, email, exclude_user_id=student_id)
+    if error:
+        messages.error(request, error)
+        return HttpResponseRedirect(reverse("staff_edit_student", kwargs={"student_id": student_id}))
+
+    try:
+        with transaction.atomic():
+            user = CustomUser.objects.get(id=student_id)
+            user.first_name = first_name
+            user.last_name = last_name
+            user.username = username
+            user.email = email
+            user.save()
+
+            student = Students.objects.get(admin=student_id, assigned_staff=staff_obj)
+            student.address = address
+            student.semester_id = SemesterModel.object.get(id=semester_id)
+            student.gender = sex
+            student.course_id = Courses.objects.get(id=course_id)
+            student.save()
+        del request.session["staff_student_id"]
+        messages.success(request, "Successfully Edited Student")
+        return HttpResponseRedirect(reverse("staff_edit_student", kwargs={"student_id": student_id}))
+    except (Courses.DoesNotExist, SemesterModel.DoesNotExist):
+        messages.error(request, "Invalid department or semester")
+    except Exception:
+        messages.error(request, "Failed to Edit Student")
+    return HttpResponseRedirect(reverse("staff_edit_student", kwargs={"student_id": student_id}))
+
+
+def staff_delete_student(request, student_id):
+    staff_obj = _logged_in_staff(request)
+    student = _student_for_staff_or_none(student_id, staff_obj)
+    if student is None:
+        messages.error(request, "You can delete only students assigned to you")
+        return HttpResponseRedirect(reverse("staff_manage_student"))
+
+    try:
+        CustomUser.objects.get(id=student_id).delete()
+        messages.success(request, "Successfully Deleted Student")
+    except Exception:
+        messages.error(request, "Failed to Delete Student")
+    return HttpResponseRedirect(reverse("staff_manage_student"))
+
+
+def staff_import_students_save(request):
+    if request.method != "POST":
+        return HttpResponseRedirect(reverse("staff_add_student"))
+
+    upload = request.FILES.get("student_file")
+    if upload is None:
+        messages.error(request, "Please choose a CSV or XLSX file to upload")
+        return HttpResponseRedirect(reverse("staff_add_student"))
+
+    try:
+        headers, rows = _extract_import_rows(upload)
+    except ValueError as exc:
+        messages.error(request, str(exc))
+        return HttpResponseRedirect(reverse("staff_add_student"))
+    except Exception:
+        messages.error(request, "Failed to read the uploaded file")
+        return HttpResponseRedirect(reverse("staff_add_student"))
+
+    if headers != IMPORT_HEADERS:
+        messages.error(request, "Invalid file format. Please use the provided student import template.")
+        return HttpResponseRedirect(reverse("staff_add_student"))
+
+    created_count = 0
+    skipped_reasons = []
+    for row_index, row in enumerate(rows, start=2):
+        first_name = (row.get("first_name") or "").strip()
+        last_name = (row.get("last_name") or "").strip()
+        username = (row.get("username") or "").strip()
+        email = _normalize_email(row.get("email"))
+        password = (row.get("password") or "").strip()
+        address = (row.get("address") or "").strip()
+        department_name = (row.get("department") or "").strip()
+        sex = _gender_value(row.get("gender"))
+        semester = _semester_for_dates(row.get("semester_start_date"), row.get("semester_end_date"))
+        course = _course_for_name(department_name)
+
+        if not all([first_name, last_name, username, email, password, address, department_name, sex]):
+            skipped_reasons.append(f"Row {row_index}: missing required values")
+            continue
+        if course is None:
+            skipped_reasons.append(f"Row {row_index}: unknown department")
+            continue
+        if semester is None:
+            skipped_reasons.append(f"Row {row_index}: unknown semester")
+            continue
+
+        error = _credentials_error(username, email)
+        if error:
+            skipped_reasons.append(f"Row {row_index}: {error}")
+            continue
+
+        try:
+            with transaction.atomic():
+                _create_student_user(
+                    first_name=first_name,
+                    last_name=last_name,
+                    username=username,
+                    email=email,
+                    password=password,
+                    address=address,
+                    course=course,
+                    semester=semester,
+                    sex=sex,
+                )
+            created_count += 1
+        except Exception:
+            skipped_reasons.append(f"Row {row_index}: failed to create student")
+
+    skipped_count = len(skipped_reasons)
+    if created_count:
+        messages.success(request, f"Imported {created_count} students successfully")
+    if skipped_count:
+        messages.warning(request, f"Skipped {skipped_count} rows during import")
+        for reason in skipped_reasons[:10]:
+            messages.warning(request, reason)
+        if skipped_count > 10:
+            messages.warning(request, f"{skipped_count - 10} more rows were skipped")
+    if not created_count and not skipped_count:
+        messages.info(request, "The file did not contain any student rows")
+    return HttpResponseRedirect(reverse("staff_add_student"))
+
+
+def staff_download_student_template(request):
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = 'attachment; filename="student_import_template.csv"'
+    writer = csv.writer(response)
+    writer.writerow(IMPORT_HEADERS)
+    writer.writerow(
+        [
+            "Asha",
+            "Patel",
+            "asha.patel",
+            "asha.patel@example.com",
+            "pass12345",
+            "Ahmedabad",
+            "Female",
+            "BCA",
+            "2026-01-01",
+            "2026-06-30",
+        ]
+    )
+    return response
 
 def staff_daily_attendance_graph(request):
     selected_date_raw = (request.GET.get("date") or "").strip()
@@ -234,14 +633,14 @@ def staff_take_attendance(request):
 @csrf_exempt
 def get_students(request):
     subject_id=request.POST.get("subject")
-    session_year=request.POST.get("session_year")
+    semester_id=request.POST.get("semester_id")
     attendance_date_raw = (request.POST.get("attendance_date") or "").strip()
 
     subject=_subject_for_staff_or_none(subject_id, request.user.id)
     if not subject:
         return JsonResponse({"error": "Invalid subject for this staff"}, status=403)
 
-    session_model = None
+    semester_model = None
     staff_obj = _logged_in_staff(request)
     if attendance_date_raw:
         try:
@@ -252,15 +651,15 @@ def get_students(request):
             course_id=subject.course_id,
             assigned_staff=staff_obj,
         )
-    elif session_year:
-        session_model = SessionYearModel.object.filter(id=session_year).first()
-        if not session_model:
-            session_model = _resolve_session_from_students(subject, staff_obj)
-        if not session_model:
+    elif semester_id:
+        semester_model = SemesterModel.object.filter(id=semester_id).first()
+        if not semester_model:
+            semester_model = _resolve_semester_from_students(subject, staff_obj)
+        if not semester_model:
             return JsonResponse(json.dumps([]), content_type="application/json", safe=False)
         students=Students.objects.filter(
             course_id=subject.course_id,
-            session_year_id=session_model,
+            semester_id=semester_model,
             assigned_staff=staff_obj,
         )
     else:
@@ -289,13 +688,13 @@ def save_attendance_data(request):
     staff_obj = _logged_in_staff(request)
     json_sstudent=json.loads(student_ids)
     selected_student_admin_ids = [int(stud["id"]) for stud in json_sstudent]
-    session_model = _resolve_fallback_session(
+    semester_model = _resolve_fallback_semester(
         attendance_date_obj,
         subject_model,
         staff_obj,
         selected_student_admin_ids=selected_student_admin_ids,
     ) if subject_model else None
-    if not subject_model or not session_model:
+    if not subject_model or not semester_model:
         return HttpResponse("ERR")
 
     try:
@@ -303,11 +702,11 @@ def save_attendance_data(request):
             attendance, _ = Attendance.objects.get_or_create(
                 subject_id=subject_model,
                 attendance_date=attendance_date_obj,
-                defaults={"session_year_id": session_model},
+                defaults={"semester_id": semester_model},
             )
-            if attendance.session_year_id_id != session_model.id:
-                attendance.session_year_id = session_model
-                attendance.save(update_fields=["session_year_id"])
+            if attendance.semester_id_id != semester_model.id:
+                attendance.semester_id = semester_model
+                attendance.save(update_fields=["semester_id"])
 
             for stud in json_sstudent:
                  student=_assigned_student_or_none(stud['id'], staff_obj)
@@ -342,7 +741,7 @@ def get_attendance_dates(request):
     attendance=Attendance.objects.filter(subject_id=subject_obj).order_by("-attendance_date", "-id")
     attendance_obj=[]
     for attendance_single in attendance:
-        data={"id":attendance_single.id,"attendance_date":str(attendance_single.attendance_date),"session_year_id":attendance_single.session_year_id.id}
+        data={"id":attendance_single.id,"attendance_date":str(attendance_single.attendance_date),"semester_id":attendance_single.semester_id.id}
         attendance_obj.append(data)
 
     return JsonResponse(json.dumps(attendance_obj),safe=False)
@@ -549,8 +948,8 @@ def staff_all_notification(request):
 
 def staff_add_result(request):
     subjects=Subjects.objects.filter(staff_id=request.user.id)
-    session_years=SessionYearModel.object.all()
-    return render(request,"staff_template/staff_add_result.html",{"subjects":subjects,"session_years":session_years})
+    semesters=SemesterModel.object.all()
+    return render(request,"staff_template/staff_add_result.html",{"subjects":subjects,"semesters":semesters})
 
 def save_student_result(request):
     if request.method!='POST':
@@ -605,14 +1004,14 @@ def fetch_result_student(request):
 
 def start_live_classroom(request):
     subjects=Subjects.objects.filter(staff_id=request.user.id)
-    session_years=SessionYearModel.object.all()
-    return render(request,"staff_template/start_live_classroom.html",{"subjects":subjects,"session_years":session_years})
+    semesters=SemesterModel.object.all()
+    return render(request,"staff_template/start_live_classroom.html",{"subjects":subjects,"semesters":semesters})
 
 def start_live_classroom_process(request):
-    session_year=request.POST.get("session_year")
+    semester_id=request.POST.get("semester_id")
     subject=request.POST.get("subject")
 
-    room = create_or_get_active_room(request.user, subject, session_year)
+    room = create_or_get_active_room(request.user, subject, semester_id)
     mark_participant_joined(request.user, room, "STAFF", is_publisher=True)
     return render(
         request,
@@ -622,7 +1021,7 @@ def start_live_classroom_process(request):
             "password": room.room_pwd,
             "roomid": room.room_name,
             "subject": room.subject.subject_name,
-            "session_year": room.session_years,
+            "semester": room.semester,
             "room_pk": room.id,
             "socket_url": settings.LIVE_SIGNALING_URL,
         },
@@ -635,15 +1034,15 @@ def start_live_classroom_api(request):
         return JsonResponse({"ok": False, "error": "Only staff can start class"}, status=403)
 
     subject = request.POST.get("subject")
-    session_year = request.POST.get("session_year")
-    if not subject or not session_year:
-        return JsonResponse({"ok": False, "error": "subject and session_year are required"}, status=400)
+    semester_id = request.POST.get("semester_id")
+    if not subject or not semester_id:
+        return JsonResponse({"ok": False, "error": "subject and semester_id are required"}, status=400)
 
     try:
-        room = create_or_get_active_room(request.user, subject, session_year)
+        room = create_or_get_active_room(request.user, subject, semester_id)
         mark_participant_joined(request.user, room, "STAFF", is_publisher=True)
     except ObjectDoesNotExist:
-        return JsonResponse({"ok": False, "error": "Invalid subject/session"}, status=404)
+        return JsonResponse({"ok": False, "error": "Invalid subject/semester"}, status=404)
 
     token = issue_realtime_token(request.user, room, role="STAFF")
     return JsonResponse(

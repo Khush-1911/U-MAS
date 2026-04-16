@@ -6,10 +6,10 @@ from django.dispatch import receiver
 from django.utils import timezone
 
 # Create your models here.
-class SessionYearModel(models.Model):
+class SemesterModel(models.Model):
     id=models.AutoField(primary_key=True)
-    session_start_year=models.DateField()
-    session_end_year=models.DateField()
+    semester_start_date=models.DateField()
+    semester_end_date=models.DateField()
     object=models.Manager()
 
 class CustomUser(AbstractUser):
@@ -70,10 +70,9 @@ class Students(models.Model):
     admin=models.OneToOneField(CustomUser,on_delete=models.CASCADE)
     profile_id=models.CharField(max_length=20, unique=True, default="", blank=True)
     gender=models.CharField(max_length=255)
-    profile_pic=models.FileField()
     address=models.TextField()
     course_id=models.ForeignKey(Courses,on_delete=models.DO_NOTHING)
-    session_year_id=models.ForeignKey(SessionYearModel,on_delete=models.CASCADE)
+    semester_id=models.ForeignKey(SemesterModel,on_delete=models.CASCADE)
     assigned_staff=models.ForeignKey(
         Staffs,
         on_delete=models.SET_NULL,
@@ -91,7 +90,7 @@ class Attendance(models.Model):
     subject_id=models.ForeignKey(Subjects,on_delete=models.DO_NOTHING)
     attendance_date=models.DateField()
     created_at=models.DateTimeField(auto_now_add=True)
-    session_year_id=models.ForeignKey(SessionYearModel,on_delete=models.CASCADE)
+    semester_id=models.ForeignKey(SemesterModel,on_delete=models.CASCADE)
     updated_at=models.DateTimeField(auto_now_add=True)
     objects = models.Manager()
 
@@ -205,7 +204,7 @@ class OnlineClassRoom(models.Model):
     room_pwd=models.CharField(max_length=255)
     realtime_room_id=models.CharField(max_length=255, unique=True, null=True, blank=True)
     subject=models.ForeignKey(Subjects,on_delete=models.CASCADE)
-    session_years=models.ForeignKey(SessionYearModel,on_delete=models.CASCADE)
+    semester=models.ForeignKey(SemesterModel,on_delete=models.CASCADE)
     started_by=models.ForeignKey(Staffs,on_delete=models.CASCADE)
     is_active=models.BooleanField(default=True)
     status=models.CharField(max_length=16, choices=status_choices, default="ACTIVE")
@@ -253,20 +252,19 @@ def create_user_profile(sender,instance,created,**kwargs):
             if course is None:
                 course = Courses.objects.create(course_name="Unassigned Course")
 
-            session = SessionYearModel.object.order_by("id").first()
-            if session is None:
+            semester = SemesterModel.object.order_by("id").first()
+            if semester is None:
                 year = timezone.now().date().year
-                session = SessionYearModel.object.create(
-                    session_start_year=f"{year}-01-01",
-                    session_end_year=f"{year}-12-31",
+                semester = SemesterModel.object.create(
+                    semester_start_date=f"{year}-01-01",
+                    semester_end_date=f"{year}-12-31",
                 )
 
             student = Students.objects.create(
                 admin=instance,
                 course_id=course,
-                session_year_id=session,
+                semester_id=semester,
                 address="",
-                profile_pic="",
                 gender="",
                 assigned_staff=None,
             )

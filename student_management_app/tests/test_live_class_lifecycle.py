@@ -1,15 +1,15 @@
 from django.test import TestCase
 
-from student_management_app.models import Courses, SessionYearModel, Subjects
+from student_management_app.models import Courses, SemesterModel, Subjects
 from student_management_app.models import CustomUser
 from student_management_app.services.live_class_service import create_or_get_active_room, end_room
 
 
 class LiveClassLifecycleTests(TestCase):
     def setUp(self):
-        self.session = SessionYearModel.object.create(
-            session_start_year="2025-01-01",
-            session_end_year="2025-12-31",
+        self.semester = SemesterModel.object.create(
+            semester_start_date="2025-01-01",
+            semester_end_date="2025-12-31",
         )
         self.course = Courses.objects.create(course_name="BSc")
         self.staff_user = CustomUser.objects.create_user(
@@ -25,7 +25,7 @@ class LiveClassLifecycleTests(TestCase):
         )
 
     def test_end_room_marks_inactive(self):
-        room = create_or_get_active_room(self.staff_user, self.subject.id, self.session.id)
+        room = create_or_get_active_room(self.staff_user, self.subject.id, self.semester.id)
         end_room(self.staff_user, room)
         room.refresh_from_db()
         self.assertEqual(room.status, "ENDED")

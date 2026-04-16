@@ -54,7 +54,7 @@ Edit Results
 {% block custom_js %}
 <script>
     $(document).ready(function(){
-        $("#id_session_ids").change(function(){
+        $("#id_semester_ids").change(function(){
             fetchStudents();
         });
         $("#id_subject_id").change(function(){
@@ -66,13 +66,13 @@ Edit Results
         })
 
         function fetchStudents(){
-            var session_year=$("#id_session_ids").val()
+            var semester_id=$("#id_semester_ids").val()
             var subject=$("#id_subject_id").val()
 
             $.ajax({
                 url:'{% url 'get_students' %}',
                 type:'POST',
-                data:{subject:subject,session_year:session_year},
+                data:{subject:subject,semester_id:semester_id},
             })
             .done(function(response){
                 var json_data=JSON.parse(response);

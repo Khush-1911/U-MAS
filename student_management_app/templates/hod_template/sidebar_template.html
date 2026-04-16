@@ -20,12 +20,6 @@
       <span class="sidebar-label">Manage Staff</span>
     </a>
 
-    {% url 'add_student' as add_student %}
-    <a href="{% url 'add_student' %}" class="sidebar-link {% if request.path == add_student %}active{% endif %}">
-      <i class="fas fa-user-graduate"></i>
-      <span class="sidebar-label">Add Student</span>
-    </a>
-
     {% url 'manage_student' as manage_student %}
     {% url 'edit_student' student_id=id as edit_student %}
     <a href="{% url 'manage_student' %}" class="sidebar-link {% if request.path == manage_student %}active{% endif %} {% if request.path == edit_student %}active{% endif %}">
@@ -59,10 +53,10 @@
       <span class="sidebar-label">Manage Subject</span>
     </a>
 
-    {% url 'manage_session' as manage_session %}
-    <a href="{% url 'manage_session' %}" class="sidebar-link {% if request.path == manage_session %}active{% endif %}">
+    {% url 'manage_semester' as manage_semester %}
+    <a href="{% url 'manage_semester' %}" class="sidebar-link {% if request.path == manage_semester %}active{% endif %}">
       <i class="fas fa-calendar-alt"></i>
-      <span class="sidebar-label">Sessions</span>
+      <span class="sidebar-label">Semesters</span>
     </a>
 
     {% url 'student_leave_view' as student_leave_view %}

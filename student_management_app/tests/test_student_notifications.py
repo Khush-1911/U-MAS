@@ -1,15 +1,15 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from student_management_app.models import Courses, CustomUser, NotificationStudent, SessionYearModel
+from student_management_app.models import Courses, CustomUser, NotificationStudent, SemesterModel
 
 
 class StudentNotificationTests(TestCase):
     def setUp(self):
         self.course = Courses.objects.create(course_name="BCA")
-        self.session = SessionYearModel.object.create(
-            session_start_year="2026-01-01",
-            session_end_year="2026-12-31",
+        self.semester = SemesterModel.object.create(
+            semester_start_date="2026-01-01",
+            semester_end_date="2026-12-31",
         )
         self.student_user = CustomUser.objects.create_user(
             username="student_notifications",
@@ -18,7 +18,7 @@ class StudentNotificationTests(TestCase):
             user_type=3,
         )
         self.student_user.students.course_id = self.course
-        self.student_user.students.session_year_id = self.session
+        self.student_user.students.semester_id = self.semester
         self.student_user.students.save()
 
         self.unread_notification = NotificationStudent.objects.create(

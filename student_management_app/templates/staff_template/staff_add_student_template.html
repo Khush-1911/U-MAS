@@ -1,0 +1,243 @@
+{% extends 'staff_template/base_template.html' %}
+{% block page_title %}
+Add Students
+{% endblock page_title %}
+
+{% block custom_css %}
+<style>
+  .modern-bulk-btn {
+    background: linear-gradient(135deg, #4776E6 0%, #8E54E9 100%);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 15px;
+    box-shadow: 0 4px 15px rgba(71, 118, 230, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .modern-bulk-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(71, 118, 230, 0.4);
+    color: #fff;
+  }
+  
+  .bulk-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(10, 15, 30, 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 99999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  .bulk-modal {
+    background: #ffffff;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 550px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    overflow: hidden;
+    animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+  }
+  
+  .bulk-modal-header {
+    background: linear-gradient(135deg, #4776E6 0%, #8E54E9 100%);
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+  }
+  
+  .bulk-modal-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  
+  .bulk-close-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .bulk-close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+  }
+  
+  .bulk-modal-body {
+    padding: 24px;
+    color: #4b5563;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  
+  .bulk-modal-footer {
+    padding: 16px 24px;
+    background: #f8f9fa;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    border-top: 1px solid #ebebeb;
+  }
+  
+  .btn-outline-custom {
+    padding: 10px 20px;
+    border: 1px solid #d1d5db;
+    background: white;
+    color: #4b5563;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  
+  .btn-outline-custom:hover {
+    background: #f3f4f6;
+    color: #374151;
+  }
+  
+  .btn-primary-custom {
+    padding: 10px 24px;
+    background: linear-gradient(135deg, #4776E6 0%, #8E54E9 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(71, 118, 230, 0.25);
+  }
+  
+  .btn-primary-custom:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(71, 118, 230, 0.35);
+  }
+  
+  .file-upload-wrapper {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .custom-file-input {
+    width: 100%;
+    padding: 12px;
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    background: #f8fafc;
+    cursor: pointer;
+    color: #64748b;
+    transition: all 0.3s;
+  }
+  
+  .custom-file-input:hover {
+    border-color: #4776E6;
+    background: #f0f4ff;
+  }
+
+  .template-download-link {
+    display: inline-flex;
+    align-items: center;
+    color: #4776E6;
+    text-decoration: none;
+    font-weight: 600;
+    background: #f0f4ff;
+    padding: 8px 16px;
+    border-radius: 20px;
+    transition: all 0.2s;
+  }
+  .template-download-link:hover {
+    background: #e0e7ff;
+    color: #3730A3;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+{% endblock custom_css %}
+
+{% block main_content %}
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card card-primary">
+          <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 class="card-title" style="margin: 0;">Add Student</h3>
+            <button type="button" class="modern-bulk-btn" onclick="document.getElementById('bulk-import-overlay').style.display='flex'">
+              <i class="fas fa-file-upload"></i> Add via Bulk File
+            </button>
+          </div>
+          {% url 'staff_add_student_save' as action_path %}
+          {% include 'hod_template/form_template.html' with messages=messages form=form action_path=action_path button_text="Add Student" %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Pure HTML/CSS Modal Overlay for Bulk Import -->
+    <div id="bulk-import-overlay" class="bulk-overlay">
+      <div class="bulk-modal">
+        <div class="bulk-modal-header">
+          <h5 class="bulk-modal-title">Bulk Import Students</h5>
+          <button type="button" class="bulk-close-btn" onclick="document.getElementById('bulk-import-overlay').style.display='none'">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <form action="{% url 'staff_import_students_save' %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="bulk-modal-body">
+            <p>Upload a properly structured CSV or Excel file to add multiple students simultaneously. Imported students will remain unassigned until the HOD assigns them.</p>
+            
+            <div class="file-upload-wrapper">
+              <label style="font-weight: 600; margin-bottom: 8px; display: block; color: #374151;">Select File (.csv, .xlsx)</label>
+              <input type="file" name="student_file" accept=".csv,.xlsx" required class="custom-file-input">
+            </div>
+            
+            <div style="text-align: center;">
+              <a href="{% url 'staff_download_student_template' %}" class="template-download-link">
+                <i class="fas fa-download" style="margin-right: 8px;"></i> Download CSV Template
+              </a>
+            </div>
+          </div>
+          <div class="bulk-modal-footer">
+            <button type="button" class="btn-outline-custom" onclick="document.getElementById('bulk-import-overlay').style.display='none'">Cancel</button>
+            <button type="submit" class="btn-primary-custom">Import Data</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock main_content %}

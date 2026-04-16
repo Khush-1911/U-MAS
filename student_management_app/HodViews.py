@@ -2,7 +2,6 @@ import json
 
 import requests
 from django.contrib import messages
-from django.core.files.storage import FileSystemStorage
 from django.db import IntegrityError, transaction
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
@@ -10,7 +9,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
 from student_management_app.forms import AddStudentForm, EditStudentForm
-from student_management_app.models import CustomUser, Staffs, Courses, Subjects, Students, SessionYearModel, \
+from student_management_app.models import CustomUser, Staffs, Courses, Subjects, Students, SemesterModel, \
     FeedBackStudent, FeedBackStaffs, LeaveReportStudent, LeaveReportStaff, Attendance, AttendanceReport, \
     NotificationStudent, NotificationStaffs
 
@@ -235,7 +234,7 @@ def add_student_save(request):
             email=_normalize_email(form.cleaned_data["email"])
             password=form.cleaned_data["password"]
             address=form.cleaned_data["address"]
-            session_year_id=form.cleaned_data["session_year_id"]
+            semester_id=form.cleaned_data["semester_id"]
             course_id=form.cleaned_data["course"]
             sex=form.cleaned_data["sex"]
             assigned_staff_id=form.cleaned_data["assigned_staff"]
@@ -249,18 +248,10 @@ def add_student_save(request):
                 messages.error(request, error)
                 return HttpResponseRedirect(reverse("add_student"))
 
-            profile_pic=request.FILES.get("profile_pic")
-            if not profile_pic:
-                messages.error(request, "Profile picture is required")
-                return HttpResponseRedirect(reverse("add_student"))
-            fs=FileSystemStorage()
-            filename=fs.save(profile_pic.name,profile_pic)
-            profile_pic_url=fs.url(filename)
-
             try:
                 with transaction.atomic():
                     course_obj=Courses.objects.get(id=course_id)
-                    session_year=SessionYearModel.object.get(id=session_year_id)
+                    semester=SemesterModel.object.get(id=semester_id)
                     assigned_staff=Staffs.objects.get(id=assigned_staff_id)
 
                     user=CustomUser.objects.create_user(
@@ -273,15 +264,14 @@ def add_student_save(request):
                     )
                     user.students.address=address
                     user.students.course_id=course_obj
-                    user.students.session_year_id=session_year
+                    user.students.semester_id=semester
                     user.students.gender=sex
-                    user.students.profile_pic=profile_pic_url
                     user.students.assigned_staff=assigned_staff
                     user.students.save()
                 messages.success(request,"Successfully Added Student")
                 return HttpResponseRedirect(reverse("add_student"))
-            except (Courses.DoesNotExist, SessionYearModel.DoesNotExist, Staffs.DoesNotExist):
-                messages.error(request,"Invalid department, session year, or assigned staff")
+            except (Courses.DoesNotExist, SemesterModel.DoesNotExist, Staffs.DoesNotExist):
+                messages.error(request,"Invalid department, semester, or assigned staff")
                 return HttpResponseRedirect(reverse("add_student"))
             except IntegrityError:
                 messages.error(request,"Email already exists")
@@ -456,7 +446,7 @@ def edit_student(request,student_id):
     form.fields['address'].initial=student.address
     form.fields['course'].initial=student.course_id.id
     form.fields['sex'].initial=student.gender
-    form.fields['session_year_id'].initial=student.session_year_id.id
+    form.fields['semester_id'].initial=student.semester_id.id
     form.fields['assigned_staff'].initial=student.assigned_staff_id
     return render(request,"hod_template/edit_student_template.html",{"form":form,"id":student_id,"username":student.admin.username})
 
@@ -475,7 +465,7 @@ def edit_student_save(request):
             username = form.cleaned_data["username"]
             email = _normalize_email(form.cleaned_data["email"])
             address = form.cleaned_data["address"]
-            session_year_id=form.cleaned_data["session_year_id"]
+            semester_id=form.cleaned_data["semester_id"]
             course_id = form.cleaned_data["course"]
             sex = form.cleaned_data["sex"]
             assigned_staff_id = form.cleaned_data["assigned_staff"]
@@ -484,15 +474,6 @@ def edit_student_save(request):
             if error:
                 messages.error(request, error)
                 return HttpResponseRedirect(reverse("edit_student",kwargs={"student_id":student_id}))
-
-            if request.FILES.get('profile_pic',False):
-                profile_pic=request.FILES['profile_pic']
-                fs=FileSystemStorage()
-                filename=fs.save(profile_pic.name,profile_pic)
-                profile_pic_url=fs.url(filename)
-            else:
-                profile_pic_url=None
-
 
             try:
                 with transaction.atomic():
@@ -505,21 +486,19 @@ def edit_student_save(request):
 
                     student=Students.objects.get(admin=student_id)
                     student.address=address
-                    session_year = SessionYearModel.object.get(id=session_year_id)
-                    student.session_year_id = session_year
+                    semester = SemesterModel.object.get(id=semester_id)
+                    student.semester_id = semester
                     student.gender=sex
                     course=Courses.objects.get(id=course_id)
                     assigned_staff=Staffs.objects.get(id=assigned_staff_id)
                     student.course_id=course
                     student.assigned_staff=assigned_staff
-                    if profile_pic_url!=None:
-                        student.profile_pic=profile_pic_url
                     student.save()
                 del request.session['student_id']
                 messages.success(request,"Successfully Edited Student")
                 return HttpResponseRedirect(reverse("edit_student",kwargs={"student_id":student_id}))
-            except (Courses.DoesNotExist, SessionYearModel.DoesNotExist, Staffs.DoesNotExist):
-                messages.error(request,"Invalid department, session year, or assigned staff")
+            except (Courses.DoesNotExist, SemesterModel.DoesNotExist, Staffs.DoesNotExist):
+                messages.error(request,"Invalid department, semester, or assigned staff")
                 return HttpResponseRedirect(reverse("edit_student",kwargs={"student_id":student_id}))
             except IntegrityError:
                 messages.error(request,"Email already exists")
@@ -590,34 +569,36 @@ def edit_course_save(request):
             return HttpResponseRedirect(reverse("edit_course",kwargs={"course_id":course_id}))
 
 
-def manage_session(request):
-    sessions=SessionYearModel.object.all()
-    return render(request,"hod_template/manage_session_template.html",{"sessions":sessions})
+def manage_semester(request):
+    semesters=SemesterModel.object.all()
+    return render(request,"hod_template/manage_semester_template.html",{"semesters":semesters})
 
-def delete_session(request,session_id):
+
+def delete_semester(request,semester_id):
     try:
-        session=SessionYearModel.object.get(id=session_id)
-        session.delete()
-        messages.success(request,"Successfully Deleted Session")
+        semester=SemesterModel.object.get(id=semester_id)
+        semester.delete()
+        messages.success(request,"Successfully Deleted Semester")
     except:
-        messages.error(request,"Failed to Delete Session")
-    return HttpResponseRedirect(reverse("manage_session"))
+        messages.error(request,"Failed to Delete Semester")
+    return HttpResponseRedirect(reverse("manage_semester"))
 
-def add_session_save(request):
+
+def add_semester_save(request):
     if request.method!="POST":
-        return HttpResponseRedirect(reverse("manage_session"))
+        return HttpResponseRedirect(reverse("manage_semester"))
     else:
-        session_start_year=request.POST.get("session_start")
-        session_end_year=request.POST.get("session_end")
+        semester_start_date=request.POST.get("semester_start")
+        semester_end_date=request.POST.get("semester_end")
 
         try:
-            sessionyear=SessionYearModel(session_start_year=session_start_year,session_end_year=session_end_year)
-            sessionyear.save()
-            messages.success(request, "Successfully Added Session")
-            return HttpResponseRedirect(reverse("manage_session"))
+            semester=SemesterModel(semester_start_date=semester_start_date,semester_end_date=semester_end_date)
+            semester.save()
+            messages.success(request, "Successfully Added Semester")
+            return HttpResponseRedirect(reverse("manage_semester"))
         except:
-            messages.error(request, "Failed to Add Session")
-            return HttpResponseRedirect(reverse("manage_session"))
+            messages.error(request, "Failed to Add Semester")
+            return HttpResponseRedirect(reverse("manage_semester"))
 
 @csrf_exempt
 def check_email_exist(request):
@@ -644,7 +625,7 @@ def staff_feedback_message(request):
 def student_feedback_message(request):
     feedbacks = (
         FeedBackStudent.objects.filter(forwarded_to_hod=True)
-        .select_related("student_id__admin", "student_id__session_year_id", "staff_id__admin")
+        .select_related("student_id__admin", "student_id__semester_id", "staff_id__admin")
         .order_by("-forwarded_at", "-created_at")
     )
     return render(request,"hod_template/student_feedback_template.html",{"feedbacks":feedbacks})
@@ -710,19 +691,19 @@ def staff_disapprove_leave(request,leave_id):
 
 def admin_view_attendance(request):
     subjects=Subjects.objects.all()
-    session_year_id=SessionYearModel.object.all()
-    return render(request,"hod_template/admin_view_attendance.html",{"subjects":subjects,"session_year_id":session_year_id})
+    semesters=SemesterModel.object.all()
+    return render(request,"hod_template/admin_view_attendance.html",{"subjects":subjects,"semesters":semesters})
 
 @csrf_exempt
 def admin_get_attendance_dates(request):
     subject=request.POST.get("subject")
-    session_year_id=request.POST.get("session_year_id")
+    semester_id=request.POST.get("semester_id")
     subject_obj=Subjects.objects.get(id=subject)
-    session_year_obj=SessionYearModel.object.get(id=session_year_id)
-    attendance=Attendance.objects.filter(subject_id=subject_obj,session_year_id=session_year_obj)
+    semester_obj=SemesterModel.object.get(id=semester_id)
+    attendance=Attendance.objects.filter(subject_id=subject_obj,semester_id=semester_obj)
     attendance_obj=[]
     for attendance_single in attendance:
-        data={"id":attendance_single.id,"attendance_date":str(attendance_single.attendance_date),"session_year_id":attendance_single.session_year_id.id}
+        data={"id":attendance_single.id,"attendance_date":str(attendance_single.attendance_date),"semester_id":attendance_single.semester_id.id}
         attendance_obj.append(data)
 
     return JsonResponse(json.dumps(attendance_obj),safe=False)

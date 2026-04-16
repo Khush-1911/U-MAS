@@ -53,20 +53,11 @@
         </select>
       </div>
       <div class="form-group" style="margin-top:12px;">
-        <label>Session Year</label>
-        <select class="form-control" name="session_year" required>
-          <option value="">Select session</option>
-          {% for session in session_years %}
-          <option value="{{ session.id }}">{{ session.session_start_year }} TO {{ session.session_end_year }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div class="form-group" style="margin-top:12px;">
-        <label>Assigned Staff</label>
-        <select class="form-control" name="assigned_staff" required>
-          <option value="">Select staff</option>
-          {% for staff in staffs %}
-          <option value="{{ staff.id }}">{{ staff.profile_id|default:staff.id }} - {{ staff.admin.get_full_name|default:staff.admin.username }}</option>
+        <label>Semester</label>
+        <select class="form-control" name="semester" required>
+          <option value="">Select semester</option>
+          {% for semester in semesters %}
+          <option value="{{ semester.id }}">{{ semester.semester_start_date }} TO {{ semester.semester_end_date }}</option>
           {% endfor %}
         </select>
       </div>
@@ -77,10 +68,6 @@
           <option value="Male">Male</option>
           <option value="Female">Female</option>
         </select>
-      </div>
-      <div class="form-group" style="margin-top:12px;">
-        <label>Profile Picture</label>
-        <input type="file" class="form-control" name="profile_pic" required>
       </div>
       <div class="form-group" style="margin-top:16px;">
         <button type="submit" class="btn btn-primary btn-block">Signup Student</button>

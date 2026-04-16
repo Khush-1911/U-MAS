@@ -1,0 +1,66 @@
+{% extends 'staff_template/base_template.html' %}
+{% block page_title %}
+Students
+{% endblock page_title %}
+{% block main_content %}
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Students</h3>
+          </div>
+          <div class="card-body table-responsive p-0">
+            <table class="table table-hover text-nowrap">
+              <thead>
+                <tr>
+                  <th>Student ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Department</th>
+                  <th>Semester</th>
+                  <th>Assigned Staff</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for student in students %}
+                <tr>
+                  <td>{{ student.profile_id|default:student.id }}</td>
+                  <td>{{ student.admin.first_name }} {{ student.admin.last_name }}</td>
+                  <td>{{ student.admin.email }}</td>
+                  <td>{{ student.course_id.course_name }}</td>
+                  <td>{{ student.semester_id.semester_start_date }} TO {{ student.semester_id.semester_end_date }}</td>
+                  <td>
+                    {% if student.assigned_staff %}
+                      {{ student.assigned_staff.profile_id|default:student.assigned_staff.id }} - {{ student.assigned_staff.admin.get_full_name|default:student.assigned_staff.admin.username }}
+                    {% else %}
+                      Unassigned
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if student.assigned_staff_id == staff_obj.id %}
+                      <a href="{% url 'staff_edit_student' student_id=student.admin.id %}" class="btn btn-success">Edit</a>
+                      <a href="{% url 'staff_delete_student' student_id=student.admin.id %}" class="btn btn-danger" onclick="return confirm('Delete this student?');">Delete</a>
+                    {% elif student.assigned_staff %}
+                      <span class="badge badge-secondary">Assigned to another staff</span>
+                    {% else %}
+                      <span class="badge badge-warning">Waiting for HOD assignment</span>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="7">No students found.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock main_content %}

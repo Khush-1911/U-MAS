@@ -27,10 +27,10 @@ Live Class Room
                     </select>
                   </div>
                   <div class="form-group">
-                    <label>Session Year</label>
-                    <select class="form-control" name="session_year" id="session_year">
-                        {% for session_year in session_years %}
-                          <option value="{{ session_year.id }}">{{ session_year.session_start_year }} TO {{ session_year.session_end_year }}</option>
+                    <label>Semester</label>
+                    <select class="form-control" name="semester_id" id="semester_id">
+                        {% for semester in semesters %}
+                          <option value="{{ semester.id }}">{{ semester.semester_start_date }} TO {{ semester.semester_end_date }}</option>
                         {% endfor %}
                     </select>
                   </div>
@@ -65,4 +65,3 @@ Live Class Room
     </section>
     <!-- /.content -->
 {% endblock main_content %}
-

@@ -2,15 +2,16 @@ import json
 
 from django.db import IntegrityError
 from django.test import TestCase
+from django.urls import reverse
 
-from student_management_app.models import Courses, CustomUser, SessionYearModel, Subjects
+from student_management_app.models import Courses, CustomUser, SemesterModel, Subjects
 
 
 class UserConstraintTests(TestCase):
     def setUp(self):
-        self.session = SessionYearModel.object.create(
-            session_start_year="2025-01-01",
-            session_end_year="2025-12-31",
+        self.semester = SemesterModel.object.create(
+            semester_start_date="2025-01-01",
+            semester_end_date="2025-12-31",
         )
         self.course = Courses.objects.create(course_name="BCA")
 
@@ -40,7 +41,7 @@ class UserConstraintTests(TestCase):
             user_type=3,
         )
         self.student_user.students.course_id = self.course
-        self.student_user.students.session_year_id = self.session
+        self.student_user.students.semester_id = self.semester
         self.student_user.students.assigned_staff = self.staff_user.staffs
         self.student_user.students.save()
 
@@ -80,14 +81,14 @@ class UserConstraintTests(TestCase):
             user_type=3,
         )
         unassigned_for_this_staff.students.course_id = self.course
-        unassigned_for_this_staff.students.session_year_id = self.session
+        unassigned_for_this_staff.students.semester_id = self.semester
         unassigned_for_this_staff.students.assigned_staff = self.other_staff_user.staffs
         unassigned_for_this_staff.students.save()
 
         self.client.force_login(self.staff_user)
         response = self.client.post(
             "/get_students",
-            data={"subject": self.subject.id, "session_year": self.session.id},
+            data={"subject": self.subject.id, "semester_id": self.semester.id},
         )
 
         self.assertEqual(response.status_code, 200)
@@ -103,6 +104,75 @@ class UserConstraintTests(TestCase):
         self.client.force_login(self.other_staff_user)
         response = self.client.post(
             "/get_students",
-            data={"subject": self.subject.id, "session_year": self.session.id},
+            data={"subject": self.subject.id, "semester_id": self.semester.id},
         )
         self.assertEqual(response.status_code, 403)
+
+    def test_staff_can_add_student_unassigned(self):
+        self.client.force_login(self.staff_user)
+        response = self.client.post(
+            reverse("staff_add_student_save"),
+            data={
+                "email": "newstudent@example.com",
+                "password": "pass12345",
+                "first_name": "New",
+                "last_name": "Student",
+                "username": "newstudent",
+                "address": "Campus",
+                "course": str(self.course.id),
+                "sex": "Male",
+                "semester_id": str(self.semester.id),
+            },
+            follow=True,
+        )
+
+        self.assertEqual(response.status_code, 200)
+        created_student = CustomUser.objects.get(username="newstudent")
+        self.assertIsNone(created_student.students.assigned_staff)
+        self.assertEqual(created_student.students.semester_id, self.semester)
+
+    def test_staff_cannot_edit_unassigned_student(self):
+        unassigned_student = CustomUser.objects.create_user(
+            username="unassigned_student",
+            email="unassigned_student@example.com",
+            password="pass12345",
+            user_type=3,
+        )
+        unassigned_student.students.course_id = self.course
+        unassigned_student.students.semester_id = self.semester
+        unassigned_student.students.assigned_staff = None
+        unassigned_student.students.save()
+
+        self.client.force_login(self.staff_user)
+        response = self.client.get(reverse("staff_edit_student", args=[unassigned_student.id]), follow=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "You can edit only students assigned to you")
+
+    def test_hod_can_still_edit_student(self):
+        hod_user = CustomUser.objects.create_user(
+            username="hod_editor",
+            email="hod_editor@example.com",
+            password="pass12345",
+            user_type=1,
+        )
+        self.client.force_login(hod_user)
+        self.client.get(reverse("edit_student", args=[self.student_user.id]))
+        response = self.client.post(
+            reverse("edit_student_save"),
+            data={
+                "email": self.student_user.email,
+                "first_name": "Updated",
+                "last_name": "Student",
+                "username": self.student_user.username,
+                "address": "Updated address",
+                "course": str(self.course.id),
+                "sex": "Male",
+                "semester_id": str(self.semester.id),
+                "assigned_staff": str(self.staff_user.staffs.id),
+            },
+            follow=True,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.student_user.refresh_from_db()
+        self.assertEqual(self.student_user.first_name, "Updated")

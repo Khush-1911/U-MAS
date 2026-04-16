@@ -22,7 +22,7 @@ Forwarded Student Feedback
                             <th>Student ID</th>
                             <th>Student Name</th>
                             <th>Assigned Faculty</th>
-                            <th>Student Session</th>
+                            <th>Student Semester</th>
                             <th>Message</th>
                             <th>Staff Reply</th>
                             <th>Forwarded On</th>
@@ -41,7 +41,7 @@ Forwarded Student Feedback
                                   Not assigned
                                 {% endif %}
                             </td>
-                            <td>{{ feedback.student_id.session_year_id.session_start_year }} - {{ feedback.student_id.session_year_id.session_end_year }}</td>
+                            <td>{{ feedback.student_id.semester_id.semester_start_date }} - {{ feedback.student_id.semester_id.semester_end_date }}</td>
                             <td>{{ feedback.feedback }}</td>
                             <td>{{ feedback.feedback_reply|default:"No faculty reply yet" }}</td>
                             <td>{{ feedback.forwarded_at|default:feedback.created_at }}</td>

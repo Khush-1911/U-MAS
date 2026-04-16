@@ -12,7 +12,7 @@ from django.views.decorators.http import require_POST
 from django.conf import settings
 
 from student_management_app.models import Students, Courses, Subjects, CustomUser, Attendance, AttendanceReport, \
-    LeaveReportStudent, FeedBackStudent, NotificationStudent, StudentResult, OnlineClassRoom, SessionYearModel
+    LeaveReportStudent, FeedBackStudent, NotificationStudent, StudentResult, OnlineClassRoom, SemesterModel
 from student_management_app.services.live_class_service import (
     LiveClassError,
     issue_realtime_token,
@@ -31,8 +31,8 @@ def student_home(request):
     subjects_data=Subjects.objects.filter(course_id=course)
     if student_obj.assigned_staff_id:
         subjects_data = subjects_data.filter(staff_id=student_obj.assigned_staff.admin_id)
-    session_obj=SessionYearModel.object.get(id=student_obj.session_year_id.id)
-    class_room=OnlineClassRoom.objects.filter(subject__in=subjects_data,is_active=True,session_years=session_obj)
+    semester_obj=SemesterModel.object.get(id=student_obj.semester_id.id)
+    class_room=OnlineClassRoom.objects.filter(subject__in=subjects_data,is_active=True,semester=semester_obj)
 
     subject_name=[]
     data_present=[]
@@ -48,12 +48,12 @@ def student_home(request):
 
     return render(request,"student_template/student_home_template.html",{"total_attendance":attendance_total,"attendance_absent":attendance_absent,"attendance_present":attendance_present,"subjects":subjects,"data_name":subject_name,"data1":data_present,"data2":data_absent,"class_room":class_room})
 
-def join_class_room(request,subject_id,session_year_id):
-    session_year_obj=SessionYearModel.object.get(id=session_year_id)
+def join_class_room(request,subject_id,semester_id):
+    semester_obj=SemesterModel.object.get(id=semester_id)
     subjects=Subjects.objects.filter(id=subject_id)
     if subjects.exists():
-        session=SessionYearModel.object.filter(id=session_year_obj.id)
-        if session.exists():
+        semester=SemesterModel.object.filter(id=semester_obj.id)
+        if semester.exists():
             subject_obj=Subjects.objects.get(id=subject_id)
             course=Courses.objects.get(id=subject_obj.course_id.id)
             student_obj = Students.objects.filter(admin=request.user.id,course_id=course.id).first()
@@ -61,16 +61,16 @@ def join_class_room(request,subject_id,session_year_id):
             if student_obj and student_obj.assigned_staff_id and subject_obj.staff_id_id != student_obj.assigned_staff.admin_id:
                 return HttpResponse("This Subject is Not For You")
             if check_course:
-                session_check=Students.objects.filter(admin=request.user.id,session_year_id=session_year_obj.id)
-                if session_check.exists():
+                semester_check=Students.objects.filter(admin=request.user.id,semester_id=semester_obj.id)
+                if semester_check.exists():
                     onlineclass_qs = OnlineClassRoom.objects.filter(
-                        session_years=session_year_id,
+                        semester=semester_id,
                         subject=subject_id,
                         is_active=True,
                         status="ACTIVE",
                     )
                     if not onlineclass_qs.exists():
-                        return HttpResponse("This Online Session Has Ended")
+                        return HttpResponse("This Online Semester Has Ended")
                     onlineclass = onlineclass_qs.first()
                     return render(
                         request,
@@ -85,11 +85,11 @@ def join_class_room(request,subject_id,session_year_id):
                     )
 
                 else:
-                    return HttpResponse("This Online Session is Not For You")
+                    return HttpResponse("This Online Semester is Not For You")
             else:
                 return HttpResponse("This Subject is Not For You")
         else:
-            return HttpResponse("Session Year Not Found")
+            return HttpResponse("Semester Not Found")
     else:
         return HttpResponse("Subject Not Found")
 

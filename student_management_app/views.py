@@ -6,14 +6,13 @@ import requests
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.files.storage import FileSystemStorage
 from django.db import IntegrityError, transaction
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 
 from student_management_app.EmailBackEnd import EmailBackEnd
-from student_management_app.models import CustomUser, Courses, SessionYearModel, OnlineClassRoom, Staffs, Students
+from student_management_app.models import CustomUser, Courses, SemesterModel, OnlineClassRoom, Staffs, Students
 from student_management_app.services.live_class_service import serialize_room_state
 from student_management_system import settings
 
@@ -166,7 +165,7 @@ def live_class_room_state_api(request, room_id):
             return JsonResponse({"ok": False, "error": "Not allowed"}, status=403)
     elif user_type == "3":
         student = Students.objects.get(admin=request.user.id)
-        if student.course_id.id != room.subject.course_id.id or student.session_year_id.id != room.session_years.id:
+        if student.course_id.id != room.subject.course_id.id or student.semester_id.id != room.semester.id:
             return JsonResponse({"ok": False, "error": "Not allowed"}, status=403)
         if student.assigned_staff_id and student.assigned_staff_id != room.started_by_id:
             return JsonResponse({"ok": False, "error": "Not allowed"}, status=403)
@@ -180,14 +179,11 @@ def signup_admin(request):
 
 def signup_student(request):
     courses=Courses.objects.all()
-    session_years=SessionYearModel.object.all()
-    staffs=Staffs.objects.select_related("admin").all()
-    if not staffs.exists():
-        messages.error(request, "No staff accounts found. Student signup is temporarily unavailable.")
+    semesters=SemesterModel.object.all()
     return render(
         request,
         "signup_student_page.html",
-        {"courses":courses,"session_years":session_years,"staffs":staffs},
+        {"courses":courses,"semesters":semesters},
     )
 
 def signup_staff(request):
@@ -255,12 +251,11 @@ def do_signup_student(request):
     email = _normalize_email(request.POST.get("email"))
     password = request.POST.get("password")
     address = request.POST.get("address", "").strip()
-    session_year_id = request.POST.get("session_year")
+    semester_id = request.POST.get("semester")
     course_id = request.POST.get("course")
     sex = request.POST.get("sex", "").strip()
-    assigned_staff_id = request.POST.get("assigned_staff")
 
-    if not all([first_name, last_name, username, email, password, address, session_year_id, course_id, sex, assigned_staff_id]):
+    if not all([first_name, last_name, username, email, password, address, semester_id, course_id, sex]):
         messages.error(request, "All fields are required")
         return HttpResponseRedirect(reverse("show_login"))
 
@@ -269,20 +264,10 @@ def do_signup_student(request):
         messages.error(request, error)
         return HttpResponseRedirect(reverse("show_login"))
 
-    profile_pic = request.FILES.get("profile_pic")
-    if not profile_pic:
-        messages.error(request, "Profile picture is required")
-        return HttpResponseRedirect(reverse("show_login"))
-
-    fs = FileSystemStorage()
-    filename = fs.save(profile_pic.name, profile_pic)
-    profile_pic_url = fs.url(filename)
-
     try:
         with transaction.atomic():
             course_obj = Courses.objects.get(id=course_id)
-            session_year = SessionYearModel.object.get(id=session_year_id)
-            assigned_staff = Staffs.objects.select_related("admin").get(id=assigned_staff_id)
+            semester = SemesterModel.object.get(id=semester_id)
 
             user = CustomUser.objects.create_user(
                 username=username,
@@ -294,16 +279,15 @@ def do_signup_student(request):
             )
             user.students.address = address
             user.students.course_id = course_obj
-            user.students.session_year_id = session_year
+            user.students.semester_id = semester
             user.students.gender = sex
-            user.students.profile_pic = profile_pic_url
-            user.students.assigned_staff = assigned_staff
+            user.students.assigned_staff = None
             user.students.save()
 
         messages.success(request, "Successfully Added Student")
         return HttpResponseRedirect(reverse("show_login"))
-    except (Courses.DoesNotExist, SessionYearModel.DoesNotExist, Staffs.DoesNotExist):
-        messages.error(request, "Invalid department, session year, or assigned staff")
+    except (Courses.DoesNotExist, SemesterModel.DoesNotExist):
+        messages.error(request, "Invalid department or semester")
         return HttpResponseRedirect(reverse("show_login"))
     except IntegrityError:
         messages.error(request, "Email already exists")

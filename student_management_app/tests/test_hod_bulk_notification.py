@@ -5,7 +5,7 @@ from student_management_app.models import (
     CustomUser,
     NotificationStaffs,
     NotificationStudent,
-    SessionYearModel,
+    SemesterModel,
 )
 
 
@@ -21,9 +21,9 @@ class HodBulkNotificationTests(TestCase):
 
         self.department_a = Courses.objects.create(course_name="Computer Engineering")
         self.department_b = Courses.objects.create(course_name="Mechanical Engineering")
-        self.session = SessionYearModel.object.create(
-            session_start_year="2026-01-01",
-            session_end_year="2026-12-31",
+        self.semester = SemesterModel.object.create(
+            semester_start_date="2026-01-01",
+            semester_end_date="2026-12-31",
         )
 
         self.staff_user_1 = CustomUser.objects.create_user(
@@ -46,7 +46,7 @@ class HodBulkNotificationTests(TestCase):
             user_type=3,
         )
         self.student_user_1.students.course_id = self.department_a
-        self.student_user_1.students.session_year_id = self.session
+        self.student_user_1.students.semester_id = self.semester
         self.student_user_1.students.save()
 
         self.student_user_2 = CustomUser.objects.create_user(
@@ -56,7 +56,7 @@ class HodBulkNotificationTests(TestCase):
             user_type=3,
         )
         self.student_user_2.students.course_id = self.department_b
-        self.student_user_2.students.session_year_id = self.session
+        self.student_user_2.students.semester_id = self.semester
         self.student_user_2.students.save()
 
     def test_send_bulk_notification_to_selected_staff(self):
