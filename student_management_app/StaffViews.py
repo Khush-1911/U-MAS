@@ -38,6 +38,7 @@ IMPORT_HEADERS = [
     "last_name",
     "username",
     "email",
+    "notification_email",
     "password",
     "address",
     "gender",
@@ -577,6 +578,7 @@ def staff_import_students_save(request):
         last_name = (row.get("last_name") or "").strip()
         username = (row.get("username") or "").strip()
         email = _normalize_email(row.get("email"))
+        notification_email = _normalize_email(row.get("notification_email")) or email
         password = (row.get("password") or "").strip()
         address = (row.get("address") or "").strip()
         department_name = (row.get("department") or "").strip()
@@ -606,6 +608,7 @@ def staff_import_students_save(request):
                     last_name=last_name,
                     username=username,
                     email=email,
+                    notification_email=notification_email,
                     password=password,
                     address=address,
                     course=course,
@@ -641,6 +644,7 @@ def staff_download_student_template(request):
             "Patel",
             "asha.patel",
             "asha.patel@example.com",
+            "asha.notifications@example.com",
             "pass12345",
             "Ahmedabad",
             "Female",
