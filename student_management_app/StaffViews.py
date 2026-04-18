@@ -162,7 +162,15 @@ def _semester_for_dates(start_value, end_value):
         start_date = date.fromisoformat((start_value or "").strip())
         end_date = date.fromisoformat((end_value or "").strip())
     except ValueError:
-        return None
+        try:
+            start_date = date.fromisoformat(
+                "-".join(reversed((start_value or "").strip().split("-")))
+            )
+            end_date = date.fromisoformat(
+                "-".join(reversed((end_value or "").strip().split("-")))
+            )
+        except ValueError:
+            return None
 
     return SemesterModel.object.filter(
         semester_start_date=start_date,
@@ -649,8 +657,8 @@ def staff_download_student_template(request):
             "Ahmedabad",
             "Female",
             "BCA",
-            "2026-01-01",
-            "2026-06-30",
+            "01-01-2026",
+            "30-06-2026",
         ]
     )
     return response

@@ -57,7 +57,7 @@
         <select class="form-control" name="semester" required>
           <option value="">Select semester</option>
           {% for semester in semesters %}
-          <option value="{{ semester.id }}">{{ semester.semester_start_date }} TO {{ semester.semester_end_date }}</option>
+          <option value="{{ semester.id }}">{{ semester.semester_start_date|date:"d-m-Y" }} TO {{ semester.semester_end_date|date:"d-m-Y" }}</option>
           {% endfor %}
         </select>
       </div>

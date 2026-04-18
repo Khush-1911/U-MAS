@@ -90,7 +90,7 @@ Students Under Me
                   <td>{{ student.admin.first_name }} {{ student.admin.last_name }}</td>
                   <td>{{ student.admin.email }}</td>
                   <td>{{ student.course_id.course_name }}</td>
-                  <td>{{ student.semester_id.semester_start_date }} to {{ student.semester_id.semester_end_date }}</td>
+                  <td>{{ student.semester_id.semester_start_date|date:"d-m-Y" }} to {{ student.semester_id.semester_end_date|date:"d-m-Y" }}</td>
                 </tr>
                 {% empty %}
                 <tr>

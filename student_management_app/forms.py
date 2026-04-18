@@ -3,6 +3,13 @@ from django.forms import ChoiceField
 
 from student_management_app.models import Courses, SemesterModel, Staffs, Subjects
 
+
+def _semester_label(semester):
+    return (
+        f"{semester.semester_start_date.strftime('%d-%m-%Y')} TO "
+        f"{semester.semester_end_date.strftime('%d-%m-%Y')}"
+    )
+
 class ChoiceNoValidation(ChoiceField):
     def validate(self, value):
         pass
@@ -34,7 +41,7 @@ class AddStudentForm(forms.Form):
             (course.id, course.course_name) for course in Courses.objects.all()
         ]
         self.fields["semester_id"].choices = [
-            (semester.id, f"{semester.semester_start_date} TO {semester.semester_end_date}")
+            (semester.id, _semester_label(semester))
             for semester in SemesterModel.object.all()
         ]
         self.fields["assigned_staff"].choices = [
@@ -67,7 +74,7 @@ class EditStudentForm(forms.Form):
             (course.id, course.course_name) for course in Courses.objects.all()
         ]
         self.fields["semester_id"].choices = [
-            (semester.id, f"{semester.semester_start_date} TO {semester.semester_end_date}")
+            (semester.id, _semester_label(semester))
             for semester in SemesterModel.object.all()
         ]
         self.fields["assigned_staff"].choices = [
@@ -98,7 +105,7 @@ class StaffAddStudentForm(forms.Form):
             (course.id, course.course_name) for course in Courses.objects.all()
         ]
         self.fields["semester_id"].choices = [
-            (semester.id, f"{semester.semester_start_date} TO {semester.semester_end_date}")
+            (semester.id, _semester_label(semester))
             for semester in SemesterModel.object.all()
         ]
 
@@ -124,7 +131,7 @@ class StaffEditStudentForm(forms.Form):
             (course.id, course.course_name) for course in Courses.objects.all()
         ]
         self.fields["semester_id"].choices = [
-            (semester.id, f"{semester.semester_start_date} TO {semester.semester_end_date}")
+            (semester.id, _semester_label(semester))
             for semester in SemesterModel.object.all()
         ]
 
@@ -146,7 +153,7 @@ class EditResultForm(forms.Form):
     try:
         semesters=SemesterModel.object.all()
         for semester in semesters:
-            semester_single=(semester.id,str(semester.semester_start_date)+" TO "+str(semester.semester_end_date))
+            semester_single=(semester.id,_semester_label(semester))
             semester_list.append(semester_single)
     except:
         semester_list=[]
