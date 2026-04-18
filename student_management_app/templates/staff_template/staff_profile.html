@@ -26,6 +26,10 @@ Edit Profile
                     <label>Username</label>
                     <input class="form-control" name="username" value="{{ user.email }}" disabled="disabled">
                   </div>
+                  <div class="form-group">
+                    <label>Notification Email</label>
+                    <input class="form-control" name="notification_email" value="{{ user.notification_email }}" placeholder="Optional: defaults to email address">
+                  </div>
                    <div class="form-group">
                     <label>First Name</label>
                     <input class="form-control" name="first_name" value="{{ user.first_name }}">
@@ -73,4 +77,3 @@ Edit Profile
     </section>
     <!-- /.content -->
 {% endblock main_content %}
-

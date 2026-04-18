@@ -16,6 +16,7 @@ class CustomUser(AbstractUser):
     user_type_data=((1,"HOD"),(2,"Staff"),(3,"Student"))
     user_type=models.CharField(default=1,choices=user_type_data,max_length=10)
     email = models.EmailField(unique=True)
+    notification_email = models.EmailField(blank=True, default="")
 
     class Meta:
         constraints = [
@@ -28,6 +29,10 @@ class CustomUser(AbstractUser):
     def save(self, *args, **kwargs):
         if self.email:
             self.email = self.email.strip().lower()
+        if self.notification_email:
+            self.notification_email = self.notification_email.strip().lower()
+        elif self.email:
+            self.notification_email = self.email
         super().save(*args, **kwargs)
 
 class AdminHOD(models.Model):

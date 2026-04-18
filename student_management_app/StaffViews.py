@@ -178,11 +178,12 @@ def _gender_value(value):
     return None
 
 
-def _create_student_user(*, first_name, last_name, username, email, password, address, course, semester, sex):
+def _create_student_user(*, first_name, last_name, username, email, notification_email, password, address, course, semester, sex):
     user = CustomUser.objects.create_user(
         username=username,
         password=password,
         email=email,
+        notification_email=notification_email,
         last_name=last_name,
         first_name=first_name,
         user_type=3,
@@ -404,6 +405,7 @@ def staff_add_student_save(request):
     last_name = form.cleaned_data["last_name"]
     username = form.cleaned_data["username"]
     email = _normalize_email(form.cleaned_data["email"])
+    notification_email = _normalize_email(form.cleaned_data["notification_email"]) or email
     password = form.cleaned_data["password"]
     address = form.cleaned_data["address"]
     semester_id = form.cleaned_data["semester_id"]
@@ -428,6 +430,7 @@ def staff_add_student_save(request):
                 last_name=last_name,
                 username=username,
                 email=email,
+                notification_email=notification_email,
                 password=password,
                 address=address,
                 course=course_obj,
@@ -452,6 +455,7 @@ def staff_edit_student(request, student_id):
     request.session["staff_student_id"] = student_id
     form = StaffEditStudentForm()
     form.fields["email"].initial = student.admin.email
+    form.fields["notification_email"].initial = student.admin.notification_email
     form.fields["first_name"].initial = student.admin.first_name
     form.fields["last_name"].initial = student.admin.last_name
     form.fields["username"].initial = student.admin.username
@@ -492,6 +496,7 @@ def staff_edit_student_save(request):
     last_name = form.cleaned_data["last_name"]
     username = form.cleaned_data["username"]
     email = _normalize_email(form.cleaned_data["email"])
+    notification_email = _normalize_email(form.cleaned_data["notification_email"]) or email
     address = form.cleaned_data["address"]
     semester_id = form.cleaned_data["semester_id"]
     course_id = form.cleaned_data["course"]
@@ -509,6 +514,7 @@ def staff_edit_student_save(request):
             user.last_name = last_name
             user.username = username
             user.email = email
+            user.notification_email = notification_email
             user.save()
 
             student = Students.objects.get(admin=student_id, assigned_staff=staff_obj)
@@ -980,11 +986,13 @@ def staff_profile_save(request):
         first_name=request.POST.get("first_name")
         last_name=request.POST.get("last_name")
         address=request.POST.get("address")
+        notification_email = _normalize_email(request.POST.get("notification_email"))
         password=request.POST.get("password")
         try:
             customuser=CustomUser.objects.get(id=request.user.id)
             customuser.first_name=first_name
             customuser.last_name=last_name
+            customuser.notification_email = notification_email or customuser.email
             if password!=None and password!="":
                 customuser.set_password(password)
             customuser.save()

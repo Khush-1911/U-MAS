@@ -54,6 +54,9 @@ class StaffStudentNotificationTests(TestCase):
         self.client.force_login(self.staff_user)
 
     def test_staff_can_notify_only_assigned_students(self):
+        self.assigned_student_user.notification_email = "assigned_notify@example.com"
+        self.assigned_student_user.save(update_fields=["notification_email"])
+
         response = self.client.post(
             reverse("staff_send_student_notification"),
             data={
@@ -69,7 +72,7 @@ class StaffStudentNotificationTests(TestCase):
         self.assertEqual(notification.student_id_id, self.assigned_student_user.students.id)
         self.assertEqual(notification.sender_name, "Casey Staff")
         self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].to, [self.assigned_student_user.email])
+        self.assertEqual(mail.outbox[0].to, ["assigned_notify@example.com"])
 
     def test_staff_cannot_notify_students_outside_assignment(self):
         response = self.client.post(

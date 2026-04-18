@@ -34,6 +34,10 @@ Edit Staff  | Username : {{ staff.admin.username }} |  #ID : {{ staff.admin.id }
                     <label>Email address</label>
                     <input type="email" class="form-control" name="email" placeholder="Enter email" value="{{ staff.admin.email }}">
                   </div>
+                  <div class="form-group">
+                    <label>Notification Email</label>
+                    <input type="email" class="form-control" name="notification_email" placeholder="Optional: defaults to email address" value="{{ staff.admin.notification_email }}">
+                  </div>
                    <div class="form-group">
                     <label>First Name</label>
                     <input class="form-control" placeholder="First Name" name="first_name" value="{{ staff.admin.first_name }}">

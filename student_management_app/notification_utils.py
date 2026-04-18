@@ -22,7 +22,11 @@ def create_student_notifications(students, *, sender_name, title, message):
 def send_student_notification_emails(students, *, sender_name, title, message):
     recipients = []
     for student in students:
-        email = (getattr(student.admin, "email", "") or "").strip()
+        email = (
+            getattr(student.admin, "notification_email", "")
+            or getattr(student.admin, "email", "")
+            or ""
+        ).strip()
         if email:
             recipients.append(email)
 
