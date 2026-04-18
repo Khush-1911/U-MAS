@@ -20,6 +20,10 @@ from django.utils import timezone
 from student_management_app.forms import StaffAddStudentForm, StaffEditStudentForm
 from student_management_app.models import Subjects, SemesterModel, Students, Attendance, AttendanceReport, \
     LeaveReportStaff, Staffs, FeedBackStaffs, FeedBackStudent, CustomUser, Courses, NotificationStaffs, StudentResult, OnlineClassRoom
+from student_management_app.notification_utils import (
+    create_student_notifications,
+    send_student_notification_emails,
+)
 from student_management_app.services.live_class_service import (
     create_or_get_active_room,
     end_room,
@@ -317,6 +321,70 @@ def staff_manage_student(request):
         "staff_template/staff_manage_student.html",
         {"students": students, "staff_obj": staff_obj},
     )
+
+
+def staff_students_under_me(request):
+    staff_obj = _logged_in_staff(request)
+    students = (
+        Students.objects.filter(assigned_staff=staff_obj)
+        .select_related("admin", "course_id", "semester_id")
+        .order_by("admin__first_name", "admin__last_name", "admin__username", "id")
+    )
+    return render(
+        request,
+        "staff_template/staff_students_under_me.html",
+        {"students": students},
+    )
+
+
+@require_POST
+def staff_send_student_notification(request):
+    staff_obj = _logged_in_staff(request)
+    title = (request.POST.get("title") or "").strip()
+    message = (request.POST.get("message") or "").strip()
+    selected_student_ids = request.POST.getlist("student_ids")
+
+    if not title:
+        messages.error(request, "Notification title is required")
+        return HttpResponseRedirect(reverse("staff_students_under_me"))
+
+    if not message:
+        messages.error(request, "Notification body is required")
+        return HttpResponseRedirect(reverse("staff_students_under_me"))
+
+    if not selected_student_ids:
+        messages.error(request, "Please select at least one student")
+        return HttpResponseRedirect(reverse("staff_students_under_me"))
+
+    students = list(
+        Students.objects.filter(
+            assigned_staff=staff_obj,
+            id__in=selected_student_ids,
+        ).select_related("admin")
+    )
+
+    if not students:
+        messages.error(request, "No assigned students matched your selection")
+        return HttpResponseRedirect(reverse("staff_students_under_me"))
+
+    sender_name = request.user.get_full_name().strip() or request.user.username or "Staff"
+    create_student_notifications(
+        students,
+        sender_name=sender_name,
+        title=title,
+        message=message,
+    )
+    send_student_notification_emails(
+        students,
+        sender_name=sender_name,
+        title=title,
+        message=message,
+    )
+    messages.success(
+        request,
+        f"Notification sent to {len(students)} assigned student(s).",
+    )
+    return HttpResponseRedirect(reverse("staff_students_under_me"))
 
 
 def staff_add_student(request):

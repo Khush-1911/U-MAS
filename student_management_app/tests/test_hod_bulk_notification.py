@@ -1,4 +1,5 @@
-from django.test import TestCase
+from django.core import mail
+from django.test import TestCase, override_settings
 
 from student_management_app.models import (
     Courses,
@@ -9,6 +10,7 @@ from student_management_app.models import (
 )
 
 
+@override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
 class HodBulkNotificationTests(TestCase):
     def setUp(self):
         self.hod = CustomUser.objects.create_user(
@@ -93,6 +95,8 @@ class HodBulkNotificationTests(TestCase):
         self.assertEqual(NotificationStudent.objects.count(), 1)
         self.assertEqual(NotificationStudent.objects.first().student_id_id, self.student_user_1.students.id)
         self.assertEqual(NotificationStudent.objects.first().title, "Department Alert")
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, [self.student_user_1.email])
 
     def test_send_bulk_notification_to_all(self):
         response = self.client.post(
@@ -129,3 +133,8 @@ class HodBulkNotificationTests(TestCase):
         self.assertEqual(NotificationStaffs.objects.count(), 0)
         self.assertEqual(NotificationStudent.objects.count(), 2)
         self.assertEqual(NotificationStudent.objects.first().title, "Department Circular")
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertCountEqual(
+            mail.outbox[0].to,
+            [self.student_user_1.email, self.student_user_2.email],
+        )

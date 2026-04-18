@@ -6,7 +6,68 @@ Students Under Me
 <section class="content">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-12">
+      <div class="col-lg-5">
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Send Notification</h3>
+          </div>
+          <form action="{% url 'staff_send_student_notification' %}" method="post">
+            {% csrf_token %}
+            <div class="card-body">
+              <div class="form-group">
+                <label>Title of Notification</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  name="title"
+                  maxlength="255"
+                  placeholder="Enter notification title"
+                  required
+                >
+              </div>
+              <div class="form-group">
+                <label>Body of Notification</label>
+                <textarea class="form-control" rows="4" name="message" placeholder="Enter notification message" required></textarea>
+              </div>
+              <div class="form-group">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <label class="mb-0">Select Assigned Students</label>
+                  <button class="btn btn-sm btn-info" type="button" id="select_all_students">All Students</button>
+                </div>
+                <div class="border rounded p-2" style="max-height: 280px; overflow-y: auto;">
+                  {% for student in students %}
+                  <div class="form-check mb-1">
+                    <input class="form-check-input student-checkbox" type="checkbox" name="student_ids" value="{{ student.id }}" id="student_{{ student.id }}">
+                    <label class="form-check-label" for="student_{{ student.id }}">
+                      {{ student.profile_id|default:student.id }} - {{ student.admin.get_full_name|default:student.admin.username }} ({{ student.course_id.course_name }})
+                    </label>
+                  </div>
+                  {% empty %}
+                  <p class="text-muted mb-0">No students assigned.</p>
+                  {% endfor %}
+                </div>
+                <small class="form-text text-muted">
+                  Selected students receive this in the app and by email.
+                </small>
+              </div>
+              {% if messages %}
+                {% for message in messages %}
+                  {% if message.tags == 'error' %}
+                  <div class="alert alert-danger">{{ message }}</div>
+                  {% endif %}
+                  {% if message.tags == 'success' %}
+                  <div class="alert alert-success">{{ message }}</div>
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+            </div>
+            <div class="card-footer">
+              <button type="submit" class="btn btn-primary btn-block">Send Notification</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="col-lg-7">
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">Assigned Students</h3>
@@ -19,7 +80,7 @@ Students Under Me
                   <th>Name</th>
                   <th>Email</th>
                   <th>Department</th>
-                  <th>Session</th>
+                  <th>Semester</th>
                 </tr>
               </thead>
               <tbody>
@@ -29,7 +90,7 @@ Students Under Me
                   <td>{{ student.admin.first_name }} {{ student.admin.last_name }}</td>
                   <td>{{ student.admin.email }}</td>
                   <td>{{ student.course_id.course_name }}</td>
-                  <td>{{ student.session_year_id.session_start_year }} TO {{ student.session_year_id.session_end_year }}</td>
+                  <td>{{ student.semester_id.semester_start_date }} to {{ student.semester_id.semester_end_date }}</td>
                 </tr>
                 {% empty %}
                 <tr>
@@ -45,3 +106,12 @@ Students Under Me
   </div>
 </section>
 {% endblock main_content %}
+{% block custom_js %}
+<script>
+  $(document).ready(function() {
+    $("#select_all_students").on("click", function() {
+      $(".student-checkbox").prop("checked", true);
+    });
+  });
+</script>
+{% endblock custom_js %}

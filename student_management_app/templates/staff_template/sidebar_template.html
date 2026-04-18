@@ -57,5 +57,11 @@
       <i class="fas fa-bell"></i>
       <span class="sidebar-label">Notifications</span>
     </a>
+
+    {% url 'staff_students_under_me' as staff_students_under_me %}
+    <a href="{% url 'staff_students_under_me' %}" class="sidebar-link {% if request.path == staff_students_under_me %}active{% endif %}">
+      <i class="fas fa-user-friends"></i>
+      <span class="sidebar-label">Notify Students</span>
+    </a>
   </nav>
 </aside>

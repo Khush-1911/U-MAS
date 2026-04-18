@@ -12,6 +12,10 @@ from student_management_app.forms import AddStudentForm, EditStudentForm
 from student_management_app.models import CustomUser, Staffs, Courses, Subjects, Students, SemesterModel, \
     FeedBackStudent, FeedBackStaffs, LeaveReportStudent, LeaveReportStaff, Attendance, AttendanceReport, \
     NotificationStudent, NotificationStaffs
+from student_management_app.notification_utils import (
+    create_student_notifications,
+    send_student_notification_emails,
+)
 
 
 def _normalize_email(value):
@@ -852,16 +856,17 @@ def send_bulk_notification(request):
             ]
         )
     if student_recipients:
-        NotificationStudent.objects.bulk_create(
-            [
-                NotificationStudent(
-                    student_id=student,
-                    sender_name=sender_name,
-                    title=title,
-                    message=message,
-                )
-                for student in student_recipients
-            ]
+        create_student_notifications(
+            student_recipients,
+            sender_name=sender_name,
+            title=title,
+            message=message,
+        )
+        send_student_notification_emails(
+            student_recipients,
+            sender_name=sender_name,
+            title=title,
+            message=message,
         )
 
     messages.success(
