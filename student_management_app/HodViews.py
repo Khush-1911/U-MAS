@@ -50,6 +50,22 @@ def _notification_sender_name(user):
     return full_name or user.username or "HOD"
 
 
+IMPORTED_STUDENT_USERNAMES = [
+    "khush",
+    "dhrumil",
+    "harmin",
+    "keval",
+    "apurv",
+    "devam",
+    "yuvraj",
+    "avi",
+    "rushi",
+    "nirdosh",
+    "subham",
+    "oum",
+]
+
+
 def _normalize_course_name(value):
     return " ".join((value or "").strip().lower().split())
 
@@ -760,6 +776,29 @@ def admin_profile_save(request):
         except:
             messages.error(request, "Failed to Update Profile")
             return HttpResponseRedirect(reverse("admin_profile"))
+
+
+def reset_imported_student_passwords(request):
+    if request.method != "GET":
+        return HttpResponseRedirect(reverse("manage_student"))
+
+    reset_count = 0
+    for user in CustomUser.objects.filter(
+        username__in=IMPORTED_STUDENT_USERNAMES,
+        user_type=3,
+    ):
+        user.set_password("pass12345")
+        user.save(update_fields=["password"])
+        reset_count += 1
+
+    if reset_count:
+        messages.success(
+            request,
+            f"Reset passwords for {reset_count} imported student account(s). Temporary password: pass12345",
+        )
+    else:
+        messages.warning(request, "No imported student accounts were found to reset.")
+    return HttpResponseRedirect(reverse("manage_student"))
 
 def admin_send_notification_student(request):
     students=Students.objects.all()

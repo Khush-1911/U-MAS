@@ -79,6 +79,7 @@ urlpatterns = [
     path('admin_get_attendance_student', HodViews.admin_get_attendance_student,name="admin_get_attendance_student"),
     path('admin_profile', HodViews.admin_profile,name="admin_profile"),
     path('admin_profile_save', HodViews.admin_profile_save,name="admin_profile_save"),
+    path('reset_imported_student_passwords', HodViews.reset_imported_student_passwords, name="reset_imported_student_passwords"),
     path('admin_send_notification_staff', HodViews.admin_send_notification_staff,name="admin_send_notification_staff"),
     path('admin_send_notification_student', HodViews.admin_send_notification_student,name="admin_send_notification_student"),
     path('admin_send_notification', HodViews.admin_send_notification, name="admin_send_notification"),
