@@ -19,7 +19,7 @@ from django.urls import path, include
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
-from student_management_app import views, HodViews, StaffViews, StudentViews
+from student_management_app import views, HodViews, StaffViews, StudentViews, OwnerViews, SuperuserViews, PrincipalViews, CollegeAdminViews
 from student_management_app.EditResultVIewClass import EditResultViewClass
 from student_management_system import settings
 
@@ -30,29 +30,34 @@ urlpatterns = [
     path('get_user_details', views.GetUserDetails),
     path('logout_user', views.logout_user,name="logout"),
     path('doLogin',views.doLogin,name="do_login"),
+    path('owner_home',OwnerViews.owner_home,name="owner_home"),
+    path('superuser_home',SuperuserViews.superuser_home,name="superuser_home"),
+    path('principal_home',PrincipalViews.principal_home,name="principal_home"),
+    path('collegeadmin_home',CollegeAdminViews.collegeadmin_home,name="collegeadmin_home"),
+    path('hod_home',HodViews.admin_home,name="hod_home"),
     path('admin_home',HodViews.admin_home,name="admin_home"),
     path('add_staff',HodViews.add_staff,name="add_staff"),
     path('add_staff_save',HodViews.add_staff_save,name="add_staff_save"),
-    path('add_course/', HodViews.add_course,name="add_course"),
-    path('add_course_save', HodViews.add_course_save,name="add_course_save"),
+    path('add_department/', HodViews.add_department,name="add_department"),
+    path('add_department_save', HodViews.add_department_save,name="add_department_save"),
     path('add_subject', HodViews.add_subject,name="add_subject"),
     path('add_subject_save', HodViews.add_subject_save,name="add_subject_save"),
     path('manage_staff', HodViews.manage_staff,name="manage_staff"),
     path('manage_student', HodViews.manage_student,name="manage_student"),
-    path('manage_course', HodViews.manage_course,name="manage_course"),
+    path('manage_department', HodViews.manage_department,name="manage_department"),
     path('manage_subject', HodViews.manage_subject,name="manage_subject"),
     path('delete_staff/<str:staff_id>', HodViews.delete_staff,name="delete_staff"),
     path('delete_student/<str:student_id>', HodViews.delete_student,name="delete_student"),
     path('delete_subject/<str:subject_id>', HodViews.delete_subject,name="delete_subject"),
-    path('delete_course/<str:course_id>', HodViews.delete_course,name="delete_course"),
+    path('delete_department/<str:department_id>', HodViews.delete_department,name="delete_department"),
     path('edit_staff/<str:staff_id>', HodViews.edit_staff,name="edit_staff"),
     path('edit_staff_save', HodViews.edit_staff_save,name="edit_staff_save"),
     path('edit_student/<str:student_id>', HodViews.edit_student,name="edit_student"),
     path('edit_student_save', HodViews.edit_student_save,name="edit_student_save"),
     path('edit_subject/<str:subject_id>', HodViews.edit_subject,name="edit_subject"),
     path('edit_subject_save', HodViews.edit_subject_save,name="edit_subject_save"),
-    path('edit_course/<str:course_id>', HodViews.edit_course,name="edit_course"),
-    path('edit_course_save', HodViews.edit_course_save,name="edit_course_save"),
+    path('edit_department/<str:department_id>', HodViews.edit_department,name="edit_department"),
+    path('edit_department_save', HodViews.edit_department_save,name="edit_department_save"),
     path('manage_semester', HodViews.manage_semester,name="manage_semester"),
     path('add_semester_save', HodViews.add_semester_save,name="add_semester_save"),
     path('delete_semester/<str:semester_id>', HodViews.delete_semester,name="delete_semester"),

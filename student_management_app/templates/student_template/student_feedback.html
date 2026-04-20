@@ -19,12 +19,12 @@ Feedback Message
                 <div class="card-body">
                     {% csrf_token %}
                   <div class="form-group">
-                    {% if assigned_staff %}
+                    {% if mentor %}
                       <div class="alert alert-info" style="margin-bottom:15px">
                         Your feedback will be sent to
                         <strong>
-                          {{ assigned_staff.profile_id|default:assigned_staff.id }} -
-                          {{ assigned_staff.admin.get_full_name|default:assigned_staff.admin.username }}
+                          {{ mentor.profile_id|default:mentor.id }} -
+                          {{ mentor.admin.get_full_name|default:mentor.admin.username }}
                         </strong>.
                       </div>
                     {% else %}
@@ -35,7 +35,7 @@ Feedback Message
                   </div>
                   <div class="form-group">
                     <label>Feedback Message</label>
-                    <textarea class="form-control" rows="6" name="feedback_msg" {% if not assigned_staff %}disabled{% endif %}></textarea>
+                    <textarea class="form-control" rows="6" name="feedback_msg" {% if not mentor %}disabled{% endif %}></textarea>
                   </div>
                    <div class="form-group">
                       {% if messages %}
@@ -54,7 +54,7 @@ Feedback Message
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary btn-block" id="fetch_student" {% if not assigned_staff %}disabled{% endif %}>Send Feedback</button>
+                  <button type="submit" class="btn btn-primary btn-block" id="fetch_student" {% if not mentor %}disabled{% endif %}>Send Feedback</button>
                 </div>
                </form>
             </div>

@@ -54,10 +54,10 @@ Manage Student
                       <td>{{ student.address }}</td>
                       <td>{{ student.gender }}</td>
                       <td>{{ student.semester_id.semester_start_date }} TO {{ student.semester_id.semester_end_date }}</td>
-                      <td>{{ student.course_id.course_name }}</td>
+                      <td>{{ student.department_id.department_name }}</td>
                       <td>
-                        {% if student.assigned_staff %}
-                          {{ student.assigned_staff.profile_id|default:student.assigned_staff.id }} - {{ student.assigned_staff.admin.get_full_name|default:student.assigned_staff.admin.username }}
+                        {% if student.mentor %}
+                          {{ student.mentor.profile_id|default:student.mentor.id }} - {{ student.mentor.admin.get_full_name|default:student.mentor.admin.username }}
                         {% else %}
                           Unassigned
                         {% endif %}

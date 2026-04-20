@@ -2,7 +2,7 @@ from django.core import mail
 from django.test import TestCase, override_settings
 
 from student_management_app.models import (
-    Courses,
+    Department,
     CustomUser,
     NotificationStaffs,
     NotificationStudent,
@@ -21,8 +21,8 @@ class HodBulkNotificationTests(TestCase):
         )
         self.client.force_login(self.hod)
 
-        self.department_a = Courses.objects.create(course_name="Computer Engineering")
-        self.department_b = Courses.objects.create(course_name="Mechanical Engineering")
+        self.department_a = Department.objects.create(department_name="Computer Engineering")
+        self.department_b = Department.objects.create(department_name="Mechanical Engineering")
         self.semester = SemesterModel.object.create(
             semester_start_date="2026-01-01",
             semester_end_date="2026-12-31",
@@ -47,7 +47,7 @@ class HodBulkNotificationTests(TestCase):
             password="pass12345",
             user_type=3,
         )
-        self.student_user_1.students.course_id = self.department_a
+        self.student_user_1.students.department_id = self.department_a
         self.student_user_1.students.semester_id = self.semester
         self.student_user_1.students.save()
 
@@ -57,7 +57,7 @@ class HodBulkNotificationTests(TestCase):
             password="pass12345",
             user_type=3,
         )
-        self.student_user_2.students.course_id = self.department_b
+        self.student_user_2.students.department_id = self.department_b
         self.student_user_2.students.semester_id = self.semester
         self.student_user_2.students.save()
 

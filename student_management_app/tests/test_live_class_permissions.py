@@ -2,7 +2,7 @@ import json
 
 from django.test import TestCase
 
-from student_management_app.models import Courses, SemesterModel, Subjects
+from student_management_app.models import Department, SemesterModel, Subjects
 from student_management_app.models import CustomUser
 from student_management_app.services.live_class_service import create_or_get_active_room, end_room
 
@@ -13,7 +13,7 @@ class LiveClassPermissionTests(TestCase):
             semester_start_date="2025-01-01",
             semester_end_date="2025-12-31",
         )
-        self.course = Courses.objects.create(course_name="BTech")
+        self.department = Department.objects.create(department_name="BTech")
         self.staff_user = CustomUser.objects.create_user(
             username="staff_owner",
             email="staff_owner@example.com",
@@ -32,13 +32,13 @@ class LiveClassPermissionTests(TestCase):
             password="pass12345",
             user_type=3,
         )
-        self.student_user.students.course_id = self.course
+        self.student_user.students.department_id = self.department
         self.student_user.students.semester_id = self.semester
         self.student_user.students.save()
 
         self.subject = Subjects.objects.create(
             subject_name="Physics",
-            course_id=self.course,
+            department_id=self.department,
             staff_id=self.staff_user,
         )
         self.room = create_or_get_active_room(self.staff_user, self.subject.id, self.semester.id)

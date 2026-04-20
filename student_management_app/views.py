@@ -12,7 +12,7 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from student_management_app.EmailBackEnd import EmailBackEnd
-from student_management_app.models import CustomUser, Courses, SemesterModel, OnlineClassRoom, Staffs, Students
+from student_management_app.models import CustomUser, Department, SemesterModel, OnlineClassRoom, Staffs, Students
 from student_management_app.services.live_class_service import serialize_room_state
 from student_management_system import settings
 
@@ -165,9 +165,9 @@ def live_class_room_state_api(request, room_id):
             return JsonResponse({"ok": False, "error": "Not allowed"}, status=403)
     elif user_type == "3":
         student = Students.objects.get(admin=request.user.id)
-        if student.course_id.id != room.subject.course_id.id or student.semester_id.id != room.semester.id:
+        if student.department_id.id != room.subject.department_id.id or student.semester_id.id != room.semester.id:
             return JsonResponse({"ok": False, "error": "Not allowed"}, status=403)
-        if student.assigned_staff_id and student.assigned_staff_id != room.started_by_id:
+        if student.mentor_id and student.mentor_id != room.started_by_id:
             return JsonResponse({"ok": False, "error": "Not allowed"}, status=403)
     else:
         return JsonResponse({"ok": False, "error": "Not allowed"}, status=403)

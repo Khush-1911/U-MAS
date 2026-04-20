@@ -1,41 +1,41 @@
 from django.test import TestCase
 
-from student_management_app.models import Courses, CustomUser
+from student_management_app.models import Department, CustomUser
 
 
-class CourseNameValidationTests(TestCase):
+class DepartmentNameValidationTests(TestCase):
     def setUp(self):
         self.hod_user = CustomUser.objects.create_user(
-            username="hod_course_admin",
-            email="hod_course_admin@example.com",
+            username="hod_department_admin",
+            email="hod_department_admin@example.com",
             password="pass12345",
             user_type=1,
         )
         self.client.force_login(self.hod_user)
 
-    def test_add_course_rejects_exact_duplicate_case_insensitive(self):
-        Courses.objects.create(course_name="Computer Engineering")
+    def test_add_department_rejects_exact_duplicate_case_insensitive(self):
+        Department.objects.create(department_name="Computer Engineering")
 
         response = self.client.post(
-            "/add_course_save",
-            data={"course": "computer engineering"},
+            "/add_department_save",
+            data={"department": "computer engineering"},
         )
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, "/add_course/")
+        self.assertEqual(response.url, "/add_department/")
         self.assertEqual(
-            Courses.objects.filter(course_name__iexact="computer engineering").count(),
+            Department.objects.filter(department_name__iexact="computer engineering").count(),
             1,
         )
 
-    def test_add_course_rejects_partial_overlap(self):
-        Courses.objects.create(course_name="Computer Engineering")
+    def test_add_department_rejects_partial_overlap(self):
+        Department.objects.create(department_name="Computer Engineering")
 
         response = self.client.post(
-            "/add_course_save",
-            data={"course": "Computer"},
+            "/add_department_save",
+            data={"department": "Computer"},
         )
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, "/add_course/")
-        self.assertEqual(Courses.objects.count(), 1)
+        self.assertEqual(response.url, "/add_department/")
+        self.assertEqual(Department.objects.count(), 1)

@@ -30,20 +30,20 @@ Students
                   <td>{{ student.profile_id|default:student.id }}</td>
                   <td>{{ student.admin.first_name }} {{ student.admin.last_name }}</td>
                   <td>{{ student.admin.email }}</td>
-                  <td>{{ student.course_id.course_name }}</td>
+                  <td>{{ student.department_id.department_name }}</td>
                   <td>{{ student.semester_id.semester_start_date }} TO {{ student.semester_id.semester_end_date }}</td>
                   <td>
-                    {% if student.assigned_staff %}
-                      {{ student.assigned_staff.profile_id|default:student.assigned_staff.id }} - {{ student.assigned_staff.admin.get_full_name|default:student.assigned_staff.admin.username }}
+                    {% if student.mentor %}
+                      {{ student.mentor.profile_id|default:student.mentor.id }} - {{ student.mentor.admin.get_full_name|default:student.mentor.admin.username }}
                     {% else %}
                       Unassigned
                     {% endif %}
                   </td>
                   <td>
-                    {% if student.assigned_staff_id == staff_obj.id %}
+                    {% if student.mentor_id == staff_obj.id %}
                       <a href="{% url 'staff_edit_student' student_id=student.admin.id %}" class="btn btn-success">Edit</a>
                       <a href="{% url 'staff_delete_student' student_id=student.admin.id %}" class="btn btn-danger" onclick="return confirm('Delete this student?');">Delete</a>
-                    {% elif student.assigned_staff %}
+                    {% elif student.mentor %}
                       <span class="badge badge-secondary">Assigned to another staff</span>
                     {% else %}
                       <span class="badge badge-warning">Waiting for HOD assignment</span>

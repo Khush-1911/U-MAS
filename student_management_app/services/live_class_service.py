@@ -7,7 +7,7 @@ from django.core import signing
 from django.utils import timezone
 
 from student_management_app.models import (
-    Courses,
+    Department,
     LiveClassParticipant,
     OnlineClassRoom,
     SemesterModel,
@@ -64,12 +64,12 @@ def validate_student_can_join(student_user, room):
         raise LiveClassError("Class room is not active")
 
     student_obj = Students.objects.get(admin=student_user.id)
-    subject_course = Courses.objects.get(id=room.subject.course_id.id)
-    if student_obj.course_id.id != subject_course.id:
+    subject_department = Department.objects.get(id=room.subject.department_id.id)
+    if student_obj.department_id.id != subject_department.id:
         raise LiveClassError("This subject is not assigned to the student")
     if student_obj.semester_id.id != room.semester.id:
         raise LiveClassError("This semester is not assigned to the student")
-    if student_obj.assigned_staff_id and student_obj.assigned_staff_id != room.started_by_id:
+    if student_obj.mentor_id and student_obj.mentor_id != room.started_by_id:
         raise LiveClassError("This class is not assigned to the student")
     return True
 

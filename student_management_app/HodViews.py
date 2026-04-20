@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
 from student_management_app.forms import AddStudentForm, EditStudentForm
-from student_management_app.models import CustomUser, Staffs, Courses, Subjects, Students, SemesterModel, \
+from student_management_app.models import CustomUser, Staffs, Department, Subjects, Students, SemesterModel, \
     FeedBackStudent, FeedBackStaffs, LeaveReportStudent, LeaveReportStaff, Attendance, AttendanceReport, \
     NotificationStudent, NotificationStaffs
 from student_management_app.notification_utils import (
@@ -66,13 +66,13 @@ IMPORTED_STUDENT_USERNAMES = [
 ]
 
 
-def _normalize_course_name(value):
+def _normalize_department_name(value):
     return " ".join((value or "").strip().lower().split())
 
 
 def _contains_word_sequence(full_name, sub_name):
-    full_tokens = _normalize_course_name(full_name).split()
-    sub_tokens = _normalize_course_name(sub_name).split()
+    full_tokens = _normalize_department_name(full_name).split()
+    sub_tokens = _normalize_department_name(sub_name).split()
     if not full_tokens or not sub_tokens or len(sub_tokens) > len(full_tokens):
         return False
     for idx in range(len(full_tokens) - len(sub_tokens) + 1):
@@ -81,24 +81,24 @@ def _contains_word_sequence(full_name, sub_name):
     return False
 
 
-def _course_name_conflict(course_name, exclude_course_id=None):
-    normalized_new = _normalize_course_name(course_name)
+def _department_name_conflict(department_name, exclude_department_id=None):
+    normalized_new = _normalize_department_name(department_name)
     if not normalized_new:
         return "Department name is required"
 
-    existing_courses = Courses.objects.all()
-    if exclude_course_id:
-        existing_courses = existing_courses.exclude(id=exclude_course_id)
+    existing_departments = Department.objects.all()
+    if exclude_department_id:
+        existing_departments = existing_departments.exclude(id=exclude_department_id)
 
-    for existing in existing_courses:
-        normalized_existing = _normalize_course_name(existing.course_name)
+    for existing in existing_departments:
+        normalized_existing = _normalize_department_name(existing.department_name)
         if (
             normalized_new == normalized_existing
             or _contains_word_sequence(normalized_existing, normalized_new)
             or _contains_word_sequence(normalized_new, normalized_existing)
         ):
             return (
-                f'Department "{existing.course_name}" already exists or overlaps '
+                f'Department "{existing.department_name}" already exists or overlaps '
                 "with this name. Please use a distinct name."
             )
     return None
@@ -108,25 +108,25 @@ def admin_home(request):
     student_count1=Students.objects.all().count()
     staff_count=Staffs.objects.all().count()
     subject_count=Subjects.objects.all().count()
-    course_count=Courses.objects.all().count()
+    department_count=Department.objects.all().count()
 
-    course_all=Courses.objects.all()
-    course_name_list=[]
+    department_all=Department.objects.all()
+    department_name_list=[]
     subject_count_list=[]
-    student_count_list_in_course=[]
-    for course in course_all:
-        subjects=Subjects.objects.filter(course_id=course.id).count()
-        students=Students.objects.filter(course_id=course.id).count()
-        course_name_list.append(course.course_name)
+    student_count_list_in_department=[]
+    for department in department_all:
+        subjects=Subjects.objects.filter(department_id=department.id).count()
+        students=Students.objects.filter(department_id=department.id).count()
+        department_name_list.append(department.department_name)
         subject_count_list.append(subjects)
-        student_count_list_in_course.append(students)
+        student_count_list_in_department.append(students)
 
     subjects_all=Subjects.objects.all()
     subject_list=[]
     student_count_list_in_subject=[]
     for subject in subjects_all:
-        course=Courses.objects.get(id=subject.course_id.id)
-        student_count=Students.objects.filter(course_id=course.id).count()
+        department=Department.objects.get(id=subject.department_id.id)
+        student_count=Students.objects.filter(department_id=department.id).count()
         subject_list.append(subject.subject_name)
         student_count_list_in_subject.append(student_count)
 
@@ -155,11 +155,11 @@ def admin_home(request):
         student_name_list.append(student.admin.username)
 
 
-    return render(request,"hod_template/home_content.html",{"student_count":student_count1,"staff_count":staff_count,"subject_count":subject_count,"course_count":course_count,"course_name_list":course_name_list,"subject_count_list":subject_count_list,"student_count_list_in_course":student_count_list_in_course,"student_count_list_in_subject":student_count_list_in_subject,"subject_list":subject_list,"staff_name_list":staff_name_list,"attendance_present_list_staff":attendance_present_list_staff,"attendance_absent_list_staff":attendance_absent_list_staff,"student_name_list":student_name_list,"attendance_present_list_student":attendance_present_list_student,"attendance_absent_list_student":attendance_absent_list_student})
+    return render(request,"hod_template/home_content.html",{"student_count":student_count1,"staff_count":staff_count,"subject_count":subject_count,"department_count":department_count,"department_name_list":department_name_list,"subject_count_list":subject_count_list,"student_count_list_in_department":student_count_list_in_department,"student_count_list_in_subject":student_count_list_in_subject,"subject_list":subject_list,"staff_name_list":staff_name_list,"attendance_present_list_staff":attendance_present_list_staff,"attendance_absent_list_staff":attendance_absent_list_staff,"student_name_list":student_name_list,"attendance_present_list_student":attendance_present_list_student,"attendance_absent_list_student":attendance_absent_list_student})
 
 def add_staff(request):
     students = (
-        Students.objects.select_related("admin", "assigned_staff")
+        Students.objects.select_related("admin", "mentor")
         .order_by("admin__first_name", "admin__last_name", "admin__username")
     )
     return render(
@@ -205,7 +205,7 @@ def add_staff_save(request):
                 user.staffs.save(update_fields=["address"])
                 if selected_student_ids:
                     Students.objects.filter(admin_id__in=selected_student_ids).update(
-                        assigned_staff=user.staffs
+                        mentor=user.staffs
                     )
             messages.success(request,"Successfully Added Staff")
             return HttpResponseRedirect(reverse("add_staff"))
@@ -216,27 +216,27 @@ def add_staff_save(request):
             messages.error(request,"Failed to Add Staff")
             return HttpResponseRedirect(reverse("add_staff"))
 
-def add_course(request):
-    return render(request,"hod_template/add_course_template.html")
+def add_department(request):
+    return render(request,"hod_template/add_department_template.html")
 
-def add_course_save(request):
+def add_department_save(request):
     if request.method!="POST":
         return HttpResponse("Method Not Allowed")
     else:
-        course = (request.POST.get("course") or "").strip()
-        conflict_error = _course_name_conflict(course)
+        department = (request.POST.get("department") or "").strip()
+        conflict_error = _department_name_conflict(department)
         if conflict_error:
             messages.error(request, conflict_error)
-            return HttpResponseRedirect(reverse("add_course"))
+            return HttpResponseRedirect(reverse("add_department"))
         try:
-            course_model=Courses(course_name=course)
-            course_model.save()
+            department_model=Department(department_name=department)
+            department_model.save()
             messages.success(request,"Successfully Added Department")
-            return HttpResponseRedirect(reverse("add_course"))
+            return HttpResponseRedirect(reverse("add_department"))
         except Exception as e:
             print(e)
             messages.error(request,"Failed To Add Department")
-            return HttpResponseRedirect(reverse("add_course"))
+            return HttpResponseRedirect(reverse("add_department"))
 
 def add_student(request):
     if not Staffs.objects.exists():
@@ -258,9 +258,9 @@ def add_student_save(request):
             password=form.cleaned_data["password"]
             address=form.cleaned_data["address"]
             semester_id=form.cleaned_data["semester_id"]
-            course_id=form.cleaned_data["course"]
+            department_id=form.cleaned_data["department"]
             sex=form.cleaned_data["sex"]
-            assigned_staff_id=form.cleaned_data["assigned_staff"]
+            mentor_id=form.cleaned_data["mentor"]
 
             if not password:
                 messages.error(request, "Password is required")
@@ -273,9 +273,9 @@ def add_student_save(request):
 
             try:
                 with transaction.atomic():
-                    course_obj=Courses.objects.get(id=course_id)
+                    department_obj=Department.objects.get(id=department_id)
                     semester=SemesterModel.object.get(id=semester_id)
-                    assigned_staff=Staffs.objects.get(id=assigned_staff_id)
+                    mentor=Staffs.objects.get(id=mentor_id)
 
                     user=CustomUser.objects.create_user(
                         username=username,
@@ -287,14 +287,14 @@ def add_student_save(request):
                         user_type=3,
                     )
                     user.students.address=address
-                    user.students.course_id=course_obj
+                    user.students.department_id=department_obj
                     user.students.semester_id=semester
                     user.students.gender=sex
-                    user.students.assigned_staff=assigned_staff
+                    user.students.mentor=mentor
                     user.students.save()
                 messages.success(request,"Successfully Added Student")
                 return HttpResponseRedirect(reverse("add_student"))
-            except (Courses.DoesNotExist, SemesterModel.DoesNotExist, Staffs.DoesNotExist):
+            except (Department.DoesNotExist, SemesterModel.DoesNotExist, Staffs.DoesNotExist):
                 messages.error(request,"Invalid department, semester, or assigned staff")
                 return HttpResponseRedirect(reverse("add_student"))
             except IntegrityError:
@@ -309,22 +309,22 @@ def add_student_save(request):
 
 
 def add_subject(request):
-    courses=Courses.objects.all()
+    departments=Department.objects.all()
     staffs=CustomUser.objects.filter(user_type=2)
-    return render(request,"hod_template/add_subject_template.html",{"staffs":staffs,"courses":courses})
+    return render(request,"hod_template/add_subject_template.html",{"staffs":staffs,"departments":departments})
 
 def add_subject_save(request):
     if request.method!="POST":
         return HttpResponse("<h2>Method Not Allowed</h2>")
     else:
         subject_name=request.POST.get("subject_name")
-        course_id=request.POST.get("course")
-        course=Courses.objects.get(id=course_id)
+        department_id=request.POST.get("department")
+        department=Department.objects.get(id=department_id)
         staff_id=request.POST.get("staff")
         staff=CustomUser.objects.get(id=staff_id)
 
         try:
-            subject=Subjects(subject_name=subject_name,course_id=course,staff_id=staff)
+            subject=Subjects(subject_name=subject_name,department_id=department,staff_id=staff)
             subject.save()
             messages.success(request,"Successfully Added Subject")
             return HttpResponseRedirect(reverse("add_subject"))
@@ -341,9 +341,9 @@ def manage_student(request):
     students=Students.objects.all()
     return render(request,"hod_template/manage_student_template.html",{"students":students})
 
-def manage_course(request):
-    courses=Courses.objects.all()
-    return render(request,"hod_template/manage_course_template.html",{"courses":courses})
+def manage_department(request):
+    departments=Department.objects.all()
+    return render(request,"hod_template/manage_department_template.html",{"departments":departments})
 
 def manage_subject(request):
     subjects=Subjects.objects.all()
@@ -376,23 +376,23 @@ def delete_subject(request,subject_id):
         messages.error(request,"Failed to Delete Subject")
     return HttpResponseRedirect(reverse("manage_subject"))
 
-def delete_course(request,course_id):
+def delete_department(request,department_id):
     try:
-        course=Courses.objects.get(id=course_id)
-        course.delete()
+        department=Department.objects.get(id=department_id)
+        department.delete()
         messages.success(request,"Successfully Deleted Department")
     except:
         messages.error(request,"Failed to Delete Department")
-    return HttpResponseRedirect(reverse("manage_course"))
+    return HttpResponseRedirect(reverse("manage_department"))
 
 def edit_staff(request,staff_id):
     staff=Staffs.objects.get(admin=staff_id)
     students = (
-        Students.objects.select_related("admin", "assigned_staff")
+        Students.objects.select_related("admin", "mentor")
         .order_by("admin__first_name", "admin__last_name", "admin__username")
     )
     selected_student_ids = set(
-        Students.objects.filter(assigned_staff=staff).values_list("admin_id", flat=True)
+        Students.objects.filter(mentor=staff).values_list("admin_id", flat=True)
     )
     return render(
         request,
@@ -445,12 +445,12 @@ def edit_staff_save(request):
                 staff_model.address=address
                 staff_model.save()
 
-                Students.objects.filter(assigned_staff=staff_model).exclude(
+                Students.objects.filter(mentor=staff_model).exclude(
                     admin_id__in=selected_student_ids
-                ).update(assigned_staff=None)
+                ).update(mentor=None)
                 if selected_student_ids:
                     Students.objects.filter(admin_id__in=selected_student_ids).update(
-                        assigned_staff=staff_model
+                        mentor=staff_model
                     )
             messages.success(request,"Successfully Edited Staff")
             return HttpResponseRedirect(reverse("edit_staff",kwargs={"staff_id":staff_id}))
@@ -471,10 +471,10 @@ def edit_student(request,student_id):
     form.fields['last_name'].initial=student.admin.last_name
     form.fields['username'].initial=student.admin.username
     form.fields['address'].initial=student.address
-    form.fields['course'].initial=student.course_id.id
+    form.fields['department'].initial=student.department_id.id
     form.fields['sex'].initial=student.gender
     form.fields['semester_id'].initial=student.semester_id.id
-    form.fields['assigned_staff'].initial=student.assigned_staff_id
+    form.fields['mentor'].initial=student.mentor_id
     return render(request,"hod_template/edit_student_template.html",{"form":form,"id":student_id,"username":student.admin.username})
 
 def edit_student_save(request):
@@ -494,9 +494,9 @@ def edit_student_save(request):
             notification_email = _normalize_email(form.cleaned_data["notification_email"]) or email
             address = form.cleaned_data["address"]
             semester_id=form.cleaned_data["semester_id"]
-            course_id = form.cleaned_data["course"]
+            department_id = form.cleaned_data["department"]
             sex = form.cleaned_data["sex"]
-            assigned_staff_id = form.cleaned_data["assigned_staff"]
+            mentor_id = form.cleaned_data["mentor"]
 
             error = _credentials_error(username, email, exclude_user_id=student_id)
             if error:
@@ -518,15 +518,15 @@ def edit_student_save(request):
                     semester = SemesterModel.object.get(id=semester_id)
                     student.semester_id = semester
                     student.gender=sex
-                    course=Courses.objects.get(id=course_id)
-                    assigned_staff=Staffs.objects.get(id=assigned_staff_id)
-                    student.course_id=course
-                    student.assigned_staff=assigned_staff
+                    department=Department.objects.get(id=department_id)
+                    mentor=Staffs.objects.get(id=mentor_id)
+                    student.department_id=department
+                    student.mentor=mentor
                     student.save()
                 del request.session['student_id']
                 messages.success(request,"Successfully Edited Student")
                 return HttpResponseRedirect(reverse("edit_student",kwargs={"student_id":student_id}))
-            except (Courses.DoesNotExist, SemesterModel.DoesNotExist, Staffs.DoesNotExist):
+            except (Department.DoesNotExist, SemesterModel.DoesNotExist, Staffs.DoesNotExist):
                 messages.error(request,"Invalid department, semester, or assigned staff")
                 return HttpResponseRedirect(reverse("edit_student",kwargs={"student_id":student_id}))
             except IntegrityError:
@@ -542,9 +542,9 @@ def edit_student_save(request):
 
 def edit_subject(request,subject_id):
     subject=Subjects.objects.get(id=subject_id)
-    courses=Courses.objects.all()
+    departments=Department.objects.all()
     staffs=CustomUser.objects.filter(user_type=2)
-    return render(request,"hod_template/edit_subject_template.html",{"subject":subject,"staffs":staffs,"courses":courses,"id":subject_id})
+    return render(request,"hod_template/edit_subject_template.html",{"subject":subject,"staffs":staffs,"departments":departments,"id":subject_id})
 
 def edit_subject_save(request):
     if request.method!="POST":
@@ -553,15 +553,15 @@ def edit_subject_save(request):
         subject_id=request.POST.get("subject_id")
         subject_name=request.POST.get("subject_name")
         staff_id=request.POST.get("staff")
-        course_id=request.POST.get("course")
+        department_id=request.POST.get("department")
 
         try:
             subject=Subjects.objects.get(id=subject_id)
             subject.subject_name=subject_name
             staff=CustomUser.objects.get(id=staff_id)
             subject.staff_id=staff
-            course=Courses.objects.get(id=course_id)
-            subject.course_id=course
+            department=Department.objects.get(id=department_id)
+            subject.department_id=department
             subject.save()
 
             messages.success(request,"Successfully Edited Subject")
@@ -571,31 +571,31 @@ def edit_subject_save(request):
             return HttpResponseRedirect(reverse("edit_subject",kwargs={"subject_id":subject_id}))
 
 
-def edit_course(request,course_id):
-    course=Courses.objects.get(id=course_id)
-    return render(request,"hod_template/edit_course_template.html",{"course":course,"id":course_id})
+def edit_department(request,department_id):
+    department=Department.objects.get(id=department_id)
+    return render(request,"hod_template/edit_department_template.html",{"department":department,"id":department_id})
 
-def edit_course_save(request):
+def edit_department_save(request):
     if request.method!="POST":
         return HttpResponse("<h2>Method Not Allowed</h2>")
     else:
-        course_id=request.POST.get("course_id")
-        course_name=(request.POST.get("course") or "").strip()
+        department_id=request.POST.get("department_id")
+        department_name=(request.POST.get("department") or "").strip()
 
-        conflict_error = _course_name_conflict(course_name, exclude_course_id=course_id)
+        conflict_error = _department_name_conflict(department_name, exclude_department_id=department_id)
         if conflict_error:
             messages.error(request, conflict_error)
-            return HttpResponseRedirect(reverse("edit_course",kwargs={"course_id":course_id}))
+            return HttpResponseRedirect(reverse("edit_department",kwargs={"department_id":department_id}))
 
         try:
-            course=Courses.objects.get(id=course_id)
-            course.course_name=course_name
-            course.save()
+            department=Department.objects.get(id=department_id)
+            department.department_name=department_name
+            department.save()
             messages.success(request,"Successfully Edited Department")
-            return HttpResponseRedirect(reverse("edit_course",kwargs={"course_id":course_id}))
+            return HttpResponseRedirect(reverse("edit_department",kwargs={"department_id":department_id}))
         except:
             messages.error(request,"Failed to Edit Department")
-            return HttpResponseRedirect(reverse("edit_course",kwargs={"course_id":course_id}))
+            return HttpResponseRedirect(reverse("edit_department",kwargs={"department_id":department_id}))
 
 
 def manage_semester(request):
@@ -811,11 +811,11 @@ def admin_send_notification_staff(request):
 
 def admin_send_notification(request):
     staffs = Staffs.objects.select_related("admin").order_by("admin__first_name", "admin__last_name", "id")
-    students = Students.objects.select_related("admin", "course_id").order_by("admin__first_name", "admin__last_name", "id")
-    departments = Courses.objects.order_by("course_name")
+    students = Students.objects.select_related("admin", "department_id").order_by("admin__first_name", "admin__last_name", "id")
+    departments = Department.objects.order_by("department_name")
     admin_to_staff = {staff.admin_id: staff.id for staff in staffs}
     staff_department_map = {staff.id: [] for staff in staffs}
-    for staff_admin_id, department_id in Subjects.objects.values_list("staff_id", "course_id").distinct():
+    for staff_admin_id, department_id in Subjects.objects.values_list("staff_id", "department_id").distinct():
         staff_id = admin_to_staff.get(staff_admin_id)
         if staff_id:
             staff_department_map[staff_id].append(department_id)
@@ -866,7 +866,7 @@ def send_bulk_notification(request):
         filtered_staff_qs = Staffs.objects.all()
         if selected_staff_department_id and selected_staff_department_id != "all_departments":
             filtered_staff_qs = filtered_staff_qs.filter(
-                admin_id__in=Subjects.objects.filter(course_id_id=selected_staff_department_id)
+                admin_id__in=Subjects.objects.filter(department_id_id=selected_staff_department_id)
                 .values_list("staff_id", flat=True)
                 .distinct()
             )
@@ -880,7 +880,7 @@ def send_bulk_notification(request):
             return HttpResponseRedirect(reverse("admin_send_notification"))
         department_students = Students.objects.all()
         if selected_department_id != "all_departments":
-            department_students = department_students.filter(course_id_id=selected_department_id)
+            department_students = department_students.filter(department_id_id=selected_department_id)
         if not selected_student_ids:
             messages.error(request, "Please select at least one student")
             return HttpResponseRedirect(reverse("admin_send_notification"))

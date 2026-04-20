@@ -41,14 +41,14 @@ Home
             <!-- small box -->
             <div class="small-box bg-warning">
               <div class="inner">
-                <h3>{{ course_count }}</h3>
+                <h3>{{ department_count }}</h3>
 
                 <p>Total Department</p>
               </div>
               <div class="icon">
                 <i class="ion ion-pie-graph"></i>
               </div>
-              <a href="{% url 'manage_course' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="{% url 'manage_department' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -188,10 +188,10 @@ Home
 
             //Second Chart for Total Subject in Each Department
                 var subject_count_list={{ subject_count_list }};
-                var course_name_list={{ course_name_list|safe }};
+                var department_name_list={{ department_name_list|safe }};
                 var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
                 var donutData        = {
-                  labels:course_name_list,
+                  labels:department_name_list,
                   datasets: [
                     {
                       data: subject_count_list,
@@ -212,15 +212,15 @@ Home
                 });
 
 
-                //show total student in each course
-                var student_count_list_in_course={{ student_count_list_in_course }};
+                //show total student in each department
+                var student_count_list_in_department={{ student_count_list_in_department }};
 
                   var pieData2        = {
-                          labels:course_name_list,
+                          labels:department_name_list,
                           datasets: [
                             {
-                              data: student_count_list_in_course,
-                              backgroundColor : createUniqueChartColors(student_count_list_in_course.length),
+                              data: student_count_list_in_department,
+                              backgroundColor : createUniqueChartColors(student_count_list_in_department.length),
                             }
                           ]
                      };

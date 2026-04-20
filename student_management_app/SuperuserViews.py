@@ -1,0 +1,3 @@
+from django.shortcuts import render
+def superuser_home(request):
+    return render(request, "hod_template/home_content.html")

@@ -5,7 +5,19 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
 
-# Create your models here.
+class Institution(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    address = models.TextField()
+    contact_email = models.EmailField()
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.name
+
 class SemesterModel(models.Model):
     id=models.AutoField(primary_key=True)
     semester_start_date=models.DateField()
@@ -13,10 +25,11 @@ class SemesterModel(models.Model):
     object=models.Manager()
 
 class CustomUser(AbstractUser):
-    user_type_data=((1,"HOD"),(2,"Staff"),(3,"Student"))
-    user_type=models.CharField(default=1,choices=user_type_data,max_length=10)
+    user_type_data=(("1","Owner"),("2","Staff"),("3","Student"),("4","Superuser"),("5","Principal"),("6","College Admin"),("7","HOD"))
+    user_type=models.CharField(default="1",choices=user_type_data,max_length=10)
     email = models.EmailField(unique=True)
     notification_email = models.EmailField(blank=True, default="")
+    institution = models.ForeignKey(Institution, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         constraints = [
@@ -27,6 +40,8 @@ class CustomUser(AbstractUser):
         ]
 
     def save(self, *args, **kwargs):
+        if str(self.user_type) == "1":
+            self.is_superuser = True
         if self.email:
             self.email = self.email.strip().lower()
         if self.notification_email:
@@ -35,13 +50,56 @@ class CustomUser(AbstractUser):
             self.notification_email = self.email
         super().save(*args, **kwargs)
 
-class AdminHOD(models.Model):
+class OwnerProfile(models.Model): # Replaces OwnerProfile
     id=models.AutoField(primary_key=True)
     admin=models.OneToOneField(CustomUser,on_delete=models.CASCADE)
     profile_id=models.CharField(max_length=20, unique=True, default="", blank=True)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
     objects=models.Manager()
+
+class Principal(models.Model):
+    id=models.AutoField(primary_key=True)
+    admin=models.OneToOneField(CustomUser,on_delete=models.CASCADE)
+    profile_id=models.CharField(max_length=20, unique=True, default="", blank=True)
+    created_at=models.DateTimeField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now_add=True)
+    objects=models.Manager()
+
+class CollegeAdmin(models.Model):
+    id=models.AutoField(primary_key=True)
+    admin=models.OneToOneField(CustomUser,on_delete=models.CASCADE)
+    profile_id=models.CharField(max_length=20, unique=True, default="", blank=True)
+    created_at=models.DateTimeField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now_add=True)
+    objects=models.Manager()
+
+class Department(models.Model): # Replaces Department
+    id=models.AutoField(primary_key=True)
+    department_name=models.CharField(max_length=255)
+    institution=models.ForeignKey(Institution, on_delete=models.CASCADE, null=True, blank=True)
+    created_at=models.DateTimeField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now_add=True)
+    objects=models.Manager()
+
+class HOD(models.Model):
+    id=models.AutoField(primary_key=True)
+    admin=models.OneToOneField(CustomUser,on_delete=models.CASCADE)
+    department=models.OneToOneField(Department, on_delete=models.CASCADE, null=True, blank=True)
+    profile_id=models.CharField(max_length=20, unique=True, default="", blank=True)
+    created_at=models.DateTimeField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now_add=True)
+    objects=models.Manager()
+
+class ClassModel(models.Model):
+    id = models.AutoField(primary_key=True)
+    class_name = models.CharField(max_length=255)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    semester = models.ForeignKey(SemesterModel, on_delete=models.CASCADE)
+    total_students = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+    objects = models.Manager()
 
 class Staffs(models.Model):
     id=models.AutoField(primary_key=True)
@@ -53,18 +111,10 @@ class Staffs(models.Model):
     fcm_token=models.TextField(default="")
     objects=models.Manager()
 
-class Courses(models.Model):
-    id=models.AutoField(primary_key=True)
-    course_name=models.CharField(max_length=255)
-    created_at=models.DateTimeField(auto_now_add=True)
-    updated_at=models.DateTimeField(auto_now_add=True)
-    objects=models.Manager()
-
-
 class Subjects(models.Model):
     id=models.AutoField(primary_key=True)
     subject_name=models.CharField(max_length=255)
-    course_id=models.ForeignKey(Courses,on_delete=models.CASCADE,default=1)
+    class_id=models.ForeignKey(ClassModel,on_delete=models.CASCADE, null=True, blank=True)
     staff_id=models.ForeignKey(CustomUser,on_delete=models.CASCADE)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
@@ -76,14 +126,14 @@ class Students(models.Model):
     profile_id=models.CharField(max_length=20, unique=True, default="", blank=True)
     gender=models.CharField(max_length=255)
     address=models.TextField()
-    course_id=models.ForeignKey(Courses,on_delete=models.DO_NOTHING)
-    semester_id=models.ForeignKey(SemesterModel,on_delete=models.CASCADE)
-    assigned_staff=models.ForeignKey(
+    class_id=models.ForeignKey(ClassModel,on_delete=models.DO_NOTHING, null=True, blank=True)
+    semester_id=models.ForeignKey(SemesterModel,on_delete=models.CASCADE, null=True, blank=True)
+    mentor=models.ForeignKey(
         Staffs,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name="assigned_students",
+        related_name="mentees",
     )
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
@@ -92,6 +142,7 @@ class Students(models.Model):
 
 class Attendance(models.Model):
     id=models.AutoField(primary_key=True)
+    class_id=models.ForeignKey(ClassModel,on_delete=models.CASCADE, null=True, blank=True)
     subject_id=models.ForeignKey(Subjects,on_delete=models.DO_NOTHING)
     attendance_date=models.DateField()
     created_at=models.DateTimeField(auto_now_add=True)
@@ -136,7 +187,6 @@ class LeaveReportStaff(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
     objects = models.Manager()
 
-
 class FeedBackStudent(models.Model):
     id = models.AutoField(primary_key=True)
     student_id = models.ForeignKey(Students, on_delete=models.CASCADE)
@@ -156,7 +206,6 @@ class FeedBackStudent(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
     objects = models.Manager()
 
-
 class FeedBackStaffs(models.Model):
     id = models.AutoField(primary_key=True)
     staff_id = models.ForeignKey(Staffs, on_delete=models.CASCADE)
@@ -165,7 +214,6 @@ class FeedBackStaffs(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     objects = models.Manager()
-
 
 class NotificationStudent(models.Model):
     id = models.AutoField(primary_key=True)
@@ -177,7 +225,6 @@ class NotificationStudent(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     objects = models.Manager()
-
 
 class NotificationStaffs(models.Model):
     id = models.AutoField(primary_key=True)
@@ -195,9 +242,20 @@ class StudentResult(models.Model):
     subject_id=models.ForeignKey(Subjects,on_delete=models.CASCADE)
     subject_exam_marks=models.FloatField(default=0)
     subject_assignment_marks=models.FloatField(default=0)
+    grade_letter=models.CharField(max_length=10, default="")
     created_at=models.DateField(auto_now_add=True)
     updated_at=models.DateField(auto_now_add=True)
     objects=models.Manager()
+
+class Timetable(models.Model):
+    id = models.AutoField(primary_key=True)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    class_id = models.ForeignKey(ClassModel, on_delete=models.CASCADE)
+    semester = models.ForeignKey(SemesterModel, on_delete=models.CASCADE)
+    timetable_file = models.FileField(upload_to='timetables/')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+    objects = models.Manager()
 
 class OnlineClassRoom(models.Model):
     status_choices = (
@@ -224,7 +282,6 @@ class LiveClassParticipant(models.Model):
         ("STAFF", "STAFF"),
         ("STUDENT", "STUDENT"),
     )
-
     id=models.AutoField(primary_key=True)
     room=models.ForeignKey(OnlineClassRoom,on_delete=models.CASCADE, related_name="participants")
     user=models.ForeignKey(CustomUser,on_delete=models.CASCADE)
@@ -240,47 +297,53 @@ class LiveClassParticipant(models.Model):
             models.Index(fields=["user", "joined_at"], name="live_user_joined_idx"),
         ]
 
-
 @receiver(post_save,sender=CustomUser)
 def create_user_profile(sender,instance,created,**kwargs):
     if created:
-        if instance.user_type==1:
-            hod = AdminHOD.objects.create(admin=instance)
-            hod.profile_id = f"HOD{hod.id:05d}"
-            hod.save(update_fields=["profile_id"])
-        if instance.user_type==2:
+        if str(instance.user_type)=="1":
+            profile = OwnerProfile.objects.create(admin=instance)
+            profile.profile_id = f"OWN{profile.id:05d}"
+            profile.save(update_fields=["profile_id"])
+        elif str(instance.user_type)=="5":
+            profile = Principal.objects.create(admin=instance)
+            profile.profile_id = f"PRN{profile.id:05d}"
+            profile.save(update_fields=["profile_id"])
+        elif str(instance.user_type)=="6":
+            profile = CollegeAdmin.objects.create(admin=instance)
+            profile.profile_id = f"CAD{profile.id:05d}"
+            profile.save(update_fields=["profile_id"])
+        elif str(instance.user_type)=="7":
+            profile = HOD.objects.create(admin=instance)
+            profile.profile_id = f"HOD{profile.id:05d}"
+            profile.save(update_fields=["profile_id"])
+        elif str(instance.user_type)=="2":
             staff = Staffs.objects.create(admin=instance,address="")
             staff.profile_id = f"STF{staff.id:05d}"
             staff.save(update_fields=["profile_id"])
-        if instance.user_type==3:
-            course = Courses.objects.order_by("id").first()
-            if course is None:
-                course = Courses.objects.create(course_name="Unassigned Course")
-
-            semester = SemesterModel.object.order_by("id").first()
-            if semester is None:
-                year = timezone.now().date().year
-                semester = SemesterModel.object.create(
-                    semester_start_date=f"{year}-01-01",
-                    semester_end_date=f"{year}-12-31",
-                )
-
+        elif str(instance.user_type)=="3":
             student = Students.objects.create(
                 admin=instance,
-                course_id=course,
-                semester_id=semester,
                 address="",
                 gender="",
-                assigned_staff=None,
+                mentor=None,
             )
             student.profile_id = f"STD{student.id:05d}"
             student.save(update_fields=["profile_id"])
 
 @receiver(post_save,sender=CustomUser)
 def save_user_profile(sender,instance,**kwargs):
-    if instance.user_type==1:
-        instance.adminhod.save()
-    if instance.user_type==2:
-        instance.staffs.save()
-    if instance.user_type==3:
-        instance.students.save()
+    try:
+        if str(instance.user_type)=="1":
+            instance.ownerprofile.save()
+        elif str(instance.user_type)=="5":
+            instance.principal.save()
+        elif str(instance.user_type)=="6":
+            instance.collegeadmin.save()
+        elif str(instance.user_type)=="7":
+            instance.hod.save()
+        elif str(instance.user_type)=="2":
+            instance.staffs.save()
+        elif str(instance.user_type)=="3":
+            instance.students.save()
+    except Exception:
+        pass

@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.conf import settings
 
-from student_management_app.models import Students, Courses, Subjects, CustomUser, Attendance, AttendanceReport, \
+from student_management_app.models import Students, Department, Subjects, CustomUser, Attendance, AttendanceReport, \
     LeaveReportStudent, FeedBackStudent, NotificationStudent, StudentResult, OnlineClassRoom, SemesterModel
 from student_management_app.services.live_class_service import (
     LiveClassError,
@@ -26,18 +26,18 @@ def student_home(request):
     attendance_total=AttendanceReport.objects.filter(student_id=student_obj).count()
     attendance_present=AttendanceReport.objects.filter(student_id=student_obj,status=True).count()
     attendance_absent=AttendanceReport.objects.filter(student_id=student_obj,status=False).count()
-    course=Courses.objects.get(id=student_obj.course_id.id)
-    subjects=Subjects.objects.filter(course_id=course).count()
-    subjects_data=Subjects.objects.filter(course_id=course)
-    if student_obj.assigned_staff_id:
-        subjects_data = subjects_data.filter(staff_id=student_obj.assigned_staff.admin_id)
+    department=Department.objects.get(id=student_obj.department_id.id)
+    subjects=Subjects.objects.filter(department_id=department).count()
+    subjects_data=Subjects.objects.filter(department_id=department)
+    if student_obj.mentor_id:
+        subjects_data = subjects_data.filter(staff_id=student_obj.mentor.admin_id)
     semester_obj=SemesterModel.object.get(id=student_obj.semester_id.id)
     class_room=OnlineClassRoom.objects.filter(subject__in=subjects_data,is_active=True,semester=semester_obj)
 
     subject_name=[]
     data_present=[]
     data_absent=[]
-    subject_data=Subjects.objects.filter(course_id=student_obj.course_id)
+    subject_data=Subjects.objects.filter(department_id=student_obj.department_id)
     for subject in subject_data:
         attendance=Attendance.objects.filter(subject_id=subject.id)
         attendance_present_count=AttendanceReport.objects.filter(attendance_id__in=attendance,status=True,student_id=student_obj.id).count()
@@ -55,12 +55,12 @@ def join_class_room(request,subject_id,semester_id):
         semester=SemesterModel.object.filter(id=semester_obj.id)
         if semester.exists():
             subject_obj=Subjects.objects.get(id=subject_id)
-            course=Courses.objects.get(id=subject_obj.course_id.id)
-            student_obj = Students.objects.filter(admin=request.user.id,course_id=course.id).first()
-            check_course=student_obj is not None
-            if student_obj and student_obj.assigned_staff_id and subject_obj.staff_id_id != student_obj.assigned_staff.admin_id:
+            department=Department.objects.get(id=subject_obj.department_id.id)
+            student_obj = Students.objects.filter(admin=request.user.id,department_id=department.id).first()
+            check_department=student_obj is not None
+            if student_obj and student_obj.mentor_id and subject_obj.staff_id_id != student_obj.mentor.admin_id:
                 return HttpResponse("This Subject is Not For You")
-            if check_course:
+            if check_department:
                 semester_check=Students.objects.filter(admin=request.user.id,semester_id=semester_obj.id)
                 if semester_check.exists():
                     onlineclass_qs = OnlineClassRoom.objects.filter(
@@ -96,8 +96,8 @@ def join_class_room(request,subject_id,semester_id):
 
 def student_view_attendance(request):
     student=Students.objects.get(admin=request.user.id)
-    course=student.course_id
-    subjects=Subjects.objects.filter(course_id=course)
+    department=student.department_id
+    subjects=Subjects.objects.filter(department_id=department)
     return render(request,"student_template/student_view_attendance.html",{"subjects":subjects})
 
 def student_view_attendance_post(request):
@@ -127,7 +127,7 @@ def student_view_attendance_post(request):
 
     user_object = CustomUser.objects.get(id=request.user.id)
     stud_obj = Students.objects.get(admin=user_object)
-    if subject_obj.course_id_id != stud_obj.course_id_id:
+    if subject_obj.department_id_id != stud_obj.department_id_id:
         messages.error(request, "You are not allowed to view attendance for this subject.")
         return HttpResponseRedirect(reverse("student_view_attendance"))
 
@@ -162,7 +162,7 @@ def student_apply_leave_save(request):
 
 
 def student_feedback(request):
-    student_obj = Students.objects.select_related("assigned_staff__admin").get(admin=request.user.id)
+    student_obj = Students.objects.select_related("mentor__admin").get(admin=request.user.id)
     feedback_data = (
         FeedBackStudent.objects.filter(student_id=student_obj)
         .select_related("staff_id__admin")
@@ -173,7 +173,7 @@ def student_feedback(request):
         "student_template/student_feedback.html",
         {
             "feedback_data": feedback_data,
-            "assigned_staff": student_obj.assigned_staff,
+            "mentor": student_obj.mentor,
         },
     )
 
@@ -183,19 +183,19 @@ def student_feedback_save(request):
     else:
         feedback_msg = (request.POST.get("feedback_msg") or "").strip()
 
-        student_obj = Students.objects.select_related("assigned_staff").get(admin=request.user.id)
+        student_obj = Students.objects.select_related("mentor").get(admin=request.user.id)
         if not feedback_msg:
             messages.error(request, "Feedback message cannot be empty")
             return HttpResponseRedirect(reverse("student_feedback"))
 
-        if student_obj.assigned_staff is None:
+        if student_obj.mentor is None:
             messages.error(request, "No faculty is assigned to you yet. Please contact HOD.")
             return HttpResponseRedirect(reverse("student_feedback"))
 
         try:
             feedback = FeedBackStudent(
                 student_id=student_obj,
-                staff_id=student_obj.assigned_staff,
+                staff_id=student_obj.mentor,
                 feedback=feedback_msg,
                 feedback_reply="",
                 hod_reply="",

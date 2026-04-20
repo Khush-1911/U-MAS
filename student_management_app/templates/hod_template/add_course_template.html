@@ -15,12 +15,12 @@ Add Department
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form role="form" action="/add_course_save" method="post">
+              <form role="form" action="/add_department_save" method="post">
                   {% csrf_token %}
                 <div class="card-body">
                   <div class="form-group">
                     <label>Department Name </label>
-                    <input class="form-control" name="course" placeholder="Enter Department">
+                    <input class="form-control" name="department" placeholder="Enter Department">
                   </div>
                    <div class="form-group">
                       {% if messages %}

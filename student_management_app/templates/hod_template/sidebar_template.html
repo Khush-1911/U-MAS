@@ -27,15 +27,15 @@
       <span class="sidebar-label">Manage Students</span>
     </a>
 
-    {% url 'add_course' as add_course %}
-    <a href="{% url 'add_course' %}" class="sidebar-link {% if request.path == add_course %}active{% endif %}">
+    {% url 'add_department' as add_department %}
+    <a href="{% url 'add_department' %}" class="sidebar-link {% if request.path == add_department %}active{% endif %}">
       <i class="fas fa-book"></i>
       <span class="sidebar-label">Add Department</span>
     </a>
 
-    {% url 'manage_course' as manage_course %}
-    {% url 'edit_course' course_id=id as edit_course %}
-    <a href="{% url 'manage_course' %}" class="sidebar-link {% if request.path == manage_course %}active{% endif %} {% if request.path == edit_course %}active{% endif %}">
+    {% url 'manage_department' as manage_department %}
+    {% url 'edit_department' department_id=id as edit_department %}
+    <a href="{% url 'manage_department' %}" class="sidebar-link {% if request.path == manage_department %}active{% endif %} {% if request.path == edit_department %}active{% endif %}">
       <i class="fas fa-layer-group"></i>
       <span class="sidebar-label">Manage Department</span>
     </a>

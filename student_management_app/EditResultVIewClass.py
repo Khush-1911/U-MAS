@@ -23,7 +23,7 @@ class EditResultViewClass(View):
             subject_id = form.cleaned_data['subject_id']
 
             staff_obj = Staffs.objects.get(admin=request.user.id)
-            student_obj = Students.objects.filter(admin=student_admin_id, assigned_staff=staff_obj).first()
+            student_obj = Students.objects.filter(admin=student_admin_id, mentor=staff_obj).first()
             subject_obj = Subjects.objects.filter(id=subject_id, staff_id=request.user.id).first()
             if student_obj is None or subject_obj is None:
                 messages.error(request, "Invalid student or subject assignment")

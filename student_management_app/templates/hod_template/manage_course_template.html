@@ -35,13 +35,13 @@ Manage Department
                     </tr>
                   </thead>
                   <tbody>
-                  {% for course in courses %}
+                  {% for department in departments %}
                     <tr>
-                      <td>{{ course.id }}</td>
-                      <td>{{ course.course_name }}</td>
+                      <td>{{ department.id }}</td>
+                      <td>{{ department.department_name }}</td>
                       <td>
-                        <a href="/edit_course/{{ course.id }}" class="btn btn-success">Edit</a>
-                        <a href="{% url 'delete_course' course_id=course.id %}" class="btn btn-danger" onclick="return confirm('Delete this department?');">Delete</a>
+                        <a href="/edit_department/{{ department.id }}" class="btn btn-success">Edit</a>
+                        <a href="{% url 'delete_department' department_id=department.id %}" class="btn btn-danger" onclick="return confirm('Delete this department?');">Delete</a>
                       </td>
                     </tr>
                   {% endfor %}

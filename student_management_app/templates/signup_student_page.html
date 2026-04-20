@@ -45,10 +45,10 @@
       </div>
       <div class="form-group" style="margin-top:12px;">
         <label>Department</label>
-        <select class="form-control" name="course" required>
+        <select class="form-control" name="department" required>
           <option value="">Select department</option>
-          {% for course in courses %}
-          <option value="{{ course.id }}">{{ course.course_name }}</option>
+          {% for department in departments %}
+          <option value="{{ department.id }}">{{ department.department_name }}</option>
           {% endfor %}
         </select>
       </div>

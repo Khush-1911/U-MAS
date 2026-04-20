@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from student_management_app.models import Courses, CustomUser, FeedBackStudent, SemesterModel
+from student_management_app.models import Department, CustomUser, FeedBackStudent, SemesterModel
 
 
 class FeedbackRoutingTests(TestCase):
@@ -10,7 +10,7 @@ class FeedbackRoutingTests(TestCase):
             semester_start_date="2025-01-01",
             semester_end_date="2025-12-31",
         )
-        self.course = Courses.objects.create(course_name="BCA")
+        self.department = Department.objects.create(department_name="BCA")
 
         self.hod_user = CustomUser.objects.create_user(
             username="hod_feedback",
@@ -37,12 +37,12 @@ class FeedbackRoutingTests(TestCase):
             user_type=3,
         )
 
-        self.student_user.students.course_id = self.course
+        self.student_user.students.department_id = self.department
         self.student_user.students.semester_id = self.semester
-        self.student_user.students.assigned_staff = self.staff_user.staffs
+        self.student_user.students.mentor = self.staff_user.staffs
         self.student_user.students.save()
 
-    def test_student_feedback_is_routed_to_assigned_staff(self):
+    def test_student_feedback_is_routed_to_mentor(self):
         self.client.force_login(self.student_user)
         response = self.client.post(
             reverse("student_feedback_save"),

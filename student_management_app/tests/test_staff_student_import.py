@@ -5,12 +5,12 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
 
-from student_management_app.models import Courses, CustomUser, SemesterModel
+from student_management_app.models import Department, CustomUser, SemesterModel
 
 
 class StaffStudentImportTests(TestCase):
     def setUp(self):
-        self.course = Courses.objects.create(course_name="BCA")
+        self.department = Department.objects.create(department_name="BCA")
         self.semester = SemesterModel.object.create(
             semester_start_date="2026-01-01",
             semester_end_date="2026-06-30",
@@ -36,8 +36,8 @@ class StaffStudentImportTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         created_user = CustomUser.objects.get(username="asha.patel")
-        self.assertIsNone(created_user.students.assigned_staff)
-        self.assertEqual(created_user.students.course_id, self.course)
+        self.assertIsNone(created_user.students.mentor)
+        self.assertEqual(created_user.students.department_id, self.department)
         self.assertEqual(created_user.students.semester_id, self.semester)
 
     def test_xlsx_import_skips_duplicate_username(self):

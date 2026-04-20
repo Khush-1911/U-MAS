@@ -47,7 +47,7 @@ Send Notification
                   <option value="">Select department</option>
                   <option value="all_departments">All Departments</option>
                   {% for department in departments %}
-                  <option value="{{ department.id }}">{{ department.course_name }}</option>
+                  <option value="{{ department.id }}">{{ department.department_name }}</option>
                   {% endfor %}
                 </select>
               </div>
@@ -58,7 +58,7 @@ Send Notification
                   <option value="">Select department</option>
                   <option value="all_departments">All Departments</option>
                   {% for department in departments %}
-                  <option value="{{ department.id }}">{{ department.course_name }}</option>
+                  <option value="{{ department.id }}">{{ department.department_name }}</option>
                   {% endfor %}
                 </select>
               </div>
@@ -89,10 +89,10 @@ Send Notification
                 </div>
                 <div class="border rounded p-2" style="max-height: 260px; overflow-y: auto;">
                   {% for student in students %}
-                  <div class="form-check mb-1 student-item" data-department-id="{{ student.course_id.id }}">
+                  <div class="form-check mb-1 student-item" data-department-id="{{ student.department_id.id }}">
                     <input class="form-check-input student-checkbox" type="checkbox" name="student_ids" value="{{ student.id }}" id="student_{{ student.id }}">
                     <label class="form-check-label" for="student_{{ student.id }}">
-                      {{ student.profile_id|default:student.id }} - {{ student.admin.get_full_name|default:student.admin.username }} ({{ student.course_id.course_name }})
+                      {{ student.profile_id|default:student.id }} - {{ student.admin.get_full_name|default:student.admin.username }} ({{ student.department_id.department_name }})
                     </label>
                   </div>
                   {% empty %}

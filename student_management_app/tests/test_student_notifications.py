@@ -1,12 +1,12 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from student_management_app.models import Courses, CustomUser, NotificationStudent, SemesterModel
+from student_management_app.models import Department, CustomUser, NotificationStudent, SemesterModel
 
 
 class StudentNotificationTests(TestCase):
     def setUp(self):
-        self.course = Courses.objects.create(course_name="BCA")
+        self.department = Department.objects.create(department_name="BCA")
         self.semester = SemesterModel.object.create(
             semester_start_date="2026-01-01",
             semester_end_date="2026-12-31",
@@ -17,7 +17,7 @@ class StudentNotificationTests(TestCase):
             password="pass12345",
             user_type=3,
         )
-        self.student_user.students.course_id = self.course
+        self.student_user.students.department_id = self.department
         self.student_user.students.semester_id = self.semester
         self.student_user.students.save()
 

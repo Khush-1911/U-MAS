@@ -2,13 +2,13 @@ from django.core import mail
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
-from student_management_app.models import Courses, CustomUser, NotificationStudent, SemesterModel
+from student_management_app.models import Department, CustomUser, NotificationStudent, SemesterModel
 
 
 @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
 class StaffStudentNotificationTests(TestCase):
     def setUp(self):
-        self.course = Courses.objects.create(course_name="Computer Science")
+        self.department = Department.objects.create(department_name="Computer Science")
         self.semester = SemesterModel.object.create(
             semester_start_date="2026-01-01",
             semester_end_date="2026-12-31",
@@ -35,9 +35,9 @@ class StaffStudentNotificationTests(TestCase):
             password="pass12345",
             user_type=3,
         )
-        self.assigned_student_user.students.course_id = self.course
+        self.assigned_student_user.students.department_id = self.department
         self.assigned_student_user.students.semester_id = self.semester
-        self.assigned_student_user.students.assigned_staff = self.staff_user.staffs
+        self.assigned_student_user.students.mentor = self.staff_user.staffs
         self.assigned_student_user.students.save()
 
         self.unassigned_student_user = CustomUser.objects.create_user(
@@ -46,9 +46,9 @@ class StaffStudentNotificationTests(TestCase):
             password="pass12345",
             user_type=3,
         )
-        self.unassigned_student_user.students.course_id = self.course
+        self.unassigned_student_user.students.department_id = self.department
         self.unassigned_student_user.students.semester_id = self.semester
-        self.unassigned_student_user.students.assigned_staff = self.other_staff_user.staffs
+        self.unassigned_student_user.students.mentor = self.other_staff_user.staffs
         self.unassigned_student_user.students.save()
 
         self.client.force_login(self.staff_user)

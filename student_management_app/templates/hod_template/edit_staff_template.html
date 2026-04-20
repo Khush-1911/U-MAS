@@ -63,8 +63,8 @@ Edit Staff  | Username : {{ staff.admin.username }} |  #ID : {{ staff.admin.id }
                           <input class="form-check-input" type="checkbox" name="assigned_students" value="{{ student.admin.id }}" id="student_{{ student.admin.id }}" {% if student.admin.id in selected_student_ids %}checked{% endif %}>
                           <label class="form-check-label" for="student_{{ student.admin.id }}">
                             {{ student.profile_id }} - {{ student.admin.get_full_name|default:student.admin.username }}
-                            {% if student.assigned_staff %}
-                              (Current: {{ student.assigned_staff.profile_id }} - {{ student.assigned_staff.admin.get_full_name|default:student.assigned_staff.admin.username }})
+                            {% if student.mentor %}
+                              (Current: {{ student.mentor.profile_id }} - {{ student.mentor.admin.get_full_name|default:student.mentor.admin.username }})
                             {% else %}
                               (Current: Unassigned)
                             {% endif %}

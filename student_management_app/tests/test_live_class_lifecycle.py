@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from student_management_app.models import Courses, SemesterModel, Subjects
+from student_management_app.models import Department, SemesterModel, Subjects
 from student_management_app.models import CustomUser
 from student_management_app.services.live_class_service import create_or_get_active_room, end_room
 
@@ -11,7 +11,7 @@ class LiveClassLifecycleTests(TestCase):
             semester_start_date="2025-01-01",
             semester_end_date="2025-12-31",
         )
-        self.course = Courses.objects.create(course_name="BSc")
+        self.department = Department.objects.create(department_name="BSc")
         self.staff_user = CustomUser.objects.create_user(
             username="staff_lifecycle",
             email="staff_lifecycle@example.com",
@@ -20,7 +20,7 @@ class LiveClassLifecycleTests(TestCase):
         )
         self.subject = Subjects.objects.create(
             subject_name="Math",
-            course_id=self.course,
+            department_id=self.department,
             staff_id=self.staff_user,
         )
 

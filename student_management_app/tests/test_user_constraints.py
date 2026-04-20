@@ -4,7 +4,7 @@ from django.db import IntegrityError
 from django.test import TestCase
 from django.urls import reverse
 
-from student_management_app.models import Courses, CustomUser, SemesterModel, Subjects
+from student_management_app.models import Department, CustomUser, SemesterModel, Subjects
 
 
 class UserConstraintTests(TestCase):
@@ -13,7 +13,7 @@ class UserConstraintTests(TestCase):
             semester_start_date="2025-01-01",
             semester_end_date="2025-12-31",
         )
-        self.course = Courses.objects.create(course_name="BCA")
+        self.department = Department.objects.create(department_name="BCA")
 
         self.staff_user = CustomUser.objects.create_user(
             username="staff_primary",
@@ -30,7 +30,7 @@ class UserConstraintTests(TestCase):
 
         self.subject = Subjects.objects.create(
             subject_name="Algorithms",
-            course_id=self.course,
+            department_id=self.department,
             staff_id=self.staff_user,
         )
 
@@ -40,9 +40,9 @@ class UserConstraintTests(TestCase):
             password="pass12345",
             user_type=3,
         )
-        self.student_user.students.course_id = self.course
+        self.student_user.students.department_id = self.department
         self.student_user.students.semester_id = self.semester
-        self.student_user.students.assigned_staff = self.staff_user.staffs
+        self.student_user.students.mentor = self.staff_user.staffs
         self.student_user.students.save()
 
     def test_email_is_unique_case_insensitive_across_roles(self):
@@ -69,7 +69,7 @@ class UserConstraintTests(TestCase):
             user_type=1,
         )
 
-        self.assertTrue(hod_user.adminhod.profile_id.startswith("HOD"))
+        self.assertTrue(hod_user.ownerprofile.profile_id.startswith("HOD"))
         self.assertTrue(self.staff_user.staffs.profile_id.startswith("STF"))
         self.assertTrue(self.student_user.students.profile_id.startswith("STD"))
 
@@ -80,9 +80,9 @@ class UserConstraintTests(TestCase):
             password="pass12345",
             user_type=3,
         )
-        unassigned_for_this_staff.students.course_id = self.course
+        unassigned_for_this_staff.students.department_id = self.department
         unassigned_for_this_staff.students.semester_id = self.semester
-        unassigned_for_this_staff.students.assigned_staff = self.other_staff_user.staffs
+        unassigned_for_this_staff.students.mentor = self.other_staff_user.staffs
         unassigned_for_this_staff.students.save()
 
         self.client.force_login(self.staff_user)
@@ -119,7 +119,7 @@ class UserConstraintTests(TestCase):
                 "last_name": "Student",
                 "username": "newstudent",
                 "address": "Campus",
-                "course": str(self.course.id),
+                "department": str(self.department.id),
                 "sex": "Male",
                 "semester_id": str(self.semester.id),
             },
@@ -128,7 +128,7 @@ class UserConstraintTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         created_student = CustomUser.objects.get(username="newstudent")
-        self.assertIsNone(created_student.students.assigned_staff)
+        self.assertIsNone(created_student.students.mentor)
         self.assertEqual(created_student.students.semester_id, self.semester)
 
     def test_staff_cannot_edit_unassigned_student(self):
@@ -138,9 +138,9 @@ class UserConstraintTests(TestCase):
             password="pass12345",
             user_type=3,
         )
-        unassigned_student.students.course_id = self.course
+        unassigned_student.students.department_id = self.department
         unassigned_student.students.semester_id = self.semester
-        unassigned_student.students.assigned_staff = None
+        unassigned_student.students.mentor = None
         unassigned_student.students.save()
 
         self.client.force_login(self.staff_user)
@@ -166,10 +166,10 @@ class UserConstraintTests(TestCase):
                 "last_name": "Student",
                 "username": self.student_user.username,
                 "address": "Updated address",
-                "course": str(self.course.id),
+                "department": str(self.department.id),
                 "sex": "Male",
                 "semester_id": str(self.semester.id),
-                "assigned_staff": str(self.staff_user.staffs.id),
+                "mentor": str(self.staff_user.staffs.id),
             },
             follow=True,
         )
