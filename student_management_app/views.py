@@ -165,7 +165,7 @@ def live_class_room_state_api(request, room_id):
             return JsonResponse({"ok": False, "error": "Not allowed"}, status=403)
     elif user_type == "3":
         student = Students.objects.get(admin=request.user.id)
-        if student.department_id.id != room.subject.department_id.id or student.semester_id.id != room.semester.id:
+        if student.class_id_id != room.subject.class_id_id or student.semester_id.id != room.semester.id:
             return JsonResponse({"ok": False, "error": "Not allowed"}, status=403)
         if student.mentor_id and student.mentor_id != room.started_by_id:
             return JsonResponse({"ok": False, "error": "Not allowed"}, status=403)

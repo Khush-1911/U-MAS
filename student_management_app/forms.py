@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ChoiceField
 
-from student_management_app.models import Department, SemesterModel, Staffs, Subjects
+from student_management_app.models import Department, SemesterModel, Staffs, Subjects, ClassModel
 
 
 def _semester_label(semester):
@@ -30,15 +30,15 @@ class AddStudentForm(forms.Form):
         ("Female","Female")
     )
 
-    department=forms.ChoiceField(label="Department",choices=[],widget=forms.Select(attrs={"class":"form-control"}))
+    class_id=forms.ChoiceField(label="Class",choices=[],widget=forms.Select(attrs={"class":"form-control"}))
     sex=forms.ChoiceField(label="Sex",choices=gender_choice,widget=forms.Select(attrs={"class":"form-control"}))
     semester_id=forms.ChoiceField(label="Semester",choices=[],widget=forms.Select(attrs={"class":"form-control"}))
     mentor=forms.ChoiceField(label="Assigned Staff",choices=[],widget=forms.Select(attrs={"class":"form-control"}))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["department"].choices = [
-            (department.id, department.department_name) for department in Department.objects.all()
+        self.fields["class_id"].choices = [
+            (cls.id, cls.class_name) for cls in ClassModel.objects.all()
         ]
         self.fields["semester_id"].choices = [
             (semester.id, _semester_label(semester))
@@ -63,15 +63,15 @@ class EditStudentForm(forms.Form):
         ("Female","Female")
     )
 
-    department=forms.ChoiceField(label="Department",choices=[],widget=forms.Select(attrs={"class":"form-control"}))
+    class_id=forms.ChoiceField(label="Class",choices=[],widget=forms.Select(attrs={"class":"form-control"}))
     sex=forms.ChoiceField(label="Sex",choices=gender_choice,widget=forms.Select(attrs={"class":"form-control"}))
     semester_id=forms.ChoiceField(label="Semester",choices=[],widget=forms.Select(attrs={"class":"form-control"}))
     mentor=forms.ChoiceField(label="Assigned Staff",choices=[],widget=forms.Select(attrs={"class":"form-control"}))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["department"].choices = [
-            (department.id, department.department_name) for department in Department.objects.all()
+        self.fields["class_id"].choices = [
+            (cls.id, cls.class_name) for cls in ClassModel.objects.all()
         ]
         self.fields["semester_id"].choices = [
             (semester.id, _semester_label(semester))
@@ -95,14 +95,14 @@ class StaffAddStudentForm(forms.Form):
         ("Male","Male"),
         ("Female","Female")
     )
-    department=forms.ChoiceField(label="Department",choices=[],widget=forms.Select(attrs={"class":"form-control"}))
+    class_id=forms.ChoiceField(label="Class",choices=[],widget=forms.Select(attrs={"class":"form-control"}))
     sex=forms.ChoiceField(label="Sex",choices=gender_choice,widget=forms.Select(attrs={"class":"form-control"}))
     semester_id=forms.ChoiceField(label="Semester",choices=[],widget=forms.Select(attrs={"class":"form-control"}))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["department"].choices = [
-            (department.id, department.department_name) for department in Department.objects.all()
+        self.fields["class_id"].choices = [
+            (cls.id, cls.class_name) for cls in ClassModel.objects.all()
         ]
         self.fields["semester_id"].choices = [
             (semester.id, _semester_label(semester))
@@ -121,14 +121,14 @@ class StaffEditStudentForm(forms.Form):
         ("Male","Male"),
         ("Female","Female")
     )
-    department=forms.ChoiceField(label="Department",choices=[],widget=forms.Select(attrs={"class":"form-control"}))
+    class_id=forms.ChoiceField(label="Class",choices=[],widget=forms.Select(attrs={"class":"form-control"}))
     sex=forms.ChoiceField(label="Sex",choices=gender_choice,widget=forms.Select(attrs={"class":"form-control"}))
     semester_id=forms.ChoiceField(label="Semester",choices=[],widget=forms.Select(attrs={"class":"form-control"}))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["department"].choices = [
-            (department.id, department.department_name) for department in Department.objects.all()
+        self.fields["class_id"].choices = [
+            (cls.id, cls.class_name) for cls in ClassModel.objects.all()
         ]
         self.fields["semester_id"].choices = [
             (semester.id, _semester_label(semester))

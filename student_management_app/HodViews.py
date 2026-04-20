@@ -2,6 +2,7 @@ import json
 
 import requests
 from django.contrib import messages
+from django.core.files.storage import FileSystemStorage
 from django.db import IntegrityError, transaction
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
@@ -9,7 +10,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
 from student_management_app.forms import AddStudentForm, EditStudentForm
-from student_management_app.models import CustomUser, Staffs, Department, Subjects, Students, SemesterModel, \
+from student_management_app.models import CustomUser, Staffs, Department, Subjects, Students, SemesterModel, ClassModel, \
     FeedBackStudent, FeedBackStaffs, LeaveReportStudent, LeaveReportStaff, Attendance, AttendanceReport, \
     NotificationStudent, NotificationStaffs
 from student_management_app.notification_utils import (
@@ -115,8 +116,8 @@ def admin_home(request):
     subject_count_list=[]
     student_count_list_in_department=[]
     for department in department_all:
-        subjects=Subjects.objects.filter(department_id=department.id).count()
-        students=Students.objects.filter(department_id=department.id).count()
+        subjects=Subjects.objects.filter(class_id__department_id=department.id).count()
+        students=Students.objects.filter(class_id__department_id=department.id).count()
         department_name_list.append(department.department_name)
         subject_count_list.append(subjects)
         student_count_list_in_department.append(students)
@@ -125,8 +126,8 @@ def admin_home(request):
     subject_list=[]
     student_count_list_in_subject=[]
     for subject in subjects_all:
-        department=Department.objects.get(id=subject.department_id.id)
-        student_count=Students.objects.filter(department_id=department.id).count()
+        department=Department.objects.get(id=subject.class_id.department.id)
+        student_count=Students.objects.filter(class_id__department_id=department.id).count()
         subject_list.append(subject.subject_name)
         student_count_list_in_subject.append(student_count)
 
@@ -258,7 +259,7 @@ def add_student_save(request):
             password=form.cleaned_data["password"]
             address=form.cleaned_data["address"]
             semester_id=form.cleaned_data["semester_id"]
-            department_id=form.cleaned_data["department"]
+            class_id=form.cleaned_data["class_id"]
             sex=form.cleaned_data["sex"]
             mentor_id=form.cleaned_data["mentor"]
 
@@ -273,7 +274,7 @@ def add_student_save(request):
 
             try:
                 with transaction.atomic():
-                    department_obj=Department.objects.get(id=department_id)
+                    class_obj=ClassModel.objects.get(id=class_id)
                     semester=SemesterModel.object.get(id=semester_id)
                     mentor=Staffs.objects.get(id=mentor_id)
 
@@ -287,7 +288,7 @@ def add_student_save(request):
                         user_type=3,
                     )
                     user.students.address=address
-                    user.students.department_id=department_obj
+                    user.students.class_id=class_obj
                     user.students.semester_id=semester
                     user.students.gender=sex
                     user.students.mentor=mentor
@@ -309,22 +310,22 @@ def add_student_save(request):
 
 
 def add_subject(request):
-    departments=Department.objects.all()
+    classes=ClassModel.objects.all()
     staffs=CustomUser.objects.filter(user_type=2)
-    return render(request,"hod_template/add_subject_template.html",{"staffs":staffs,"departments":departments})
+    return render(request,"hod_template/add_subject_template.html",{"staffs":staffs,"classes":classes})
 
 def add_subject_save(request):
     if request.method!="POST":
         return HttpResponse("<h2>Method Not Allowed</h2>")
     else:
         subject_name=request.POST.get("subject_name")
-        department_id=request.POST.get("department")
-        department=Department.objects.get(id=department_id)
+        class_id=request.POST.get("class")
+        class_obj=ClassModel.objects.get(id=class_id)
         staff_id=request.POST.get("staff")
         staff=CustomUser.objects.get(id=staff_id)
 
         try:
-            subject=Subjects(subject_name=subject_name,department_id=department,staff_id=staff)
+            subject=Subjects(subject_name=subject_name,class_id=class_obj,staff_id=staff)
             subject.save()
             messages.success(request,"Successfully Added Subject")
             return HttpResponseRedirect(reverse("add_subject"))
@@ -471,7 +472,7 @@ def edit_student(request,student_id):
     form.fields['last_name'].initial=student.admin.last_name
     form.fields['username'].initial=student.admin.username
     form.fields['address'].initial=student.address
-    form.fields['department'].initial=student.department_id.id
+    form.fields['class_id'].initial=student.class_id.id if student.class_id else None
     form.fields['sex'].initial=student.gender
     form.fields['semester_id'].initial=student.semester_id.id
     form.fields['mentor'].initial=student.mentor_id
@@ -494,7 +495,7 @@ def edit_student_save(request):
             notification_email = _normalize_email(form.cleaned_data["notification_email"]) or email
             address = form.cleaned_data["address"]
             semester_id=form.cleaned_data["semester_id"]
-            department_id = form.cleaned_data["department"]
+            class_id = form.cleaned_data["class_id"]
             sex = form.cleaned_data["sex"]
             mentor_id = form.cleaned_data["mentor"]
 
@@ -518,16 +519,16 @@ def edit_student_save(request):
                     semester = SemesterModel.object.get(id=semester_id)
                     student.semester_id = semester
                     student.gender=sex
-                    department=Department.objects.get(id=department_id)
+                    class_obj=ClassModel.objects.get(id=class_id)
                     mentor=Staffs.objects.get(id=mentor_id)
-                    student.department_id=department
+                    student.class_id=class_obj
                     student.mentor=mentor
                     student.save()
                 del request.session['student_id']
                 messages.success(request,"Successfully Edited Student")
                 return HttpResponseRedirect(reverse("edit_student",kwargs={"student_id":student_id}))
-            except (Department.DoesNotExist, SemesterModel.DoesNotExist, Staffs.DoesNotExist):
-                messages.error(request,"Invalid department, semester, or assigned staff")
+            except (ClassModel.DoesNotExist, SemesterModel.DoesNotExist, Staffs.DoesNotExist):
+                messages.error(request,"Invalid class, semester, or assigned staff")
                 return HttpResponseRedirect(reverse("edit_student",kwargs={"student_id":student_id}))
             except IntegrityError:
                 messages.error(request,"Email already exists")
@@ -542,9 +543,9 @@ def edit_student_save(request):
 
 def edit_subject(request,subject_id):
     subject=Subjects.objects.get(id=subject_id)
-    departments=Department.objects.all()
+    classes=ClassModel.objects.all()
     staffs=CustomUser.objects.filter(user_type=2)
-    return render(request,"hod_template/edit_subject_template.html",{"subject":subject,"staffs":staffs,"departments":departments,"id":subject_id})
+    return render(request,"hod_template/edit_subject_template.html",{"subject":subject,"staffs":staffs,"classes":classes,"id":subject_id})
 
 def edit_subject_save(request):
     if request.method!="POST":
@@ -553,15 +554,15 @@ def edit_subject_save(request):
         subject_id=request.POST.get("subject_id")
         subject_name=request.POST.get("subject_name")
         staff_id=request.POST.get("staff")
-        department_id=request.POST.get("department")
+        class_id=request.POST.get("class")
 
         try:
             subject=Subjects.objects.get(id=subject_id)
             subject.subject_name=subject_name
             staff=CustomUser.objects.get(id=staff_id)
             subject.staff_id=staff
-            department=Department.objects.get(id=department_id)
-            subject.department_id=department
+            class_obj=ClassModel.objects.get(id=class_id)
+            subject.class_id=class_obj
             subject.save()
 
             messages.success(request,"Successfully Edited Subject")
@@ -811,11 +812,11 @@ def admin_send_notification_staff(request):
 
 def admin_send_notification(request):
     staffs = Staffs.objects.select_related("admin").order_by("admin__first_name", "admin__last_name", "id")
-    students = Students.objects.select_related("admin", "department_id").order_by("admin__first_name", "admin__last_name", "id")
+    students = Students.objects.select_related("admin", "class_id__department").order_by("admin__first_name", "admin__last_name", "id")
     departments = Department.objects.order_by("department_name")
     admin_to_staff = {staff.admin_id: staff.id for staff in staffs}
     staff_department_map = {staff.id: [] for staff in staffs}
-    for staff_admin_id, department_id in Subjects.objects.values_list("staff_id", "department_id").distinct():
+    for staff_admin_id, department_id in Subjects.objects.values_list("staff_id", "class_id__department_id").distinct():
         staff_id = admin_to_staff.get(staff_admin_id)
         if staff_id:
             staff_department_map[staff_id].append(department_id)
@@ -866,7 +867,7 @@ def send_bulk_notification(request):
         filtered_staff_qs = Staffs.objects.all()
         if selected_staff_department_id and selected_staff_department_id != "all_departments":
             filtered_staff_qs = filtered_staff_qs.filter(
-                admin_id__in=Subjects.objects.filter(department_id_id=selected_staff_department_id)
+                admin_id__in=Subjects.objects.filter(class_id__department_id=selected_staff_department_id)
                 .values_list("staff_id", flat=True)
                 .distinct()
             )
@@ -880,7 +881,7 @@ def send_bulk_notification(request):
             return HttpResponseRedirect(reverse("admin_send_notification"))
         department_students = Students.objects.all()
         if selected_department_id != "all_departments":
-            department_students = department_students.filter(department_id_id=selected_department_id)
+            department_students = department_students.filter(class_id__department_id=selected_department_id)
         if not selected_student_ids:
             messages.error(request, "Please select at least one student")
             return HttpResponseRedirect(reverse("admin_send_notification"))

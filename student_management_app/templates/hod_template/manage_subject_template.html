@@ -42,8 +42,7 @@ Manage Subject
                     <tr>
                       <td>{{ subject.id }}</td>
                       <td>{{ subject.subject_name }}</td>
-                      <td>{{ subject.department_id.department_name }}</td>
-                      <td>{{ subject.department_id.id }}</td>
+                      <td>{{ subject.class_id.class_name }} ({{ subject.class_id.department.department_name }})</td>
                       <td>{{ subject.staff_id.first_name }} {{ subject.staff_id.last_name }}</td>
                       <td>
                         <a href="/edit_subject/{{ subject.id }}" class="btn btn-success">Edit</a>

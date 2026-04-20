@@ -91,12 +91,12 @@ def _student_for_staff_or_none(student_admin_id, staff_obj):
     return Students.objects.filter(
         admin=student_admin_id,
         mentor=staff_obj,
-    ).select_related("admin", "department_id", "semester_id", "mentor__admin").first()
+    ).select_related("admin", "class_id__department", "semester_id", "mentor__admin").first()
 
 
 def _student_queryset_for_staff_list():
     return (
-        Students.objects.select_related("admin", "department_id", "semester_id", "mentor__admin")
+        Students.objects.select_related("admin", "class_id__department", "semester_id", "mentor__admin")
         .order_by("admin__first_name", "admin__last_name", "admin__username", "id")
     )
 
@@ -111,7 +111,7 @@ def _resolve_semester_for_date(target_date):
 def _resolve_semester_from_students(subject, staff_obj):
     semester_ids = list(
         Students.objects.filter(
-            department_id=subject.department_id,
+            class_id=subject.class_id,
             mentor=staff_obj,
         ).values_list("semester_id", flat=True).distinct()
     )
@@ -127,7 +127,7 @@ def _resolve_fallback_semester(attendance_date_obj, subject_model, staff_obj, se
 
     students_qs = Students.objects.filter(
         mentor=staff_obj,
-        department_id=subject_model.department_id,
+        class_id=subject_model.class_id,
     )
     if selected_student_admin_ids:
         students_qs = students_qs.filter(admin_id__in=selected_student_admin_ids)
@@ -147,13 +147,13 @@ def _resolve_fallback_semester(attendance_date_obj, subject_model, staff_obj, se
     )
 
 
-def _department_for_name(value):
-    normalized_value = " ".join((value or "").strip().lower().split())
-    if not normalized_value:
+def _class_for_name(value):
+    if not value:
         return None
-    for department in Department.objects.all():
-        if " ".join(department.department_name.strip().lower().split()) == normalized_value:
-            return department
+    normalized_value = " ".join(value.strip().lower().split())
+    for class_obj in ClassModel.objects.all():
+        if " ".join(class_obj.class_name.strip().lower().split()) == normalized_value:
+            return class_obj
     return None
 
 
@@ -187,7 +187,7 @@ def _gender_value(value):
     return None
 
 
-def _create_student_user(*, first_name, last_name, username, email, notification_email, password, address, department, semester, sex):
+def _create_student_user(*, first_name, last_name, username, email, notification_email, password, address, class_id, semester, sex):
     user = CustomUser.objects.create_user(
         username=username,
         password=password,
@@ -198,7 +198,7 @@ def _create_student_user(*, first_name, last_name, username, email, notification
         user_type=3,
     )
     user.students.address = address
-    user.students.department_id = department
+    user.students.class_id = class_id
     user.students.semester_id = semester
     user.students.gender = sex
     user.students.mentor = None
@@ -337,7 +337,7 @@ def staff_students_under_me(request):
     staff_obj = _logged_in_staff(request)
     students = (
         Students.objects.filter(mentor=staff_obj)
-        .select_related("admin", "department_id", "semester_id")
+        .select_related("admin", "class_id__department", "semester_id")
         .order_by("admin__first_name", "admin__last_name", "admin__username", "id")
     )
     return render(
@@ -418,7 +418,7 @@ def staff_add_student_save(request):
     password = form.cleaned_data["password"]
     address = form.cleaned_data["address"]
     semester_id = form.cleaned_data["semester_id"]
-    department_id = form.cleaned_data["department"]
+    class_id = form.cleaned_data["class_id"]
     sex = form.cleaned_data["sex"]
 
     if not password:
@@ -432,7 +432,7 @@ def staff_add_student_save(request):
 
     try:
         with transaction.atomic():
-            department_obj = Department.objects.get(id=department_id)
+            class_obj = ClassModel.objects.get(id=class_id)
             semester = SemesterModel.object.get(id=semester_id)
             _create_student_user(
                 first_name=first_name,
@@ -442,13 +442,13 @@ def staff_add_student_save(request):
                 notification_email=notification_email,
                 password=password,
                 address=address,
-                department=department_obj,
+                class_id=class_obj,
                 semester=semester,
                 sex=sex,
             )
         messages.success(request, "Successfully Added Student")
-    except (Department.DoesNotExist, SemesterModel.DoesNotExist):
-        messages.error(request, "Invalid department or semester")
+    except (ClassModel.DoesNotExist, SemesterModel.DoesNotExist):
+        messages.error(request, "Invalid class or semester")
     except Exception:
         messages.error(request, "Failed to Add Student")
     return HttpResponseRedirect(reverse("staff_add_student"))
@@ -469,7 +469,7 @@ def staff_edit_student(request, student_id):
     form.fields["last_name"].initial = student.admin.last_name
     form.fields["username"].initial = student.admin.username
     form.fields["address"].initial = student.address
-    form.fields["department"].initial = student.department_id.id
+    form.fields["class_id"].initial = student.class_id.id if student.class_id else None
     form.fields["sex"].initial = student.gender
     form.fields["semester_id"].initial = student.semester_id.id
     return render(
@@ -508,7 +508,7 @@ def staff_edit_student_save(request):
     notification_email = _normalize_email(form.cleaned_data["notification_email"]) or email
     address = form.cleaned_data["address"]
     semester_id = form.cleaned_data["semester_id"]
-    department_id = form.cleaned_data["department"]
+    class_id = form.cleaned_data["class_id"]
     sex = form.cleaned_data["sex"]
 
     error = _credentials_error(username, email, exclude_user_id=student_id)
@@ -530,13 +530,13 @@ def staff_edit_student_save(request):
             student.address = address
             student.semester_id = SemesterModel.object.get(id=semester_id)
             student.gender = sex
-            student.department_id = Department.objects.get(id=department_id)
+            student.class_id = ClassModel.objects.get(id=class_id)
             student.save()
         del request.session["staff_student_id"]
         messages.success(request, "Successfully Edited Student")
         return HttpResponseRedirect(reverse("staff_edit_student", kwargs={"student_id": student_id}))
-    except (Department.DoesNotExist, SemesterModel.DoesNotExist):
-        messages.error(request, "Invalid department or semester")
+    except (ClassModel.DoesNotExist, SemesterModel.DoesNotExist):
+        messages.error(request, "Invalid class or semester")
     except Exception:
         messages.error(request, "Failed to Edit Student")
     return HttpResponseRedirect(reverse("staff_edit_student", kwargs={"student_id": student_id}))
@@ -589,16 +589,16 @@ def staff_import_students_save(request):
         notification_email = _normalize_email(row.get("notification_email")) or email
         password = (row.get("password") or "").strip()
         address = (row.get("address") or "").strip()
-        department_name = (row.get("department") or "").strip()
+        class_name = (row.get("class") or "").strip()
         sex = _gender_value(row.get("gender"))
         semester = _semester_for_dates(row.get("semester_start_date"), row.get("semester_end_date"))
-        department = _department_for_name(department_name)
+        class_obj = _class_for_name(class_name)
 
-        if not all([first_name, last_name, username, email, password, address, department_name, sex]):
+        if not all([first_name, last_name, username, email, password, address, class_name, sex]):
             skipped_reasons.append(f"Row {row_index}: missing required values")
             continue
-        if department is None:
-            skipped_reasons.append(f"Row {row_index}: unknown department")
+        if class_obj is None:
+            skipped_reasons.append(f"Row {row_index}: unknown class")
             continue
         if semester is None:
             skipped_reasons.append(f"Row {row_index}: unknown semester")
@@ -619,7 +619,7 @@ def staff_import_students_save(request):
                     notification_email=notification_email,
                     password=password,
                     address=address,
-                    department=department,
+                    class_id=class_obj,
                     semester=semester,
                     sex=sex,
                 )
@@ -656,7 +656,7 @@ def staff_download_student_template(request):
             "pass12345",
             "Ahmedabad",
             "Female",
-            "BCA",
+            "BCA-1",
             "01-01-2026",
             "30-06-2026",
         ]
@@ -734,7 +734,7 @@ def get_students(request):
         except ValueError:
             return JsonResponse({"error": "Invalid attendance date"}, status=400)
         students=Students.objects.filter(
-            department_id=subject.department_id,
+            class_id=subject.class_id,
             mentor=staff_obj,
         )
     elif semester_id:
@@ -744,13 +744,13 @@ def get_students(request):
         if not semester_model:
             return JsonResponse(json.dumps([]), content_type="application/json", safe=False)
         students=Students.objects.filter(
-            department_id=subject.department_id,
+            class_id=subject.class_id,
             semester_id=semester_model,
             mentor=staff_obj,
         )
     else:
         students=Students.objects.filter(
-            department_id=subject.department_id,
+            class_id=subject.class_id,
             mentor=staff_obj,
         )
     list_data=[]
@@ -788,7 +788,7 @@ def save_attendance_data(request):
             attendance, _ = Attendance.objects.get_or_create(
                 subject_id=subject_model,
                 attendance_date=attendance_date_obj,
-                defaults={"semester_id": semester_model},
+                defaults={"semester_id": semester_model, "class_id": subject_model.class_id},
             )
             if attendance.semester_id_id != semester_model.id:
                 attendance.semester_id = semester_model
@@ -798,8 +798,8 @@ def save_attendance_data(request):
                  student=_assigned_student_or_none(stud['id'], staff_obj)
                  if student is None:
                      raise ValueError("Unauthorized student in attendance payload")
-                 if student.department_id_id != subject_model.department_id_id:
-                     raise ValueError("Student-department mismatch for this subject")
+                 if student.class_id_id != subject_model.class_id_id:
+                     raise ValueError("Student-class mismatch for this subject")
                  status_value = bool(int(stud['status']))
                  attendance_report, created = AttendanceReport.objects.get_or_create(
                      student_id=student,

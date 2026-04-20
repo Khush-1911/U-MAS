@@ -15,8 +15,26 @@ Upload Timetable
                   {% csrf_token %}
                 <div class="card-body">
                   <div class="form-group">
+                    <label>Select Class</label>
+                    <select class="form-control" name="class_id" required>
+                      <option value="">Select Class</option>
+                      {% for class in classes %}
+                        <option value="{{ class.id }}">{{ class.class_name }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Select Semester</label>
+                    <select class="form-control" name="semester_id" required>
+                      <option value="">Select Semester</option>
+                      {% for semester in semesters %}
+                        <option value="{{ semester.id }}">{{ semester.semester_start_date }} TO {{ semester.semester_end_date }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="form-group">
                     <label>Timetable File</label>
-                    <input type="file" class="form-control" name="timetable_file" required>
+                    <input type="file" class="form-control" name="timetable_file" accept=".pdf,.doc,.docx,.xls,.xlsx" required>
                   </div>
                    <div class="form-group">
                       {% if messages %}

@@ -30,7 +30,7 @@ Students
                   <td>{{ student.profile_id|default:student.id }}</td>
                   <td>{{ student.admin.first_name }} {{ student.admin.last_name }}</td>
                   <td>{{ student.admin.email }}</td>
-                  <td>{{ student.department_id.department_name }}</td>
+                  <td>{{ student.class_id.class_name }} ({{ student.class_id.department.department_name }})</td>
                   <td>{{ student.semester_id.semester_start_date }} TO {{ student.semester_id.semester_end_date }}</td>
                   <td>
                     {% if student.mentor %}

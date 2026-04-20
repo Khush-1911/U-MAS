@@ -36,10 +36,10 @@ Edit Subject | Subject ID : {{ subject.id }}
                     <input type="hidden" class="form-control" name="subject_id" placeholder="Enter Subject" value="{{ subject.id }}">
                   </div>
                    <div class="form-group">
-                    <label>Department </label>
-                    <select class="form-control" name="department">
-                        {% for department in departments %}
-                              <option value="{{ department.id }}" {% if department.id == subject.department_id.id %} selected {% endif %}>{{ department.department_name }}</option>
+                    <label>Class</label>
+                    <select class="form-control" name="class">
+                        {% for class in classes %}
+                            <option value="{{ class.id }}" {% if class.id == subject.class_id.id %} selected {% endif %}>{{ class.class_name }} ({{ class.department.department_name }})</option>
                         {% endfor %}
                     </select>
                   </div>

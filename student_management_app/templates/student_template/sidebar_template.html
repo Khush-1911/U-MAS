@@ -40,6 +40,12 @@
       <span class="sidebar-label">Results</span>
     </a>
 
+    {% url 'student_view_timetable' as student_view_timetable %}
+    <a href="{% url 'student_view_timetable' %}" class="sidebar-link {% if request.path == student_view_timetable %}active{% endif %}">
+      <i class="fas fa-calendar-alt"></i>
+      <span class="sidebar-label">Timetable</span>
+    </a>
+
     {% url 'student_all_notification' as student_all_notification %}
     <a href="{% url 'student_all_notification' %}" class="sidebar-link {% if request.path == student_all_notification %}active{% endif %}">
       <div class="sidebar-icon-wrap">

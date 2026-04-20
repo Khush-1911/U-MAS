@@ -157,6 +157,7 @@ urlpatterns = [
     path('student_all_notification',StudentViews.student_all_notification,name="student_all_notification"),
     path('student_notification_mark_read/<int:notification_id>', StudentViews.student_notification_mark_read, name="student_notification_mark_read"),
     path('student_view_result',StudentViews.student_view_result,name="student_view_result"),
+    path('student_view_timetable',StudentViews.student_view_timetable,name="student_view_timetable"),
     path('join_class_room/<int:subject_id>/<int:semester_id>',StudentViews.join_class_room,name="join_class_room"),
     path('api/live-class/<int:room_id>/join-token', StudentViews.live_class_join_token_api, name="live_class_join_token_api"),
     path('testurl/',views.Testurl)
