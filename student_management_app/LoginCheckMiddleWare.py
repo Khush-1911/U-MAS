@@ -10,7 +10,7 @@ class LoginCheckMiddleWare(MiddlewareMixin):
         user=request.user
         if user.is_authenticated:
             if str(user.user_type) == "1": # Owner
-                if modulename in ["student_management_app.OwnerViews", "student_management_app.views", "django.views.static", "django.contrib.auth.views", "django.contrib.admin.sites"]:
+                if modulename in ["student_management_app.OwnerViews", "student_management_app.HodViews", "student_management_app.views", "django.views.static", "django.contrib.auth.views", "django.contrib.admin.sites"]:
                     pass
                 else:
                     return HttpResponseRedirect(reverse("owner_home"))
@@ -39,11 +39,11 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                     pass
                 else:
                     return HttpResponseRedirect(reverse("collegeadmin_home"))
-            elif str(user.user_type) == "7": # HOD
-                if modulename in ["student_management_app.HodViews", "django.views.static", "student_management_app.views"]:
+            elif str(user.user_type) == "7": # Department HOD
+                if modulename in ["student_management_app.DepartmentHodViews", "django.views.static", "student_management_app.views"]:
                     pass
                 else:
-                    return HttpResponseRedirect(reverse("hod_home"))
+                    return HttpResponseRedirect(reverse("department_hod_home"))
             else:
                 return HttpResponseRedirect(reverse("show_login"))
 

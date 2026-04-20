@@ -19,7 +19,7 @@ from django.urls import path, include
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
-from student_management_app import views, HodViews, StaffViews, StudentViews, OwnerViews, SuperuserViews, PrincipalViews, CollegeAdminViews
+from student_management_app import views, HodViews, StaffViews, StudentViews, OwnerViews, SuperuserViews, PrincipalViews, CollegeAdminViews, DepartmentHodViews
 from student_management_app.EditResultVIewClass import EditResultViewClass
 from student_management_system import settings
 
@@ -39,6 +39,11 @@ urlpatterns = [
     path('principal_home',PrincipalViews.principal_home,name="principal_home"),
     path('principal_manage_users',PrincipalViews.principal_manage_users,name="principal_manage_users"),
     path('collegeadmin_home',CollegeAdminViews.collegeadmin_home,name="collegeadmin_home"),
+    path('collegeadmin_manage_grades',CollegeAdminViews.collegeadmin_manage_grades,name="collegeadmin_manage_grades"),
+    path('collegeadmin_manage_grades_save',CollegeAdminViews.collegeadmin_manage_grades_save,name="collegeadmin_manage_grades_save"),
+    path('department_hod_home',DepartmentHodViews.department_hod_home,name="department_hod_home"),
+    path('department_hod_upload_timetable',DepartmentHodViews.department_hod_upload_timetable,name="department_hod_upload_timetable"),
+    path('department_hod_upload_timetable_save',DepartmentHodViews.department_hod_upload_timetable_save,name="department_hod_upload_timetable_save"),
     path('hod_home',HodViews.admin_home,name="hod_home"),
     path('admin_home',HodViews.admin_home,name="admin_home"),
     path('add_staff',HodViews.add_staff,name="add_staff"),

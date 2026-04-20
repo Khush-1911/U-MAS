@@ -1,0 +1,34 @@
+{% extends 'department_hod_template/base_template.html' %}
+{% block page_title %}
+Department Dashboard ({{ department_name }})
+{% endblock page_title %}
+{% block main_content %}
+    <section class="content">
+      <div class="container-fluid">
+          <div class="row">
+          <div class="col-lg-6 col-6">
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>{{ student_count }}</h3>
+                <p>Students in Department</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-pie-graph"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-6">
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3>{{ staff_count }}</h3>
+                <p>Staff</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-pie-graph"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+{% endblock main_content %}
