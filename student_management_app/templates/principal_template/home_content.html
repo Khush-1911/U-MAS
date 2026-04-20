@@ -1,0 +1,48 @@
+{% extends 'principal_template/base_template.html' %}
+{% block page_title %}
+Principal Dashboard
+{% endblock page_title %}
+{% block main_content %}
+    <section class="content">
+      <div class="container-fluid">
+          <div class="row">
+          <div class="col-lg-4 col-6">
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>{{ student_count }}</h3>
+                <p>Total Students</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-pie-graph"></i>
+              </div>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <div class="col-lg-4 col-6">
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3>{{ staff_count }}</h3>
+                <p>Total Staff</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-pie-graph"></i>
+              </div>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <div class="col-lg-4 col-6">
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <h3>{{ department_count }}</h3>
+                <p>Total Departments</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-pie-graph"></i>
+              </div>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+{% endblock main_content %}

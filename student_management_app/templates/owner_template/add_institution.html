@@ -1,0 +1,51 @@
+{% extends 'owner_template/base_template.html' %}
+{% block page_title %}
+Add Institution
+{% endblock page_title %}
+{% block main_content %}
+    <section class="content">
+      <div class="container-fluid">
+          <div class="row">
+              <div class="col-md-12">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Add Institution</h3>
+              </div>
+              <form role="form" action="/add_institution_save" method="post">
+                  {% csrf_token %}
+                <div class="card-body">
+                  <div class="form-group">
+                    <label>Institution Name </label>
+                    <input type="text" class="form-control" name="name" placeholder="Enter Institution Name" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Contact Email</label>
+                    <input type="email" class="form-control" name="contact_email" placeholder="Enter Contact Email" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Address</label>
+                    <textarea class="form-control" name="address" placeholder="Address" required></textarea>
+                  </div>
+                   <div class="form-group">
+                      {% if messages %}
+                        {% for message in messages %}
+                        {% if message.tags == 'error' %}
+                        <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+                        {% endif %}
+                        {% if message.tags == 'success' %}
+                        <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+                        {% endif %}
+                        {% endfor %}
+                      {% endif %}
+                    </div>
+                </div>
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary btn-block">Add Institution</button>
+                </div>
+              </form>
+            </div>
+          </div>
+          </div>
+      </div>
+    </section>
+{% endblock main_content %}

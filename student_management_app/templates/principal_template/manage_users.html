@@ -1,0 +1,53 @@
+{% extends 'principal_template/base_template.html' %}
+{% block page_title %}
+Manage Users
+{% endblock page_title %}
+{% block main_content %}
+    <section class="content">
+      <div class="container-fluid">
+          <div class="row">
+              <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Users in {{ user.institution.name }}</h3>
+              </div>
+              <div class="card-body table-responsive p-0">
+                <table class="table table-hover text-nowrap">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>First Name</th>
+                      <th>Last Name</th>
+                      <th>Username</th>
+                      <th>Email</th>
+                      <th>Role</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for u in users %}
+                    <tr>
+                      <td>{{ u.id }}</td>
+                      <td>{{ u.first_name }}</td>
+                      <td>{{ u.last_name }}</td>
+                      <td>{{ u.username }}</td>
+                      <td>{{ u.email }}</td>
+                      <td>
+                        {% if u.user_type == '1' %}Owner{% endif %}
+                        {% if u.user_type == '2' %}Staff{% endif %}
+                        {% if u.user_type == '3' %}Student{% endif %}
+                        {% if u.user_type == '4' %}Superuser{% endif %}
+                        {% if u.user_type == '5' %}Principal{% endif %}
+                        {% if u.user_type == '6' %}College Admin{% endif %}
+                        {% if u.user_type == '7' %}HOD{% endif %}
+                      </td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          </div>
+      </div>
+    </section>
+{% endblock main_content %}
