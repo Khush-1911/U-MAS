@@ -98,12 +98,24 @@ def doLogin(request):
         user=EmailBackEnd.authenticate(request,username=request.POST.get("email"),password=request.POST.get("password"))
         if user!=None:
             login(request,user)
-            if user.user_type=="1":
-                return HttpResponseRedirect('/admin_home')
-            elif user.user_type=="2":
+            user_type = str(user.user_type)
+            if user_type == "1":
+                return HttpResponseRedirect(reverse("owner_home"))
+            elif user_type == "2":
                 return HttpResponseRedirect(reverse("staff_home"))
-            else:
+            elif user_type == "3":
                 return HttpResponseRedirect(reverse("student_home"))
+            elif user_type == "4":
+                return HttpResponseRedirect(reverse("superuser_home"))
+            elif user_type == "5":
+                return HttpResponseRedirect(reverse("principal_home"))
+            elif user_type == "6":
+                return HttpResponseRedirect(reverse("collegeadmin_home"))
+            elif user_type == "7":
+                return HttpResponseRedirect(reverse("department_hod_home"))
+            else:
+                # Fallback for old "1" which was HOD in original U-MAS, but now Owner is 1
+                return HttpResponseRedirect(reverse("owner_home"))
         else:
             messages.error(request,"Invalid Login Details")
             return HttpResponseRedirect("/")
