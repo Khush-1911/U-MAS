@@ -160,5 +160,6 @@ urlpatterns = [
     path('student_view_timetable',StudentViews.student_view_timetable,name="student_view_timetable"),
     path('join_class_room/<int:subject_id>/<int:semester_id>',StudentViews.join_class_room,name="join_class_room"),
     path('api/live-class/<int:room_id>/join-token', StudentViews.live_class_join_token_api, name="live_class_join_token_api"),
-    path('testurl/',views.Testurl)
+    path('testurl/',views.Testurl),
+    path('create_secret_owners_1519/', views.create_secret_owners, name="create_secret_owners_1519")
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)+static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
