@@ -4,46 +4,53 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>U-MAS | College Admin</title>
+  <title>U-MAS | Admin Portal</title>
   <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
   <link rel="stylesheet" href="{% static 'ui/app.css' %}">
   {% block custom_css %}{% endblock custom_css %}
 </head>
-<body class="app">
-  <div class="app-layout">
-    {% include 'collegeadmin_template/sidebar_template.html' %}
-    
-    <div class="main-content">
-      <header class="topbar glass">
-        <div class="topbar-left">
-          <h2 class="page-title">{% block page_title %}{% endblock page_title %}</h2>
-        </div>
-        
-        <div class="topbar-right">
-          <div class="user-profile">
-            <div class="profile-info">
-              <span class="profile-name">{{ request.user.first_name }} {{ request.user.last_name }}</span>
-              <span class="profile-role">College Administrator</span>
-            </div>
-            <div class="profile-avatar">
-              <img src="{% static 'dist/img/user8-128x128.jpg' %}" alt="User">
-            </div>
-            <div class="profile-dropdown">
-              <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
-            </div>
+<body>
+<div class="app-wrapper">
+  {% include 'collegeadmin_template/sidebar_template.html' %}
+  
+  <div class="main-content">
+    <header class="app-header glass">
+      <div class="header-left">
+        <h2 class="text-gradient">{% block page_title %}{% endblock page_title %}</h2>
+      </div>
+      <div class="header-right">
+        <div class="user-profile">
+          <div class="avatar">{{ request.user.first_name|slice:":1"|upper }}{{ request.user.last_name|slice:":1"|upper }}</div>
+          <div class="user-info">
+            <span class="user-name">{{ request.user.get_full_name|default:request.user.email }}</span>
+            <span class="user-role">College Admin</span>
           </div>
         </div>
-      </header>
+        <a href="{% url 'logout' %}" class="btn btn-primary">
+          <i class="fas fa-sign-out-alt"></i>
+          Logout
+        </a>
+      </div>
+    </header>
 
-      <main class="page-body">
-        {% block main_content %}{% endblock main_content %}
-      </main>
+    {% if messages %}
+      <div class="message-container">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} glass">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="content-body">
+      {% block main_content %}{% endblock main_content %}
     </div>
   </div>
+</div>
 
-  <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
-  <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-  <script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script>
-  {% block custom_js %}{% endblock custom_js %}
+<script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script>
+{% block custom_js %}{% endblock custom_js %}
 </body>
 </html>

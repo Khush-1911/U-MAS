@@ -1,69 +1,56 @@
 {% extends 'hod_template/base_template.html' %}
 {% block page_title %}
-Manage Staff
+Faculty Directory
 {% endblock page_title %}
+
 {% block main_content %}
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-
-
-           <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Staff Details</h3>
-
-                <div class="card-tools">
-                  <div class="input-group input-group-sm" style="width: 150px;">
-                    <input name="table_search" class="form-control float-right" placeholder="Search">
-
-                    <div class="input-group-append">
-                      <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
-                  <thead>
-                    <tr>
-                      <th>Staff ID</th>
-                      <th>First Name</th>
-                      <th>Last Name</th>
-                      <th>User Name</th>
-                      <th>Email</th>
-                      <th>Address</th>
-                      <th>Date Joined</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  {% for staff in staffs %}
-                    <tr>
-                      <td>{{ staff.profile_id|default:staff.id }}</td>
-                      <td>{{ staff.admin.first_name }}</td>
-                      <td>{{ staff.admin.last_name }}</td>
-                      <td>{{ staff.admin.username }}</td>
-                      <td>{{ staff.admin.email }}</td>
-                      <td>{{ staff.address }}</td>
-                      <td>{{ staff.admin.date_joined }}</td>
-                      <td>
-                        <a href="/edit_staff/{{ staff.admin.id }}" class="btn btn-success">Edit</a>
-                        <a href="{% url 'delete_staff' staff_id=staff.admin.id %}" class="btn btn-danger" onclick="return confirm('Delete this staff member?');">Delete</a>
-                      </td>
-                    </tr>
-                  {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-          </div>
+    <div class="card glass">
+      <div class="chart-header">
+        <div>
+          <h3>Active Faculty Members</h3>
+          <p>Global oversight of institutional teaching staff and administrative personnel.</p>
         </div>
+        <a href="{% url 'add_staff' %}" class="btn btn-primary">
+          <i class="fas fa-plus"></i>
+          Register New Faculty
+        </a>
       </div>
-    </section>
-    <!-- /.content -->
+
+      <div class="table-container">
+        <table class="modern-table">
+          <thead>
+            <tr>
+              <th>Internal ID</th>
+              <th>Full Name</th>
+              <th>Institutional Email</th>
+              <th>Date Joined</th>
+              <th style="text-align: right;">Operations</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for staff in staffs %}
+            <tr>
+              <td><span class="badge badge-success">{{ staff.profile_id|default:staff.id }}</span></td>
+              <td>
+                <div style="font-weight: 600;">{{ staff.admin.get_full_name }}</div>
+                <div style="font-size: 0.75rem; color: var(--on-surface-variant);">@{{ staff.admin.username }}</div>
+              </td>
+              <td>{{ staff.admin.email }}</td>
+              <td>{{ staff.admin.date_joined|date:"M d, Y" }}</td>
+              <td style="text-align: right;">
+                <div style="display: inline-flex; gap: 0.5rem;">
+                  <a href="/edit_staff/{{ staff.admin.id }}" class="btn btn-primary" style="padding: 0.5rem; background: rgba(67, 67, 213, 0.1); color: var(--primary);">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <a href="{% url 'delete_staff' staff_id=staff.admin.id %}" class="btn btn-primary" style="padding: 0.5rem; background: rgba(186, 26, 26, 0.1); color: var(--error);" onclick="return confirm('Permanently remove this faculty member?');">
+                    <i class="fas fa-trash-alt"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
 {% endblock main_content %}
