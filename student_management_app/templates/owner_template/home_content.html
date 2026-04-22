@@ -3,6 +3,16 @@
 Owner Dashboard
 {% endblock page_title %}
 {% block main_content %}
+    <div class="page-hero">
+      <div>
+        <h1>Owner Dashboard</h1>
+        <p>Global overview of all institutions and users in the U-MAS ecosystem.</p>
+      </div>
+      <div class="hero-actions">
+        <span class="badge badge-primary">Total Institutions: {{ institution_count }}</span>
+      </div>
+    </div>
+
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
