@@ -423,6 +423,9 @@ def edit_staff_save(request):
         email=_normalize_email(request.POST.get("email"))
         notification_email = _normalize_email(request.POST.get("notification_email")) or email
         address=request.POST.get("address", "").strip()
+        selected_student_ids = {
+            int(student_id)
+            for student_id in request.POST.getlist("assigned_students")
             if student_id.isdigit()
         }
         role_id = request.POST.get("role")
