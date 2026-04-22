@@ -1,72 +1,49 @@
-{% extends 'staff_template/base_template.html' %}
 {% block page_title %}
-Take Day-Wise Attendance
+Attendance Registry
 {% endblock page_title %}
+
 {% block main_content %}
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-                    <div class="row">
-              <div class="col-md-12">
-            <!-- general form elements -->
-            <div class="card card-primary">
-              <div class="card-header">
-                <h3 class="card-title">Take Day-Wise Attendance</h3>
-              </div>
-              <!-- /.card-header -->
-              <!-- form start -->
-                <div class="card-body">
-                   <div class="form-group">
-                    <label>Subject </label>
-                    <select class="form-control" name="subject" id="subject">
-                        {% for subject in subjects %}
-                          <option value="{{ subject.id }}">{{ subject.subject_name }}</option>
-                        {% endfor %}
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label>Attendance Date</label>
-                    <input
-                      type="date"
-                      class="form-control"
-                      name="attendance_date"
-                      id="attendance_date"
-                      value="{{ today_date }}"
-                    >
-                  </div>
-                   <div class="form-group">
-                      {% if messages %}
-                        {% for message in messages %}
-                        {% if message.tags == 'error' %}
-                        <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
-                        {% endif %}
-                        {% if message.tags == 'success' %}
-                        <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
-                        {% endif %}
-                        {% endfor %}
-                      {% endif %}
-                    </div>
-
-                </div>
-                <!-- /.card-body -->
-
-                <div class="card-footer">
-                  <button type="button" class="btn btn-primary btn-block" id="fetch_student">Take attendance</button>
-                </div>
-                <div id="student_data" class="card-footer">
-
-                </div>
-            </div>
-            <!-- /.card -->
-
-
-
-          </div>
-          </div>
+    <div class="card">
+      <div class="chart-header">
+        <h3>Class Attendance</h3>
+        <p>Select a subject and date to register student attendance.</p>
       </div>
-    </section>
-    <!-- /.content -->
+      
+      <div class="modern-form">
+        <div class="form-content">
+          <div class="form-group">
+            <label>Academic Subject</label>
+            <div class="input-wrapper">
+              <select name="subject" id="subject">
+                {% for subject in subjects %}
+                  <option value="{{ subject.id }}">{{ subject.subject_name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Registration Date</label>
+            <div class="input-wrapper">
+              <input type="date" name="attendance_date" id="attendance_date" value="{{ today_date }}">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-primary" id="fetch_student">
+            <i class="fas fa-search"></i>
+            Fetch Enrolled Students
+          </button>
+        </div>
+      </div>
+
+      <div id="student_data" style="margin-top: 2rem;">
+        <!-- AJAX content will load here -->
+      </div>
+    </div>
 {% endblock main_content %}
+
 {% block custom_js %}
 <script>
     $(document).ready(function(){
@@ -79,6 +56,8 @@ Take Day-Wise Attendance
                 return;
             }
 
+            $("#student_data").html("<div class='loading-state'><i class='fas fa-spinner fa-spin'></i> Synchronizing roster...</div>");
+
             $.ajax({
                 url:'{% url 'get_students' %}',
                 type:'POST',
@@ -86,67 +65,62 @@ Take Day-Wise Attendance
             })
             .done(function(response){
                 var json_data=JSON.parse(response);
-                console.log(json_data)
                 if(json_data.length===0){
-                    $("#student_data").html("<div class='alert alert-warning mb-0'>No students found for selected date.</div>");
+                    $("#student_data").html("<div class='alert alert-warning glass'>No students enrolled for the selected criteria.</div>");
                     return;
                 }
 
-                var div_data="<div class='form-group'><div class='row'>";
-                for(key in json_data)
-                {
-                    div_data+="<div class='col-lg-2'><div class='form-check'><input type='checkbox' checked='checked' name='student_data[]' value='"+json_data[key]['id']+"'><label class='form-check-label'>"+json_data[key]['name']+"</label></div></div>";
+                var div_data = "<div class='attendance-grid' style='display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;'>";
+                for(key in json_data) {
+                    div_data += "<div class='student-attendance-card glass' style='padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--surface-container-highest); transition: all 0.2s;'>";
+                    div_data += "  <div class='custom-control' style='display: flex; align-items: center; gap: 0.75rem; cursor: pointer;'>";
+                    div_data += "    <input type='checkbox' checked='checked' name='student_data[]' value='"+json_data[key]['id']+"' id='st_"+json_data[key]['id']+"' style='width: 1.25rem; height: 1.25rem; accent-color: var(--primary);'>";
+                    div_data += "    <label for='st_"+json_data[key]['id']+"' style='margin-bottom: 0; font-weight: 600; font-size: 0.9rem; cursor: pointer;'>"+json_data[key]['name']+"</label>";
+                    div_data += "  </div>";
+                    div_data += "</div>";
                 }
-                div_data+="</div></div>";
-                div_data+="<div class='form-group'>";
-                div_data+="<button id='save_attendance' class='btn btn-success btn-block' type='button'>Save Attendance Data</button>";
-                div_data+="</div>";
+                div_data += "</div>";
+                div_data += "<div class='form-actions'>";
+                div_data += "  <button id='save_attendance' class='btn btn-primary btn-block' type='button'>Finalize Attendance Registry</button>";
+                div_data += "</div>";
 
                 $("#student_data").html(div_data);
-
             })
             .fail(function(){
-                alert("Error in Fetching Student")
+                alert("Critical Error: Failed to synchronize student roster.");
             })
+        });
 
-
-            $(document).on("click","#save_attendance",function(){
-
-                $(this).attr("disabled","disabled")
-                $(this).text("Saving Attendance Data...")
-                var student_data=$("input[name='student_data[]']").map(function(){
-                        if($(this).is(":checked")){
-                            return {"id":$(this).val(),"status":1};
-                        }
-                        else{
-                            return {"id":$(this).val(),"status":0};
-                        }
-                }).get()
-                var attendance_date=$("#attendance_date").val();
-                var subject_id=$("#subject").val();
-                console.log(student_data)
-                student_data=JSON.stringify(student_data)
-
-                $.ajax({
-                        url:'{% url 'save_attendance_data' %}',
-                        type:'POST',
-                        data:{student_ids:student_data,attendance_date:attendance_date,subject_id:subject_id},
-                    })
-                    .done(function(response){
-
-                        if(response=="OK"){
-                            alert("Attendance Save")
-                        }
-                        else{
-                            alert("Error in Saving Data")
-                        }
-                        location.reload()
-                    })
-                    .fail(function(){
-                        alert("Error in Saving Student")
-                    })
+        $(document).on("click","#save_attendance",function(){
+            $(this).attr("disabled","disabled")
+            $(this).html("<i class='fas fa-spinner fa-spin'></i> Committing Data...")
+            
+            var student_data=$("input[name='student_data[]']").map(function(){
+                return {"id":$(this).val(),"status":($(this).is(":checked") ? 1 : 0)};
+            }).get()
+            
+            var attendance_date=$("#attendance_date").val();
+            var subject_id=$("#subject").val();
+            
+            $.ajax({
+                url:'{% url 'save_attendance_data' %}',
+                type:'POST',
+                data:{student_ids:JSON.stringify(student_data),attendance_date:attendance_date,subject_id:subject_id},
             })
-        })
+            .done(function(response){
+                if(response=="OK"){
+                    alert("Attendance registry successfully committed to secure vault.")
+                    location.reload()
+                } else {
+                    alert("Data error: Persistence failed.")
+                    $(this).removeAttr("disabled").text("Retry Finalization")
+                }
+            })
+            .fail(function(){
+                alert("Network error: Verification failure.")
+                $(this).removeAttr("disabled").text("Retry Finalization")
+            })
+        });
     })
 </script>
 {% endblock custom_js %}

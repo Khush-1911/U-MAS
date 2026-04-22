@@ -1,55 +1,69 @@
-{% extends 'principal_template/base_template.html' %}
 {% block page_title %}
-Manage Users
+Institutional User Registry
 {% endblock page_title %}
+
 {% block main_content %}
-    <section class="content">
-      <div class="container-fluid">
-          <div class="row">
-              <div class="col-md-12">
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Users in {{ user.institution.name }}</h3>
-              </div>
-              <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>First Name</th>
-                      <th>Last Name</th>
-                      <th>Email</th>
-                      <th>Role</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  {% for u in users %}
-                    <tr>
-                      <td>{{ u.id }}</td>
-                      <td>{{ u.first_name }}</td>
-                      <td>{{ u.last_name }}</td>
-                      <td>{{ u.email }}</td>
-                      <td>
-                        {% if u.user_type == '1' %}Owner{% endif %}
-                        {% if u.user_type == '2' %}Staff{% endif %}
-                        {% if u.user_type == '3' %}Student{% endif %}
-                        {% if u.user_type == '4' %}Superuser{% endif %}
-                        {% if u.user_type == '5' %}Principal{% endif %}
-                        {% if u.user_type == '6' %}College Admin{% endif %}
-                        {% if u.user_type == '7' %}HOD{% endif %}
-                      </td>
-                      <td>
-                        <a href="{% url 'principal_edit_user' u.id %}" class="btn btn-primary btn-sm">Edit</a>
-                      </td>
-                    </tr>
-                  {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-          </div>
+    <div class="card">
+      <div class="chart-header">
+        <h3>Institutional Directory</h3>
+        <p>Comprehensive list of authorized accounts for <strong>{{ user.institution.name }}</strong></p>
       </div>
-    </section>
+
+      <div class="table-container">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Internal ID</th>
+              <th>Full Name</th>
+              <th>Email Address</th>
+              <th>Institutional Role</th>
+              <th>Management</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for u in users %}
+            <tr>
+              <td><span class="badge glass">#{{ u.id }}</span></td>
+              <td><strong>{{ u.first_name }} {{ u.last_name }}</strong></td>
+              <td>{{ u.email }}</td>
+              <td>
+                {% if u.user_type == '1' %}<span class="role-pill owner">Owner</span>{% endif %}
+                {% if u.user_type == '2' %}<span class="role-pill staff">Staff</span>{% endif %}
+                {% if u.user_type == '3' %}<span class="role-pill student">Student</span>{% endif %}
+                {% if u.user_type == '4' %}<span class="role-pill superuser">Superuser</span>{% endif %}
+                {% if u.user_type == '5' %}<span class="role-pill principal">Principal</span>{% endif %}
+                {% if u.user_type == '6' %}<span class="role-pill admin">College Admin</span>{% endif %}
+                {% if u.user_type == '7' %}<span class="role-pill hod">HOD</span>{% endif %}
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <a href="{% url 'principal_edit_user' u.id %}" class="btn-icon" title="Edit Profile">
+                    <i class="fas fa-user-edit"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <style>
+      .role-pill {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .owner { background: #e0f2fe; color: #0369a1; }
+      .staff { background: #f0fdf4; color: #15803d; }
+      .student { background: #fefce8; color: #854d0e; }
+      .superuser { background: #fae8ff; color: #a21caf; }
+      .principal { background: #fff1f2; color: #be123c; }
+      .admin { background: #f5f3ff; color: #6d28d9; }
+      .hod { background: #ecfeff; color: #0e7490; }
+    </style>
 {% endblock main_content %}

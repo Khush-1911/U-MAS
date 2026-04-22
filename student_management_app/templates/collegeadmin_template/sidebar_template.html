@@ -1,36 +1,45 @@
 {% load static %}
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <a href="{% url 'collegeadmin_home' %}" class="brand-link">
-      <img src="{% static "dist/img/AdminLTELogo.png" %}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
-           style="opacity: .8">
-      <span class="brand-text font-weight-light">College Admin</span>
-    </a>
-    <div class="sidebar">
-      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <img src="{% static "dist/img/user2-160x160.jpg" %}" class="img-circle elevation-2" alt="User Image">
-        </div>
-        <div class="info">
-          <a href="#" class="d-block">{{ user.get_full_name|default:user.email }}</a>
-        </div>
-      </div>
-      <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <li class="nav-item">
-            {% url 'collegeadmin_home' as collegeadmin_home %}
-            <a href="{{ collegeadmin_home }}" class="nav-link {% if request.path == collegeadmin_home %} active {% endif %}">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
-              <p>Home</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            {% url 'collegeadmin_manage_grades' as collegeadmin_manage_grades %}
-            <a href="{% url 'collegeadmin_manage_grades' %}" class="nav-link {% if request.path == collegeadmin_manage_grades %} active {% endif %}">
-              <i class="nav-icon fas fa-file-csv"></i>
-              <p>Bulk Upload Grades</p>
-            </a>
-          </li>
-        </ul>
-      </nav>
+<aside class="sidebar glass">
+  <div class="sidebar-brand">
+    <div class="brand-icon">
+      <i class="fas fa-building"></i>
     </div>
-  </aside>
+    <div class="brand-text">
+      <h1>U-MAS</h1>
+      <span>College Suite</span>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section">
+      <span class="section-label">Institutional Management</span>
+      {% url 'collegeadmin_home' as collegeadmin_home %}
+      <a href="{{ collegeadmin_home }}" class="nav-link {% if request.path == collegeadmin_home %}active{% endif %}">
+        <i class="fas fa-tachometer-alt"></i>
+        <span>Dashboard</span>
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <span class="section-label">Academic Data</span>
+      
+      {% url 'collegeadmin_manage_grades' as collegeadmin_manage_grades %}
+      <a href="{{ collegeadmin_manage_grades }}" class="nav-link {% if request.path == collegeadmin_manage_grades %}active{% endif %}">
+        <i class="fas fa-file-csv"></i>
+        <span>Bulk Grade Upload</span>
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <span class="section-label">Administration</span>
+      <a href="#" class="nav-link">
+        <i class="fas fa-user-cog"></i>
+        <span>College Settings</span>
+      </a>
+      <a href="#" class="nav-link">
+        <i class="fas fa-history"></i>
+        <span>Audit Logs</span>
+      </a>
+    </div>
+  </nav>
+</aside>

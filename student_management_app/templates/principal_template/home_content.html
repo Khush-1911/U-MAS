@@ -1,48 +1,51 @@
-{% extends 'principal_template/base_template.html' %}
 {% block page_title %}
-Principal Dashboard
+Institutional Intelligence
 {% endblock page_title %}
+
 {% block main_content %}
-    <section class="content">
-      <div class="container-fluid">
-          <div class="row">
-          <div class="col-lg-4 col-6">
-            <div class="small-box bg-info">
-              <div class="inner">
-                <h3>{{ student_count }}</h3>
-                <p>Total Students</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <div class="col-lg-4 col-6">
-            <div class="small-box bg-success">
-              <div class="inner">
-                <h3>{{ staff_count }}</h3>
-                <p>Total Staff</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <div class="col-lg-4 col-6">
-            <div class="small-box bg-danger">
-              <div class="inner">
-                <h3>{{ department_count }}</h3>
-                <p>Total Departments</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
+    <div class="metrics-grid">
+      <div class="metric-card glass">
+        <div class="metric-icon" style="background: var(--surface-container-low); color: var(--primary);">
+          <i class="fas fa-user-graduate"></i>
+        </div>
+        <div class="metric-info">
+          <span class="metric-label">Student Body</span>
+          <h3 class="metric-value">{{ student_count }}</h3>
+          <span class="metric-trend up"><i class="fas fa-arrow-up"></i> Active Enrollment</span>
         </div>
       </div>
-    </section>
+
+      <div class="metric-card glass">
+        <div class="metric-icon" style="background: var(--surface-container-low); color: #15803d;">
+          <i class="fas fa-chalkboard-teacher"></i>
+        </div>
+        <div class="metric-info">
+          <span class="metric-label">Academic Faculty</span>
+          <h3 class="metric-value">{{ staff_count }}</h3>
+          <span class="metric-trend up"><i class="fas fa-arrow-up"></i> Certified Staff</span>
+        </div>
+      </div>
+
+      <div class="metric-card glass">
+        <div class="metric-icon" style="background: var(--surface-container-low); color: #be123c;">
+          <i class="fas fa-university"></i>
+        </div>
+        <div class="metric-info">
+          <span class="metric-label">Departments</span>
+          <h3 class="metric-value">{{ department_count }}</h3>
+          <span class="metric-trend"><i class="fas fa-check-circle"></i> Operational Units</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card glass" style="margin-top: 2rem;">
+      <div class="chart-header">
+        <h3>Administrative Overview</h3>
+        <p>Real-time metrics for institutional oversight.</p>
+      </div>
+      <div style="padding: 2rem; text-align: center; color: var(--on-surface-variant);">
+        <i class="fas fa-chart-line fa-3x" style="margin-bottom: 1rem; opacity: 0.5;"></i>
+        <p>Extended institutional analytics are being synchronized...</p>
+      </div>
+    </div>
 {% endblock main_content %}
