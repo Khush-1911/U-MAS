@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.urls import reverse
 from django.http import HttpResponseRedirect
-from student_management_app.models import CustomUser, Institution, Staffs, Students, Department
+from student_management_app.models import CustomUser, Institution, Staffs, Students, Department, Principal, CollegeAdmin, HOD
 
 def owner_home(request):
     institutions = Institution.objects.all()

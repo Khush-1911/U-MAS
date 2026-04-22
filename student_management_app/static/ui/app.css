@@ -216,7 +216,7 @@ h1, h2, h3, h4, h5, h6 {
   top: 0;
   background: var(--surface-container-high);
   padding: 1.5rem 1rem;
-  z-index: 1001; /* Ensure it's above main content and any glass headers */
+  z-index: 9999; /* Force it to the absolute top */
   display: flex;
   flex-direction: column;
   overflow-y: auto;
