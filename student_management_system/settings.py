@@ -36,10 +36,11 @@ ALLOWED_HOSTS = _split_csv_env('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost')
 CSRF_TRUSTED_ORIGINS = _split_csv_env('DJANGO_CSRF_TRUSTED_ORIGINS', '')
 
 render_external_hostname = os.getenv("RENDER_EXTERNAL_HOSTNAME", "").strip()
-if render_external_hostname and render_external_hostname not in ALLOWED_HOSTS:
-    ALLOWED_HOSTS.append(render_external_hostname)
-
 if render_external_hostname:
+    if render_external_hostname not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(render_external_hostname)
+    
+    # Automatically trust the Render origin
     render_origin = f"https://{render_external_hostname}"
     if render_origin not in CSRF_TRUSTED_ORIGINS:
         CSRF_TRUSTED_ORIGINS.append(render_origin)
@@ -194,6 +195,8 @@ if not DEBUG:
     SECURE_SSL_REDIRECT = True
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
+    USE_X_FORWARDED_HOST = True
+    USE_X_FORWARDED_PORT = True
 
 LIVE_SIGNALING_URL = os.getenv("LIVE_SIGNALING_URL", "https://rtcmulticonnection.herokuapp.com:443/")
 LIVE_TURN_URL = os.getenv("LIVE_TURN_URL", "")
