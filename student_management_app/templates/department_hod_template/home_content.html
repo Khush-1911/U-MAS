@@ -1,34 +1,40 @@
-{% extends 'department_hod_template/base_template.html' %}
 {% block page_title %}
-Department Dashboard ({{ department_name }})
+Department Performance Overview
 {% endblock page_title %}
+
 {% block main_content %}
-    <section class="content">
-      <div class="container-fluid">
-          <div class="row">
-          <div class="col-lg-6 col-6">
-            <div class="small-box bg-info">
-              <div class="inner">
-                <h3>{{ student_count }}</h3>
-                <p>Students in Department</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-6 col-6">
-            <div class="small-box bg-success">
-              <div class="inner">
-                <h3>{{ staff_count }}</h3>
-                <p>Staff</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-              </div>
-            </div>
-          </div>
+    <div class="metrics-grid">
+      <div class="metric-card glass">
+        <div class="metric-icon" style="background: var(--surface-container-low); color: var(--primary);">
+          <i class="fas fa-user-graduate"></i>
+        </div>
+        <div class="metric-info">
+          <span class="metric-label">Enrolled Scholars</span>
+          <h3 class="metric-value">{{ student_count }}</h3>
+          <span class="metric-trend"><i class="fas fa-university"></i> {{ department_name }}</span>
         </div>
       </div>
-    </section>
+
+      <div class="metric-card glass">
+        <div class="metric-icon" style="background: var(--surface-container-low); color: #15803d;">
+          <i class="fas fa-chalkboard-teacher"></i>
+        </div>
+        <div class="metric-info">
+          <span class="metric-label">Faculty Members</span>
+          <h3 class="metric-value">{{ staff_count }}</h3>
+          <span class="metric-trend up"><i class="fas fa-check-circle"></i> Active Academic Staff</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card glass" style="margin-top: 2rem;">
+      <div class="chart-header">
+        <h3>Departmental Analytics</h3>
+        <p>Strategic oversight for the <strong>{{ department_name }}</strong> academic unit.</p>
+      </div>
+      <div style="padding: 2rem; text-align: center; color: var(--on-surface-variant);">
+        <i class="fas fa-chart-line fa-3x" style="margin-bottom: 1rem; opacity: 0.5;"></i>
+        <p>Operational data is being aggregated for your review...</p>
+      </div>
+    </div>
 {% endblock main_content %}

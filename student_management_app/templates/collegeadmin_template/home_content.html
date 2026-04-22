@@ -1,34 +1,40 @@
-{% extends 'collegeadmin_template/base_template.html' %}
 {% block page_title %}
-College Admin Dashboard
+Institutional Oversight
 {% endblock page_title %}
+
 {% block main_content %}
-    <section class="content">
-      <div class="container-fluid">
-          <div class="row">
-          <div class="col-lg-6 col-6">
-            <div class="small-box bg-info">
-              <div class="inner">
-                <h3>{{ student_count }}</h3>
-                <p>Total Students</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-6 col-6">
-            <div class="small-box bg-success">
-              <div class="inner">
-                <h3>{{ staff_count }}</h3>
-                <p>Total Staff</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-              </div>
-            </div>
-          </div>
+    <div class="metrics-grid">
+      <div class="metric-card glass">
+        <div class="metric-icon" style="background: var(--surface-container-low); color: var(--primary);">
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="metric-info">
+          <span class="metric-label">Institutional Scholars</span>
+          <h3 class="metric-value">{{ student_count }}</h3>
+          <span class="metric-trend"><i class="fas fa-check-double"></i> Total Students</span>
         </div>
       </div>
-    </section>
+
+      <div class="metric-card glass">
+        <div class="metric-icon" style="background: var(--surface-container-low); color: #15803d;">
+          <i class="fas fa-user-tie"></i>
+        </div>
+        <div class="metric-info">
+          <span class="metric-label">Academic Officers</span>
+          <h3 class="metric-value">{{ staff_count }}</h3>
+          <span class="metric-trend up"><i class="fas fa-shield-alt"></i> Total Staff</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card glass" style="margin-top: 2rem;">
+      <div class="chart-header">
+        <h3>Administrative Intel</h3>
+        <p>Comprehensive monitoring of institutional resources and personnel.</p>
+      </div>
+      <div style="padding: 2rem; text-align: center; color: var(--on-surface-variant);">
+        <i class="fas fa-city fa-3x" style="margin-bottom: 1rem; opacity: 0.5;"></i>
+        <p>Resource utilization reports are being generated...</p>
+      </div>
+    </div>
 {% endblock main_content %}
