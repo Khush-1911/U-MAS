@@ -3,152 +3,103 @@
 Home
 {% endblock page_title %}
 {% block main_content %}
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-          <div class="row">
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-info">
-              <div class="inner">
-                <h3>{{ student_count }}</h3>
-
-                <p>Total Students</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-              </div>
-              <a href="{% url 'manage_student' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-success">
-              <div class="inner">
-                <h3>{{ staff_count }}</h3>
-
-                <p>Total Staffs</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-              </div>
-              <a href="{% url 'manage_staff' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-warning">
-              <div class="inner">
-                <h3>{{ department_count }}</h3>
-
-                <p>Total Department</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-              </div>
-              <a href="{% url 'manage_department' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-danger">
-              <div class="inner">
-                <h3>{{ subject_count }}</h3>
-
-                <p>Total Subject</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-              </div>
-              <a href="{% url 'manage_subject' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-icon">
+          <i class="fas fa-user-graduate"></i>
         </div>
-          <div class="row">
-              <div class="col-lg-6">
-                <div class="card card-danger">
-                  <div class="card-header">
-                    <h3 class="card-title">Student and Staff Chart</h3>
-                  </div>
-                  <div class="card-body">
-                    <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                  </div>
-                  <!-- /.card-body -->
-                </div>
-              </div>
-              <div class="col-lg-6">
-                   <div class="card card-success">
-                  <div class="card-header">
-                    <h3 class="card-title">Total Subject in Each Department</h3>
-                  </div>
-                  <div class="card-body">
-                    <canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                  </div>
-                  <!-- /.card-body -->
-                </div>
-              </div>
-          </div>
-          <div class="row">
-              <div class="col-lg-6">
-                 <div class="card card-info">
-                  <div class="card-header">
-                    <h3 class="card-title">Total Student in Each Department</h3>
-                  </div>
-                  <div class="card-body">
-                    <canvas id="pieChart3" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                  </div>
-                  <!-- /.card-body -->
-                </div>
-              </div>
-              <div class="col-lg-6">
-                 <div class="card card-warning">
-                  <div class="card-header">
-                    <h3 class="card-title">Total Student in Each Subject</h3>
-                  </div>
-                  <div class="card-body">
-                    <canvas id="pieChart4" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                  </div>
-                  <!-- /.card-body -->
-                </div>
-              </div>
-          </div>
-          <div class="row">
-              <div class="col-lg-12">
-                  <div class="card card-success">
-                  <div class="card-header">
-                    <h3 class="card-title">Staff Leaves vs Attendance</h3>
-                  </div>
-                  <div class="card-body">
-                    <div class="chart">
-                      <canvas id="barChart1" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                    </div>
-                  </div>
-                  <!-- /.card-body -->
-                </div>
-              </div>
-          </div>
-          <div class="row">
-              <div class="col-lg-12">
-                  <div class="card card-success">
-                  <div class="card-header">
-                    <h3 class="card-title">Student Leaves vs Attendance</h3>
-                  </div>
-                  <div class="card-body">
-                    <div class="chart">
-                      <canvas id="barChart2" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                    </div>
-                  </div>
-                  <!-- /.card-body -->
-                </div>
-              </div>
-          </div>
+        <div class="metric-info">
+          <span class="metric-value">{{ student_count }}</span>
+          <span class="metric-label">Total Students</span>
+        </div>
       </div>
-    </section>
-    <!-- /.content -->
+
+      <div class="metric-card">
+        <div class="metric-icon">
+          <i class="fas fa-user-tie"></i>
+        </div>
+        <div class="metric-info">
+          <span class="metric-value">{{ staff_count }}</span>
+          <span class="metric-label">Faculty Members</span>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-icon">
+          <i class="fas fa-archway"></i>
+        </div>
+        <div class="metric-info">
+          <span class="metric-value">{{ department_count }}</span>
+          <span class="metric-label">Departments</span>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-icon">
+          <i class="fas fa-book-open"></i>
+        </div>
+        <div class="metric-info">
+          <span class="metric-value">{{ subject_count }}</span>
+          <span class="metric-label">Active Subjects</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3>Staff vs Student Distribution</h3>
+        </div>
+        <div class="chart-body">
+          <canvas id="pieChart" style="min-height: 250px; height: 250px;"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3>Subjects per Department</h3>
+        </div>
+        <div class="chart-body">
+          <canvas id="donutChart" style="min-height: 250px; height: 250px;"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3>Student Enrollment by Dept</h3>
+        </div>
+        <div class="chart-body">
+          <canvas id="pieChart3" style="min-height: 250px; height: 250px;"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3>Student Enrollment by Subject</h3>
+        </div>
+        <div class="chart-body">
+          <canvas id="pieChart4" style="min-height: 250px; height: 250px;"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card" style="grid-column: span 2;">
+        <div class="chart-header">
+          <h3>Faculty Leaves vs Attendance</h3>
+        </div>
+        <div class="chart-body">
+          <canvas id="barChart1" style="min-height: 300px; height: 300px;"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card" style="grid-column: span 2;">
+        <div class="chart-header">
+          <h3>Student Leaves vs Attendance</h3>
+        </div>
+        <div class="chart-body">
+          <canvas id="barChart2" style="min-height: 300px; height: 300px;"></canvas>
+        </div>
+      </div>
+    </div>
 {% endblock main_content %}
 {% block custom_js %}
 <script>

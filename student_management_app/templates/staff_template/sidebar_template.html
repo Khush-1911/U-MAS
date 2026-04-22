@@ -1,67 +1,68 @@
 {% load static %}
-<aside class="app-sidebar">
-  <button class="sidebar-toggle" type="button" onclick="toggleSidebarLock()" aria-label="Toggle sidebar">
-    <i class="fas fa-angle-double-left"></i>
-  </button>
+<aside class="sidebar glass">
+  <div class="sidebar-brand">
+    <div class="brand-icon">
+      <i class="fas fa-graduation-cap"></i>
+    </div>
+    <div class="brand-text">
+      <h1>U-MAS</h1>
+      <span>Faculty Suite</span>
+    </div>
+  </div>
+
   <nav class="sidebar-nav">
-    {% url 'staff_home' as staff_home %}
-    <a href="{{ staff_home }}" class="sidebar-link {% if request.path == staff_home %}active{% endif %}">
-      <i class="fas fa-home"></i>
-      <span class="sidebar-label">Home</span>
-    </a>
+    <div class="nav-section">
+      <span class="section-label">Main</span>
+      {% url 'staff_home' as staff_home %}
+      <a href="{{ staff_home }}" class="nav-link {% if request.path == staff_home %}active{% endif %}">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+      </a>
+    </div>
 
-    {% url 'staff_manage_student' as staff_manage_student %}
-    <a href="{% url 'staff_manage_student' %}" class="sidebar-link {% if request.path == staff_manage_student or '/staff_edit_student/' in request.path %}active{% endif %}">
-      <i class="fas fa-users"></i>
-      <span class="sidebar-label">Students</span>
-    </a>
+    <div class="nav-section">
+      <span class="section-label">Academic Management</span>
+      
+      {% url 'staff_manage_student' as staff_manage_student %}
+      <a href="{{ staff_manage_student }}" class="nav-link {% if request.path == staff_manage_student or '/staff_edit_student/' in request.path %}active{% endif %}">
+        <i class="fas fa-users"></i>
+        <span>Student Roster</span>
+      </a>
 
-    {% url 'staff_add_student' as staff_add_student %}
-    <a href="{% url 'staff_add_student' %}" class="sidebar-link {% if request.path == staff_add_student %}active{% endif %}">
-      <i class="fas fa-user-plus"></i>
-      <span class="sidebar-label">Add Students</span>
-    </a>
+      {% url 'staff_take_attendance' as staff_take_attendance %}
+      {% url 'staff_update_attendance' as staff_update_attendance %}
+      <a href="{{ staff_take_attendance }}" class="nav-link {% if 'attendance' in request.path %}active{% endif %}">
+        <i class="fas fa-clipboard-check"></i>
+        <span>Attendance Registry</span>
+      </a>
 
-    {% url 'staff_take_attendance' as staff_take_attendance %}
-    <a href="{% url 'staff_take_attendance' %}" class="sidebar-link {% if request.path == staff_take_attendance %}active{% endif %}">
-      <i class="fas fa-clipboard-check"></i>
-      <span class="sidebar-label">Take Attendance</span>
-    </a>
+      {% url 'staff_students_under_me' as staff_students_under_me %}
+      <a href="{{ staff_students_under_me }}" class="nav-link {% if request.path == staff_students_under_me %}active{% endif %}">
+        <i class="fas fa-bullhorn"></i>
+        <span>Announcements</span>
+      </a>
+    </div>
 
-    {% url 'staff_update_attendance' as staff_update_attendance %}
-    <a href="{% url 'staff_update_attendance' %}" class="sidebar-link {% if request.path == staff_update_attendance %}active{% endif %}">
-      <i class="fas fa-clipboard-list"></i>
-      <span class="sidebar-label">Update Attendance</span>
-    </a>
+    <div class="nav-section">
+      <span class="section-label">Personal & Admin</span>
+      
+      {% url 'staff_apply_leave' as staff_apply_leave %}
+      <a href="{{ staff_apply_leave }}" class="nav-link {% if request.path == staff_apply_leave %}active{% endif %}">
+        <i class="fas fa-calendar-minus"></i>
+        <span>Leave Requests</span>
+      </a>
 
-    {% url 'staff_apply_leave' as staff_apply_leave %}
-    <a href="{% url 'staff_apply_leave' %}" class="sidebar-link {% if request.path == staff_apply_leave %}active{% endif %}">
-      <i class="fas fa-plane-departure"></i>
-      <span class="sidebar-label">Apply Leave</span>
-    </a>
+      {% url 'staff_feedback' as staff_feedback %}
+      <a href="{{ staff_feedback }}" class="nav-link {% if request.path == staff_feedback %}active{% endif %}">
+        <i class="fas fa-comment-dots"></i>
+        <span>Feedback Hub</span>
+      </a>
 
-    {% url 'staff_feedback' as staff_feedback %}
-    <a href="{% url 'staff_feedback' %}" class="sidebar-link {% if request.path == staff_feedback %}active{% endif %}">
-      <i class="fas fa-comment-dots"></i>
-      <span class="sidebar-label">Feedback</span>
-    </a>
-
-    {% url 'staff_profile' as staff_profile %}
-    <a href="{% url 'staff_profile' %}" class="sidebar-link {% if request.path == staff_profile %}active{% endif %}">
-      <i class="fas fa-user"></i>
-      <span class="sidebar-label">Profile</span>
-    </a>
-
-    {% url 'staff_all_notification' as staff_all_notification %}
-    <a href="{% url 'staff_all_notification' %}" class="sidebar-link {% if request.path == staff_all_notification %}active{% endif %}">
-      <i class="fas fa-bell"></i>
-      <span class="sidebar-label">Notifications</span>
-    </a>
-
-    {% url 'staff_students_under_me' as staff_students_under_me %}
-    <a href="{% url 'staff_students_under_me' %}" class="sidebar-link {% if request.path == staff_students_under_me %}active{% endif %}">
-      <i class="fas fa-user-friends"></i>
-      <span class="sidebar-label">Notify Students</span>
-    </a>
+      {% url 'staff_profile' as staff_profile %}
+      <a href="{{ staff_profile }}" class="nav-link {% if request.path == staff_profile %}active{% endif %}">
+        <i class="fas fa-id-card"></i>
+        <span>My Profile</span>
+      </a>
+    </div>
   </nav>
 </aside>

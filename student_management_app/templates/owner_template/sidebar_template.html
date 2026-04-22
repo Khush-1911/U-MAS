@@ -1,40 +1,53 @@
 {% load static %}
-<aside class="app-sidebar">
+<aside class="sidebar glass">
+  <div class="sidebar-brand">
+    <div class="brand-icon">
+      <i class="fas fa-shield-alt"></i>
+    </div>
+    <div class="brand-text">
+      <h1>U-MAS</h1>
+      <span>Owner Suite</span>
+    </div>
+  </div>
+
   <nav class="sidebar-nav">
-    {% url 'owner_home' as owner_home %}
-    <a href="{{ owner_home }}" class="sidebar-link {% if request.path == owner_home %}active{% endif %}">
-      <i class="fas fa-home"></i>
-      <span class="sidebar-label">Dashboard</span>
-    </a>
+    <div class="nav-section">
+      <span class="section-label">Overview</span>
+      {% url 'owner_home' as owner_home %}
+      <a href="{{ owner_home }}" class="nav-link {% if request.path == owner_home %}active{% endif %}">
+        <i class="fas fa-tachometer-alt"></i>
+        <span>System Health</span>
+      </a>
+    </div>
 
-    <!-- Institutions Section -->
-    <div class="sidebar-section-divider" style="margin: 12px 0 6px 12px; font-size: 10px; font-weight: 800; color: var(--muted); opacity: 0.6; letter-spacing: 0.5px;">INSTITUTIONS</div>
-    
-    {% url 'add_institution' as add_institution %}
-    <a href="{{ add_institution }}" class="sidebar-link {% if request.path == add_institution %}active{% endif %}">
-      <i class="fas fa-university"></i>
-      <span class="sidebar-label">Add Institution</span>
-    </a>
+    <div class="nav-section">
+      <span class="section-label">Global Management</span>
+      
+      {% url 'manage_institutions' as manage_institutions %}
+      {% url 'add_institution' as add_institution %}
+      <a href="{{ manage_institutions }}" class="nav-link {% if 'institution' in request.path %}active{% endif %}">
+        <i class="fas fa-university"></i>
+        <span>Institutions</span>
+      </a>
 
-    {% url 'manage_institutions' as manage_institutions %}
-    <a href="{{ manage_institutions }}" class="sidebar-link {% if request.path == manage_institutions %}active{% endif %}">
-      <i class="fas fa-list"></i>
-      <span class="sidebar-label">Manage Institutions</span>
-    </a>
+      {% url 'manage_users' as manage_users %}
+      {% url 'add_user' as add_user %}
+      <a href="{{ manage_users }}" class="nav-link {% if 'user' in request.path %}active{% endif %}">
+        <i class="fas fa-users-cog"></i>
+        <span>User Accounts</span>
+      </a>
+    </div>
 
-    <!-- Users Section -->
-    <div class="sidebar-section-divider" style="margin: 12px 0 6px 12px; font-size: 10px; font-weight: 800; color: var(--muted); opacity: 0.6; letter-spacing: 0.5px;">USERS</div>
-
-    {% url 'add_user' as add_user %}
-    <a href="{{ add_user }}" class="sidebar-link {% if request.path == add_user %}active{% endif %}">
-      <i class="fas fa-user-plus"></i>
-      <span class="sidebar-label">Add User</span>
-    </a>
-
-    {% url 'manage_users' as manage_users %}
-    <a href="{{ manage_users }}" class="sidebar-link {% if request.path == manage_users %}active{% endif %}">
-      <i class="fas fa-users-cog"></i>
-      <span class="sidebar-label">Manage Users</span>
-    </a>
+    <div class="nav-section">
+      <span class="section-label">System</span>
+      <a href="#" class="nav-link">
+        <i class="fas fa-cog"></i>
+        <span>Settings</span>
+      </a>
+      <a href="#" class="nav-link">
+        <i class="fas fa-database"></i>
+        <span>Backup & Sync</span>
+      </a>
+    </div>
   </nav>
 </aside>

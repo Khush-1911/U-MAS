@@ -1,62 +1,80 @@
 {% load static %}
-<aside class="app-sidebar">
-  <button class="sidebar-toggle" type="button" onclick="toggleSidebarLock()" aria-label="Toggle sidebar">
-    <i class="fas fa-angle-double-left"></i>
-  </button>
+<aside class="sidebar glass">
+  <div class="sidebar-brand">
+    <div class="brand-icon">
+      <i class="fas fa-user-graduate"></i>
+    </div>
+    <div class="brand-text">
+      <h1>U-MAS</h1>
+      <span>Student Portal</span>
+    </div>
+  </div>
+
   <nav class="sidebar-nav">
-    {% url 'student_home' as student_home %}
-    <a href="{{ student_home }}" class="sidebar-link {% if request.path == student_home %}active{% endif %}">
-      <i class="fas fa-home"></i>
-      <span class="sidebar-label">Home</span>
-    </a>
+    <div class="nav-section">
+      <span class="section-label">Main</span>
+      {% url 'student_home' as student_home %}
+      <a href="{{ student_home }}" class="nav-link {% if request.path == student_home %}active{% endif %}">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+      </a>
+    </div>
 
-    {% url 'student_view_attendance' as student_view_attendance %}
-    <a href="{% url 'student_view_attendance' %}" class="sidebar-link {% if request.path == student_view_attendance %}active{% endif %}">
-      <i class="fas fa-calendar-check"></i>
-      <span class="sidebar-label">Attendance</span>
-    </a>
+    <div class="nav-section">
+      <span class="section-label">Academic Life</span>
+      
+      {% url 'student_view_attendance' as student_view_attendance %}
+      <a href="{{ student_view_attendance }}" class="nav-link {% if request.path == student_view_attendance %}active{% endif %}">
+        <i class="fas fa-calendar-check"></i>
+        <span>Attendance Tracker</span>
+      </a>
 
-    {% url 'student_apply_leave' as student_apply_leave %}
-    <a href="{% url 'student_apply_leave' %}" class="sidebar-link {% if request.path == student_apply_leave %}active{% endif %}">
-      <i class="fas fa-plane"></i>
-      <span class="sidebar-label">Apply Leave</span>
-    </a>
+      {% url 'student_view_result' as student_view_result %}
+      <a href="{{ student_view_result }}" class="nav-link {% if request.path == student_view_result %}active{% endif %}">
+        <i class="fas fa-chart-line"></i>
+        <span>Academic Results</span>
+      </a>
 
-    {% url 'student_feedback' as student_feedback %}
-    <a href="{% url 'student_feedback' %}" class="sidebar-link {% if request.path == student_feedback %}active{% endif %}">
-      <i class="fas fa-comment"></i>
-      <span class="sidebar-label">Feedback</span>
-    </a>
+      {% url 'student_view_timetable' as student_view_timetable %}
+      <a href="{{ student_view_timetable }}" class="nav-link {% if request.path == student_view_timetable %}active{% endif %}">
+        <i class="fas fa-calendar-alt"></i>
+        <span>Class Timetable</span>
+      </a>
+    </div>
 
-    {% url 'student_profile' as student_profile %}
-    <a href="{% url 'student_profile' %}" class="sidebar-link {% if request.path == student_profile %}active{% endif %}">
-      <i class="fas fa-user"></i>
-      <span class="sidebar-label">Profile</span>
-    </a>
+    <div class="nav-section">
+      <span class="section-label">Requests & Info</span>
+      
+      {% url 'student_apply_leave' as student_apply_leave %}
+      <a href="{{ student_apply_leave }}" class="nav-link {% if request.path == student_apply_leave %}active{% endif %}">
+        <i class="fas fa-paper-plane"></i>
+        <span>Leave Application</span>
+      </a>
 
-    {% url 'student_view_result' as student_view_result %}
-    <a href="{% url 'student_view_result' %}" class="sidebar-link {% if request.path == student_view_result %}active{% endif %}">
-      <i class="fas fa-chart-line"></i>
-      <span class="sidebar-label">Results</span>
-    </a>
+      {% url 'student_feedback' as student_feedback %}
+      <a href="{{ student_feedback }}" class="nav-link {% if request.path == student_feedback %}active{% endif %}">
+        <i class="fas fa-comments"></i>
+        <span>Feedback Desk</span>
+      </a>
 
-    {% url 'student_view_timetable' as student_view_timetable %}
-    <a href="{% url 'student_view_timetable' %}" class="sidebar-link {% if request.path == student_view_timetable %}active{% endif %}">
-      <i class="fas fa-calendar-alt"></i>
-      <span class="sidebar-label">Timetable</span>
-    </a>
+      {% url 'student_all_notification' as student_all_notification %}
+      <a href="{{ student_all_notification }}" class="nav-link {% if request.path == student_all_notification %}active{% endif %}">
+        <div style="position: relative; display: inline-flex;">
+          <i class="fas fa-bell"></i>
+          {% if student_unread_notification_count %}
+            <span class="badge badge-error" style="position: absolute; top: -5px; right: -5px; padding: 2px 5px; font-size: 10px;">
+              {% if student_unread_notification_count > 99 %}99+{% else %}{{ student_unread_notification_count }}{% endif %}
+            </span>
+          {% endif %}
+        </div>
+        <span>Notifications</span>
+      </a>
 
-    {% url 'student_all_notification' as student_all_notification %}
-    <a href="{% url 'student_all_notification' %}" class="sidebar-link {% if request.path == student_all_notification %}active{% endif %}">
-      <div class="sidebar-icon-wrap">
-        <i class="fas fa-bell"></i>
-        {% if student_unread_notification_count %}
-          <span class="sidebar-badge" id="studentNotificationBadge">
-            {% if student_unread_notification_count > 99 %}99+{% else %}{{ student_unread_notification_count }}{% endif %}
-          </span>
-        {% endif %}
-      </div>
-      <span class="sidebar-label">Notifications</span>
-    </a>
+      {% url 'student_profile' as student_profile %}
+      <a href="{{ student_profile }}" class="nav-link {% if request.path == student_profile %}active{% endif %}">
+        <i class="fas fa-user-circle"></i>
+        <span>My Profile</span>
+      </a>
+    </div>
   </nav>
 </aside>

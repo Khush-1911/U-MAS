@@ -3,97 +3,67 @@
 Owner Dashboard
 {% endblock page_title %}
 {% block main_content %}
-    <div class="page-hero">
-      <div>
-        <h1>Owner Dashboard</h1>
-        <p>Global overview of all institutions and users in the U-MAS ecosystem.</p>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-icon">
+          <i class="fas fa-university"></i>
+        </div>
+        <div class="metric-info">
+          <span class="metric-value">{{ institution_count }}</span>
+          <span class="metric-label">Total Institutions</span>
+        </div>
       </div>
-      <div class="hero-actions">
-        <span class="badge badge-primary">Total Institutions: {{ institution_count }}</span>
+
+      <div class="metric-card">
+        <div class="metric-icon">
+          <i class="fas fa-user-graduate"></i>
+        </div>
+        <div class="metric-info">
+          <span class="metric-value">{{ student_count }}</span>
+          <span class="metric-label">Global Students</span>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-icon">
+          <i class="fas fa-user-tie"></i>
+        </div>
+        <div class="metric-info">
+          <span class="metric-value">{{ staff_count }}</span>
+          <span class="metric-label">Global Staff</span>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-icon">
+          <i class="fas fa-archway"></i>
+        </div>
+        <div class="metric-info">
+          <span class="metric-value">{{ department_count }}</span>
+          <span class="metric-label">Global Departments</span>
+        </div>
       </div>
     </div>
 
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-          <div class="row">
-          <div class="col-lg-3 col-6">
-            <div class="small-box bg-info">
-              <div class="inner">
-                <h3>{{ institution_count }}</h3>
-                <p>Total Institutions</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-university"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <div class="col-lg-3 col-6">
-            <div class="small-box bg-success">
-              <div class="inner">
-                <h3>{{ student_count }}</h3>
-                <p>Total Students</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-stats-bars"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <div class="col-lg-3 col-6">
-            <div class="small-box bg-warning">
-              <div class="inner">
-                <h3>{{ staff_count }}</h3>
-                <p>Total Staff</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-person-add"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <div class="col-lg-3 col-6">
-            <div class="small-box bg-danger">
-              <div class="inner">
-                <h3>{{ department_count }}</h3>
-                <p>Total Departments</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3>Student Distribution per Institution</h3>
         </div>
-
-          <div class="row">
-              <div class="col-lg-6">
-                  <div class="card card-danger">
-                      <div class="card-header">
-                        <h3 class="card-title">Students per Institution</h3>
-                      </div>
-                      <div class="card-body">
-                        <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                      </div>
-                    </div>
-              </div>
-              <div class="col-lg-6">
-                   <div class="card card-success">
-                      <div class="card-header">
-                        <h3 class="card-title">Staff per Institution</h3>
-                      </div>
-                      <div class="card-body">
-                        <div class="chart">
-                          <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                        </div>
-                      </div>
-                    </div>
-              </div>
-          </div>
-
+        <div class="chart-body">
+          <canvas id="pieChart" style="min-height: 250px; height: 250px;"></canvas>
+        </div>
       </div>
-    </section>
+
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3>Staff Distribution per Institution</h3>
+        </div>
+        <div class="chart-body">
+          <canvas id="barChart" style="min-height: 250px; height: 250px;"></canvas>
+        </div>
+      </div>
+    </div>
 {% endblock main_content %}
 {% block custom_js %}
 <script>

@@ -1,32 +1,41 @@
- <form role="form" action="{{ action_path }}" method="post" enctype="multipart/form-data">
-                  {% csrf_token %}
-                <div class="card-body">
+<form role="form" action="{{ action_path }}" method="post" enctype="multipart/form-data" class="modern-form">
+  {% csrf_token %}
+  
+  <div class="form-content">
+    {% for field in form %}
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        <div class="input-wrapper">
+          {{ field }}
+        </div>
+        {% if field.errors %}
+          <div class="field-errors">
+            {% for error in field.errors %}
+              <span class="error-text"><i class="fas fa-exclamation-circle"></i> {{ error }}</span>
+            {% endfor %}
+          </div>
+        {% endif %}
+        {% if field.help_text %}
+          <small class="help-text">{{ field.help_text }}</small>
+        {% endif %}
+      </div>
+    {% endfor %}
 
-                    {% for field in form %}
-                  <div class="form-group">
-                      {{ field.errors }}
-                      {{ field.label_tag }}
-                      {{ field }}
-                  </div>
-                    {% endfor %}
+    {% if messages %}
+      <div class="form-messages">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} glass">
+            <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-triangle{% endif %}"></i>
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
 
-                   <div class="form-group">
-                      {% if messages %}
-                        {% for message in messages %}
-                        {% if message.tags == 'error' %}
-                        <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
-                        {% endif %}
-                        {% if message.tags == 'success' %}
-                        <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
-                        {% endif %}
-                        {% endfor %}
-                      {% endif %}
-                    </div>
-
-                </div>
-                <!-- /.card-body -->
-
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-primary btn-block">{{ button_text }}</button>
-                </div>
-              </form>
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary btn-block">
+      {{ button_text }}
+    </button>
+  </div>
+</form>
