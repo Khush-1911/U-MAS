@@ -1,0 +1,48 @@
+{% extends 'owner_template/base_template.html' %}
+{% block page_title %}
+Manage Institutions
+{% endblock page_title %}
+{% block main_content %}
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">All Institutions</h3>
+            <div class="card-tools">
+              <a href="{% url 'add_institution' %}" class="btn btn-sm btn-success">+ Add New</a>
+            </div>
+          </div>
+          <div class="card-body table-responsive p-0">
+            <table class="table table-hover text-nowrap">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Contact Email</th>
+                  <th>Address</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for inst in institutions %}
+                <tr>
+                  <td>{{ inst.id }}</td>
+                  <td>{{ inst.name }}</td>
+                  <td>{{ inst.contact_email }}</td>
+                  <td>{{ inst.address }}</td>
+                  <td>
+                    <a href="{% url 'delete_institution' inst.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock main_content %}

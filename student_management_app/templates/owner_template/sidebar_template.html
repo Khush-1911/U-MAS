@@ -33,22 +33,35 @@
               </p>
             </a>
           </li>
-            <li class="nav-item">
+          <li class="nav-header">INSTITUTIONS</li>
+          <li class="nav-item">
             {% url 'add_institution' as add_institution %}
             <a href="{% url 'add_institution' %}" class="nav-link {% if request.path == add_institution %} active {% endif %}">
               <i class="nav-icon fas fa-university"></i>
-              <p>
-                Add Institution
-              </p>
+              <p>Add Institution</p>
             </a>
           </li>
+          <li class="nav-item">
+            {% url 'manage_institutions' as manage_institutions %}
+            <a href="{% url 'manage_institutions' %}" class="nav-link {% if request.path == manage_institutions %} active {% endif %}">
+              <i class="nav-icon fas fa-list"></i>
+              <p>Manage Institutions</p>
+            </a>
+          </li>
+
+          <li class="nav-header">USERS</li>
           <li class="nav-item">
             {% url 'add_user' as add_user %}
             <a href="{% url 'add_user' %}" class="nav-link {% if request.path == add_user %} active {% endif %}">
               <i class="nav-icon fas fa-user-plus"></i>
-              <p>
-                Add User
-              </p>
+              <p>Add User</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            {% url 'manage_users' as manage_users %}
+            <a href="{% url 'manage_users' %}" class="nav-link {% if request.path == manage_users %} active {% endif %}">
+              <i class="nav-icon fas fa-users-cog"></i>
+              <p>Manage Users</p>
             </a>
           </li>
         </ul>

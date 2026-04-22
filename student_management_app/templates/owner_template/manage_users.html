@@ -1,0 +1,59 @@
+{% extends 'owner_template/base_template.html' %}
+{% block page_title %}
+Manage Users
+{% endblock page_title %}
+{% block main_content %}
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">System Users</h3>
+            <div class="card-tools">
+                <a href="{% url 'add_user' %}" class="btn btn-sm btn-success">+ Add New</a>
+            </div>
+          </div>
+          <div class="card-body table-responsive p-0">
+            <table class="table table-hover text-nowrap">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Institution</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for u in users %}
+                <tr>
+                  <td>{{ u.id }}</td>
+                  <td>{{ u.username }}</td>
+                  <td>{{ u.email }}</td>
+                  <td>
+                      {% if u.user_type == '1' %}Owner
+                      {% elif u.user_type == '2' %}Staff
+                      {% elif u.user_type == '3' %}Student
+                      {% elif u.user_type == '4' %}Superuser
+                      {% elif u.user_type == '5' %}Principal
+                      {% elif u.user_type == '6' %}College Admin
+                      {% elif u.user_type == '7' %}HOD
+                      {% endif %}
+                  </td>
+                  <td>{{ u.institution.name|default:"Global" }}</td>
+                  <td>
+                    <a href="{% url 'delete_user' u.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock main_content %}

@@ -93,3 +93,29 @@ def add_user_save(request):
     except Exception as e:
         messages.error(request, f"Failed to add user: {str(e)}")
         return HttpResponseRedirect(reverse("add_user"))
+
+def manage_institutions(request):
+    institutions = Institution.objects.all()
+    return render(request, "owner_template/manage_institutions.html", {"institutions": institutions})
+
+def delete_institution(request, institution_id):
+    try:
+        institution = Institution.objects.get(id=institution_id)
+        institution.delete()
+        messages.success(request, "Institution Deleted Successfully")
+    except Exception:
+        messages.error(request, "Failed to delete institution")
+    return HttpResponseRedirect(reverse("manage_institutions"))
+
+def manage_users(request):
+    users = CustomUser.objects.all().exclude(id=request.user.id)
+    return render(request, "owner_template/manage_users.html", {"users": users})
+
+def delete_user(request, user_id):
+    try:
+        user = CustomUser.objects.get(id=user_id)
+        user.delete()
+        messages.success(request, "User Deleted Successfully")
+    except Exception:
+        messages.error(request, "Failed to delete user")
+    return HttpResponseRedirect(reverse("manage_users"))
