@@ -1,76 +1,75 @@
-{% extends 'owner_template/base_template.html' %}
 {% block page_title %}
-Edit User
+Account Modification
 {% endblock page_title %}
+
 {% block main_content %}
-    <div class="page-hero">
-      <div>
-        <h1>Edit User</h1>
-        <p>Update role, institution, or personal details for {{ user_obj.email }}.</p>
+    <div class="card glass">
+      <div class="chart-header">
+        <h3>Master Profile Governance</h3>
+        <p>Update global system privileges and institutional alignment for <strong>{{ user_obj.email }}</strong></p>
       </div>
-    </div>
-    <section class="content">
-      <div class="container-fluid">
-          <div class="row">
-              <div class="col-md-12">
-            <div class="card card-primary">
-              <div class="card-header">
-                <h3 class="card-title">Edit User</h3>
+
+      <form class="modern-form" action="{% url 'edit_user_save' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="user_id" value="{{ user_obj.id }}">
+
+        <div class="form-content">
+          <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            <div class="form-group">
+              <label>Institutional Assignment</label>
+              <div class="input-wrapper">
+                <select name="institution" required>
+                    <option value="">Select Institution</option>
+                    {% for institution in institutions %}
+                        <option value="{{ institution.id }}" {% if user_obj.institution.id == institution.id %}selected{% endif %}>{{ institution.name }}</option>
+                    {% endfor %}
+                </select>
               </div>
-              <form role="form" action="{% url 'edit_user_save' %}" method="post">
-                  {% csrf_token %}
-                <div class="card-body">
-                  <input type="hidden" name="user_id" value="{{ user_obj.id }}">
-                  <div class="form-group">
-                    <label>Institution</label>
-                    <select class="form-control" name="institution" required>
-                        <option value="">Select Institution</option>
-                        {% for institution in institutions %}
-                            <option value="{{ institution.id }}" {% if user_obj.institution.id == institution.id %}selected{% endif %}>{{ institution.name }}</option>
-                        {% endfor %}
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label>Role</label>
-                    <select class="form-control" name="role" required>
-                        <option value="">Select Role</option>
-                        {% for role in roles %}
-                            <option value="{{ role.id }}" {% if user_obj.user_type == role.id %}selected{% endif %}>{{ role.name }}</option>
-                        {% endfor %}
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label>First Name</label>
-                    <input type="text" class="form-control" name="first_name" value="{{ user_obj.first_name }}" required>
-                  </div>
-                  <div class="form-group">
-                    <label>Last Name</label>
-                    <input type="text" class="form-control" name="last_name" value="{{ user_obj.last_name }}" required>
-                  </div>
-                  <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" class="form-control" name="email" value="{{ user_obj.email }}" required>
-                  </div>
-                   <div class="form-group">
-                      {% if messages %}
-                        {% for message in messages %}
-                        {% if message.tags == 'error' %}
-                        <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
-                        {% endif %}
-                        {% if message.tags == 'success' %}
-                        <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
-                        {% endif %}
-                        {% endfor %}
-                      {% endif %}
-                    </div>
-                </div>
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-primary btn-block">Update User</button>
-                </div>
-              </form>
+            </div>
+
+            <div class="form-group">
+              <label>System Privilege Level</label>
+              <div class="input-wrapper">
+                <select name="role" required>
+                    <option value="">Select Role</option>
+                    {% for role in roles %}
+                        <option value="{{ role.id }}" {% if user_obj.user_type == role.id %}selected{% endif %}>{{ role.name }}</option>
+                    {% endfor %}
+                </select>
+              </div>
             </div>
           </div>
+
+          <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            <div class="form-group">
+              <label>Given Name</label>
+              <div class="input-wrapper">
+                <input type="text" name="first_name" value="{{ user_obj.first_name }}" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Family Name</label>
+              <div class="input-wrapper">
+                <input type="text" name="last_name" value="{{ user_obj.last_name }}" required>
+              </div>
+            </div>
           </div>
-      </div>
-    </section>
+
+          <div class="form-group">
+            <label>Master Identity (Email)</label>
+            <div class="input-wrapper">
+              <input type="email" name="email" value="{{ user_obj.email }}" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-shield-alt"></i>
+            Authorize & Commit Changes
+          </button>
+          <a href="{% url 'manage_users' %}" class="btn btn-secondary" style="margin-left: 1rem;">Discard Changes</a>
+        </div>
+      </form>
+    </div>
 {% endblock main_content %}

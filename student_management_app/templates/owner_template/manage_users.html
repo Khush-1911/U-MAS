@@ -1,64 +1,96 @@
-{% extends 'owner_template/base_template.html' %}
 {% block page_title %}
-Manage Users
+System User Matrix
 {% endblock page_title %}
+
 {% block main_content %}
-<div class="page-hero">
-  <div>
-    <h1>Manage Users</h1>
-    <p>Comprehensive list of all administrative and academic users.</p>
-  </div>
-</div>
-<section class="content">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-12">
-        <div class="card card-primary">
-          <div class="card-header">
-            <h3 class="card-title">System Users</h3>
-            <div class="card-tools">
-                <a href="{% url 'add_user' %}" class="btn btn-sm btn-success">+ Add New</a>
-            </div>
+    <div class="card">
+      <div class="chart-header">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h3>Global User Directory</h3>
+            <p>Orchestrate all administrative, academic, and student accounts across the platform.</p>
           </div>
-          <div class="card-body table-responsive p-0">
-            <table class="table table-hover text-nowrap">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Email</th>
-                  <th>Role</th>
-                  <th>Institution</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for u in users %}
-                <tr>
-                  <td>{{ u.id }}</td>
-                  <td>{{ u.email }}</td>
-                  <td>
-                      {% if u.user_type == '1' %}Owner
-                      {% elif u.user_type == '2' %}Staff
-                      {% elif u.user_type == '3' %}Student
-                      {% elif u.user_type == '4' %}Superuser
-                      {% elif u.user_type == '5' %}Principal
-                      {% elif u.user_type == '6' %}College Admin
-                      {% elif u.user_type == '7' %}HOD
-                      {% endif %}
-                  </td>
-                  <td>{{ u.institution.name|default:"Global" }}</td>
-                  <td>
-                    <a href="{% url 'edit_user' u.id %}" class="btn btn-primary btn-sm">Edit</a>
-                    <a href="{% url 'delete_user' u.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</a>
-                  </td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
+          <a href="{% url 'add_user' %}" class="btn btn-primary">
+            <i class="fas fa-user-plus"></i>
+            Register New User
+          </a>
         </div>
       </div>
+
+      <div class="table-container">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>System ID</th>
+              <th>Identity</th>
+              <th>Privilege Level</th>
+              <th>Institution</th>
+              <th>Orchestration</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for u in users %}
+            <tr>
+              <td><span class="badge glass">#{{ u.id }}</span></td>
+              <td>
+                <div style="display: flex; flex-direction: column;">
+                  <strong>{{ u.get_full_name|default:"Unnamed User" }}</strong>
+                  <span style="font-size: 0.8rem; color: var(--on-surface-variant);">{{ u.email }}</span>
+                </div>
+              </td>
+              <td>
+                {% if u.user_type == '1' %}<span class="role-pill owner">Owner</span>
+                {% elif u.user_type == '2' %}<span class="role-pill staff">Staff</span>
+                {% elif u.user_type == '3' %}<span class="role-pill student">Student</span>
+                {% elif u.user_type == '4' %}<span class="role-pill superuser">Superuser</span>
+                {% elif u.user_type == '5' %}<span class="role-pill principal">Principal</span>
+                {% elif u.user_type == '6' %}<span class="role-pill admin">College Admin</span>
+                {% elif u.user_type == '7' %}<span class="role-pill hod">HOD</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if u.institution %}
+                  <span class="badge" style="background: var(--surface-container-high); color: var(--on-surface);">
+                    <i class="fas fa-university" style="margin-right: 0.4rem; opacity: 0.6;"></i>
+                    {{ u.institution.name }}
+                  </span>
+                {% else %}
+                  <span class="badge glass" style="color: var(--primary);">Global System</span>
+                {% endif %}
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <a href="{% url 'edit_user' u.id %}" class="btn-icon" title="Edit Metadata">
+                    <i class="fas fa-pen-nib"></i>
+                  </a>
+                  <a href="{% url 'delete_user' u.id %}" class="btn-icon delete" title="Terminate Account" onclick="return confirm('Immediate termination of this account will revoke all access. Proceed?')">
+                    <i class="fas fa-trash-alt"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
-</section>
+
+    <style>
+      .role-pill {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        display: inline-block;
+      }
+      .owner { background: #e0f2fe; color: #0369a1; }
+      .staff { background: #f0fdf4; color: #15803d; }
+      .student { background: #fefce8; color: #854d0e; }
+      .superuser { background: #fae8ff; color: #a21caf; }
+      .principal { background: #fff1f2; color: #be123c; }
+      .admin { background: #f5f3ff; color: #6d28d9; }
+      .hod { background: #ecfeff; color: #0e7490; }
+    </style>
 {% endblock main_content %}

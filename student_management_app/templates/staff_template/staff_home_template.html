@@ -1,115 +1,62 @@
-{% extends 'staff_template/base_template.html' %}
 {% block page_title %}
-Home
+Faculty Overview
 {% endblock page_title %}
+
 {% block main_content %}
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-          <div class="row">
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-info">
-              <div class="inner">
-                <h3>{{ students_count }}</h3>
-
-                <p>Student Under me</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-stats-bars"></i>
-              </div>
-              <a href="{% url 'staff_manage_student' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-success">
-              <div class="inner">
-                <h3>{{ attendance_count }}</h3>
-
-                <p>Total Attendance Taken</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-stats-bars"></i>
-              </div>
-              <a href="{% url 'staff_daily_attendance_graph' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-warning">
-              <div class="inner">
-                <h3>{{ leave_count }}</h3>
-
-                <p>Total Leave Taken</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-stats-bars"></i>
-              </div>
-              <a href="{% url 'staff_apply_leave' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-danger">
-              <div class="inner">
-                <h3>{{ subject_count }}</h3>
-
-                <p>Total Subjects</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-stats-bars"></i>
-              </div>
-              <a href="{% url 'start_live_classroom' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
+    <div class="metrics-grid">
+      <div class="metric-card glass">
+        <div class="metric-icon" style="background: var(--surface-container-low); color: var(--primary);">
+          <i class="fas fa-users"></i>
         </div>
-          <!-- <div class="row">
-              <div class="col-lg-6">
-                  <div class="card card-danger">
-                  <div class="card-header">
-                    <h3 class="card-title">Attendance VS Leave Chart</h3>
-                  </div>
-                  <div class="card-body">
-                    <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                  </div>
-
-                </div>
-              </div>
-              <div class="col-lg-6">
-               <div class="card card-success">
-                  <div class="card-header">
-                    <h3 class="card-title">Attend Subject</h3>
-                  </div>
-                  <div class="card-body">
-                    <div class="chart">
-                      <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-          </div> -->
-          <div class="row">
-              <!-- <div class="col-lg-12">
-                   <div class="card card-info">
-                  <div class="card-header">
-                    <h3 class="card-title">Student Attendance Data</h3>
-                  </div>
-                  <div class="card-body">
-                    <div class="chart">
-                      <canvas id="barChart2" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                    </div>
-                  </div>
-              /.card-body -->
-                </div>
-              </div>
-          </div>
+        <div class="metric-info">
+          <span class="metric-label">Mentees</span>
+          <h3 class="metric-value">{{ students_count }}</h3>
+          <span class="metric-trend"><i class="fas fa-user-check"></i> Assigned Students</span>
+        </div>
       </div>
-    </section>
-    <!-- /.content -->
+
+      <div class="metric-card glass">
+        <div class="metric-icon" style="background: var(--surface-container-low); color: #15803d;">
+          <i class="fas fa-calendar-check"></i>
+        </div>
+        <div class="metric-info">
+          <span class="metric-label">Attendance Logs</span>
+          <h3 class="metric-value">{{ attendance_count }}</h3>
+          <span class="metric-trend"><i class="fas fa-history"></i> Lifetime Records</span>
+        </div>
+      </div>
+
+      <div class="metric-card glass">
+        <div class="metric-icon" style="background: var(--surface-container-low); color: #854d0e;">
+          <i class="fas fa-plane-departure"></i>
+        </div>
+        <div class="metric-info">
+          <span class="metric-label">Leave Status</span>
+          <h3 class="metric-value">{{ leave_count }}</h3>
+          <span class="metric-trend"><i class="fas fa-info-circle"></i> Approved Requests</span>
+        </div>
+      </div>
+
+      <div class="metric-card glass">
+        <div class="metric-icon" style="background: var(--surface-container-low); color: #be123c;">
+          <i class="fas fa-book"></i>
+        </div>
+        <div class="metric-info">
+          <span class="metric-label">Active Subjects</span>
+          <h3 class="metric-value">{{ subject_count }}</h3>
+          <span class="metric-trend"><i class="fas fa-graduation-cap"></i> Curated Courses</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card glass" style="margin-top: 2rem;">
+      <div class="chart-header">
+        <h3>Recent Academic Activity</h3>
+        <p>Monitor your departmental contributions and student progress.</p>
+      </div>
+      <div style="padding: 2rem; text-align: center; color: var(--on-surface-variant);">
+        <i class="fas fa-project-diagram fa-3x" style="margin-bottom: 1rem; opacity: 0.5;"></i>
+        <p>Advanced faculty analytics are being calculated...</p>
+      </div>
+    </div>
 {% endblock main_content %}
