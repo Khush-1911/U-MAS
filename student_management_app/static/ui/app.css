@@ -216,9 +216,11 @@ h1, h2, h3, h4, h5, h6 {
   top: 0;
   background: var(--surface-container-high);
   padding: 1.5rem 1rem;
-  z-index: 100;
+  z-index: 1001; /* Ensure it's above main content and any glass headers */
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  pointer-events: auto;
 }
 
 .sidebar-brand {
@@ -289,6 +291,8 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: var(--radius-md);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
+  z-index: 1002;
+  pointer-events: auto;
 }
 
 .nav-link i {
