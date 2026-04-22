@@ -22,8 +22,8 @@
       </div>
       <div class="topbar-right">
         <div class="profile-pill">
-          <div class="profile-avatar">{{ request.user.username|slice:":1"|upper }}</div>
-          <div>{{ request.user.username }}</div>
+          <div class="profile-avatar">{{ request.user.get_full_name|default:request.user.email|slice:":1"|upper }}</div>
+          <div>{{ request.user.get_full_name|default:request.user.email }}</div>
         </div>
         <a class="logout-btn" href="{% url 'logout' %}">Logout</a>
       </div>

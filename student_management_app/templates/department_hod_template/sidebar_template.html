@@ -11,7 +11,7 @@
           <img src="{% static "dist/img/user2-160x160.jpg" %}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">{{ user.username }}</a>
+          <a href="#" class="d-block">{{ user.get_full_name|default:user.email }}</a>
         </div>
       </div>
       <nav class="mt-2">

@@ -51,10 +51,6 @@ Add Staff
                     <label>Last Name</label>
                     <input class="form-control" placeholder="Last Name" name="last_name"required>
                   </div>
-                   <div class="form-group">
-                    <label>Username</label>
-                    <input class="form-control" placeholder="Username" name="username" id="id_username" autocomplete="off" required>
-                  </div>
                   <div class="form-group">
                     <label>Address</label>
                     <input class="form-control" placeholder="Address" name="address" required>
@@ -144,35 +140,6 @@ Add Staff
 
         });
 
-        $("#id_username").keyup(function(){
-            var username=$(this).val();
-
-            if(username!=""){
-                $.ajax({
-                    url:"'{% url 'check_username_exist' %}'",
-                    type:'POST',
-                    data:{username:username}
-                })
-                .done(function(response){
-                    console.log(response);
-                    if(response=="True"){
-                        $(".username_error").remove();
-                        $("<span class='username_error' style='padding: 5px;color: red;font-weight: bold;'>Username Not Available</span>").insertAfter("#id_username");
-                    }
-                    else{
-                        $(".username_error").remove();
-                        $("<span class='username_error' style='padding: 5px;color: green;font-weight: bold;'>Username Available</span>").insertAfter("#id_username");
-                    }
-                })
-                .fail(function(){
-                    console.log("failed");
-                })
-            }
-            else{
-                $(".username_error").remove();
-            }
-
-        });
 
     });
 </script>

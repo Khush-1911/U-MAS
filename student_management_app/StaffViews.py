@@ -56,21 +56,16 @@ def _normalize_email(value):
     return (value or "").strip().lower()
 
 
-def _credentials_error(username, email, exclude_user_id=None):
-    username = (username or "").strip()
+def _credentials_error(email, exclude_user_id=None):
     email = _normalize_email(email)
 
-    if not username or not email:
-        return "Username and email are required"
+    if not email:
+        return "Email is required"
 
-    username_qs = CustomUser.objects.filter(username__iexact=username)
     email_qs = CustomUser.objects.filter(email__iexact=email)
     if exclude_user_id:
-        username_qs = username_qs.exclude(id=exclude_user_id)
         email_qs = email_qs.exclude(id=exclude_user_id)
 
-    if username_qs.exists():
-        return "Username already exists"
     if email_qs.exists():
         return "Email already exists"
     return None
@@ -187,9 +182,9 @@ def _gender_value(value):
     return None
 
 
-def _create_student_user(*, first_name, last_name, username, email, notification_email, password, address, class_id, semester, sex):
+def _create_student_user(*, first_name, last_name, email, notification_email, password, address, class_id, semester, sex):
     user = CustomUser.objects.create_user(
-        username=username,
+        username=email,
         password=password,
         email=email,
         notification_email=notification_email,
@@ -412,7 +407,6 @@ def staff_add_student_save(request):
 
     first_name = form.cleaned_data["first_name"]
     last_name = form.cleaned_data["last_name"]
-    username = form.cleaned_data["username"]
     email = _normalize_email(form.cleaned_data["email"])
     notification_email = _normalize_email(form.cleaned_data["notification_email"]) or email
     password = form.cleaned_data["password"]
@@ -425,7 +419,7 @@ def staff_add_student_save(request):
         messages.error(request, "Password is required")
         return HttpResponseRedirect(reverse("staff_add_student"))
 
-    error = _credentials_error(username, email)
+    error = _credentials_error(email)
     if error:
         messages.error(request, error)
         return HttpResponseRedirect(reverse("staff_add_student"))
@@ -437,7 +431,6 @@ def staff_add_student_save(request):
             _create_student_user(
                 first_name=first_name,
                 last_name=last_name,
-                username=username,
                 email=email,
                 notification_email=notification_email,
                 password=password,
@@ -467,7 +460,6 @@ def staff_edit_student(request, student_id):
     form.fields["notification_email"].initial = student.admin.notification_email
     form.fields["first_name"].initial = student.admin.first_name
     form.fields["last_name"].initial = student.admin.last_name
-    form.fields["username"].initial = student.admin.username
     form.fields["address"].initial = student.address
     form.fields["class_id"].initial = student.class_id.id if student.class_id else None
     form.fields["sex"].initial = student.gender
@@ -503,7 +495,6 @@ def staff_edit_student_save(request):
 
     first_name = form.cleaned_data["first_name"]
     last_name = form.cleaned_data["last_name"]
-    username = form.cleaned_data["username"]
     email = _normalize_email(form.cleaned_data["email"])
     notification_email = _normalize_email(form.cleaned_data["notification_email"]) or email
     address = form.cleaned_data["address"]
@@ -511,7 +502,7 @@ def staff_edit_student_save(request):
     class_id = form.cleaned_data["class_id"]
     sex = form.cleaned_data["sex"]
 
-    error = _credentials_error(username, email, exclude_user_id=student_id)
+    error = _credentials_error(email, exclude_user_id=student_id)
     if error:
         messages.error(request, error)
         return HttpResponseRedirect(reverse("staff_edit_student", kwargs={"student_id": student_id}))
@@ -521,7 +512,7 @@ def staff_edit_student_save(request):
             user = CustomUser.objects.get(id=student_id)
             user.first_name = first_name
             user.last_name = last_name
-            user.username = username
+            user.username = email
             user.email = email
             user.notification_email = notification_email
             user.save()

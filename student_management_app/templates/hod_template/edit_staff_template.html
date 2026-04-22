@@ -1,6 +1,6 @@
 {% extends 'hod_template/base_template.html' %}
 {% block page_title %}
-Edit Staff  | Username : {{ staff.admin.username }} |  #ID : {{ staff.admin.id }}
+Edit Staff  | #ID : {{ staff.admin.id }}
 {% endblock page_title %}
 {% block main_content %}
     <!-- Main content -->
@@ -46,10 +46,6 @@ Edit Staff  | Username : {{ staff.admin.username }} |  #ID : {{ staff.admin.id }
                     <label>Last Name</label>
                     <input class="form-control" placeholder="Last Name" name="last_name" value="{{ staff.admin.last_name }}">
                     <input type="hidden"  name="staff_id" value="{{ staff.admin.id }}">
-                  </div>
-                   <div class="form-group">
-                    <label>Username</label>
-                    <input class="form-control" placeholder="Username" name="username" value="{{ staff.admin.username }}">
                   </div>
                   <div class="form-group">
                     <label>Address</label>

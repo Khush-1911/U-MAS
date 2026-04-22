@@ -23,21 +23,16 @@ def _normalize_email(value):
     return (value or "").strip().lower()
 
 
-def _credentials_error(username, email, exclude_user_id=None):
-    username = (username or "").strip()
+def _credentials_error(email, exclude_user_id=None):
     email = _normalize_email(email)
 
-    if not username or not email:
-        return "Username and email are required"
+    if not email:
+        return "Email is required"
 
-    username_qs = CustomUser.objects.filter(username__iexact=username)
     email_qs = CustomUser.objects.filter(email__iexact=email)
     if exclude_user_id:
-        username_qs = username_qs.exclude(id=exclude_user_id)
         email_qs = email_qs.exclude(id=exclude_user_id)
 
-    if username_qs.exists():
-        return "Username already exists"
     if email_qs.exists():
         return "Email already exists"
     return None
@@ -193,18 +188,11 @@ def add_staff_save(request):
     else:
         first_name=request.POST.get("first_name", "").strip()
         last_name=request.POST.get("last_name", "").strip()
-        username=request.POST.get("username", "").strip()
-        email=_normalize_email(request.POST.get("email"))
-        notification_email = _normalize_email(request.POST.get("notification_email")) or email
-        password=request.POST.get("password")
-        address=request.POST.get("address", "").strip()
-        selected_student_ids = request.POST.getlist("assigned_students")
-
-        if not all([first_name, last_name, username, email, password, address]):
+        if not all([first_name, last_name, email, password, address]):
             messages.error(request,"All fields are required")
             return HttpResponseRedirect(reverse("add_staff"))
 
-        error = _credentials_error(username, email)
+        error = _credentials_error(email)
         if error:
             messages.error(request, error)
             return HttpResponseRedirect(reverse("add_staff"))
@@ -212,7 +200,7 @@ def add_staff_save(request):
         try:
             with transaction.atomic():
                 user=CustomUser.objects.create_user(
-                    username=username,
+                    username=email,
                     password=password,
                     email=email,
                     notification_email=notification_email,
@@ -271,7 +259,6 @@ def add_student_save(request):
         if form.is_valid():
             first_name=form.cleaned_data["first_name"]
             last_name=form.cleaned_data["last_name"]
-            username=form.cleaned_data["username"]
             email=_normalize_email(form.cleaned_data["email"])
             notification_email = _normalize_email(form.cleaned_data["notification_email"]) or email
             password=form.cleaned_data["password"]
@@ -285,7 +272,7 @@ def add_student_save(request):
                 messages.error(request, "Password is required")
                 return HttpResponseRedirect(reverse("add_student"))
 
-            error = _credentials_error(username, email)
+            error = _credentials_error(email)
             if error:
                 messages.error(request, error)
                 return HttpResponseRedirect(reverse("add_student"))
@@ -297,7 +284,7 @@ def add_student_save(request):
                     mentor=Staffs.objects.get(id=mentor_id)
 
                     user=CustomUser.objects.create_user(
-                        username=username,
+                        username=email,
                         password=password,
                         email=email,
                         notification_email=notification_email,
@@ -433,7 +420,6 @@ def edit_staff_save(request):
         last_name=request.POST.get("last_name", "").strip()
         email=_normalize_email(request.POST.get("email"))
         notification_email = _normalize_email(request.POST.get("notification_email")) or email
-        username=request.POST.get("username", "").strip()
         address=request.POST.get("address", "").strip()
         selected_student_ids = {
             int(student_id)
@@ -441,11 +427,11 @@ def edit_staff_save(request):
             if student_id.isdigit()
         }
 
-        if not all([first_name, last_name, email, username, address]):
+        if not all([first_name, last_name, email, address]):
             messages.error(request,"All fields are required")
             return HttpResponseRedirect(reverse("edit_staff",kwargs={"staff_id":staff_id}))
 
-        error = _credentials_error(username, email, exclude_user_id=staff_id)
+        error = _credentials_error(email, exclude_user_id=staff_id)
         if error:
             messages.error(request, error)
             return HttpResponseRedirect(reverse("edit_staff",kwargs={"staff_id":staff_id}))
@@ -457,7 +443,7 @@ def edit_staff_save(request):
                 user.last_name=last_name
                 user.email=email
                 user.notification_email=notification_email
-                user.username=username
+                user.username=email
                 user.save()
 
                 staff_model=Staffs.objects.get(admin=staff_id)
@@ -508,7 +494,6 @@ def edit_student_save(request):
         if form.is_valid():
             first_name = form.cleaned_data["first_name"]
             last_name = form.cleaned_data["last_name"]
-            username = form.cleaned_data["username"]
             email = _normalize_email(form.cleaned_data["email"])
             notification_email = _normalize_email(form.cleaned_data["notification_email"]) or email
             address = form.cleaned_data["address"]
@@ -517,7 +502,7 @@ def edit_student_save(request):
             sex = form.cleaned_data["sex"]
             mentor_id = form.cleaned_data["mentor"]
 
-            error = _credentials_error(username, email, exclude_user_id=student_id)
+            error = _credentials_error(email, exclude_user_id=student_id)
             if error:
                 messages.error(request, error)
                 return HttpResponseRedirect(reverse("edit_student",kwargs={"student_id":student_id}))
@@ -527,7 +512,7 @@ def edit_student_save(request):
                     user=CustomUser.objects.get(id=student_id)
                     user.first_name=first_name
                     user.last_name=last_name
-                    user.username=username
+                    user.username=email
                     user.email=email
                     user.notification_email=notification_email
                     user.save()
@@ -657,14 +642,6 @@ def check_email_exist(request):
     else:
         return HttpResponse(False)
 
-@csrf_exempt
-def check_username_exist(request):
-    username=request.POST.get("username")
-    user_obj=CustomUser.objects.filter(username__iexact=username).exists()
-    if user_obj:
-        return HttpResponse(True)
-    else:
-        return HttpResponse(False)
 
 def staff_feedback_message(request):
     feedbacks=FeedBackStaffs.objects.all()

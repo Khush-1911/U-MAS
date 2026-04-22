@@ -69,7 +69,6 @@ def add_user_save(request):
     
     first_name = request.POST.get("first_name")
     last_name = request.POST.get("last_name")
-    username = request.POST.get("username")
     email = request.POST.get("email")
     password = request.POST.get("password")
     role_id = request.POST.get("role")
@@ -79,7 +78,7 @@ def add_user_save(request):
         institution = Institution.objects.get(id=institution_id)
         with transaction.atomic():
             user = CustomUser.objects.create_user(
-                username=username,
+                username=email, # Use email as username
                 password=password,
                 email=email,
                 first_name=first_name,

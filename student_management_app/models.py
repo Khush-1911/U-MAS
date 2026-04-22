@@ -31,6 +31,9 @@ class CustomUser(AbstractUser):
     notification_email = models.EmailField(blank=True, default="")
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE, null=True, blank=True)
 
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username'] # Keep username for compatibility but it will mirror email
+
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -40,10 +43,14 @@ class CustomUser(AbstractUser):
         ]
 
     def save(self, *args, **kwargs):
-        if str(self.user_type) == "1":
-            self.is_superuser = True
         if self.email:
             self.email = self.email.strip().lower()
+            # Ensure username mirrors email for internal Django usage
+            self.username = self.email
+        
+        if str(self.user_type) == "1":
+            self.is_superuser = True
+        
         if self.notification_email:
             self.notification_email = self.notification_email.strip().lower()
         elif self.email:
