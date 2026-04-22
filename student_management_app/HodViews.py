@@ -408,6 +408,8 @@ def edit_staff(request,staff_id):
             "id": staff_id,
             "students": students,
             "selected_student_ids": selected_student_ids,
+            "institutions": Institution.objects.all(),
+            "roles": CustomUser.user_type_data,
         },
     )
 
@@ -421,11 +423,10 @@ def edit_staff_save(request):
         email=_normalize_email(request.POST.get("email"))
         notification_email = _normalize_email(request.POST.get("notification_email")) or email
         address=request.POST.get("address", "").strip()
-        selected_student_ids = {
-            int(student_id)
-            for student_id in request.POST.getlist("assigned_students")
             if student_id.isdigit()
         }
+        role_id = request.POST.get("role")
+        institution_id = request.POST.get("institution")
 
         if not all([first_name, last_name, email, address]):
             messages.error(request,"All fields are required")
@@ -444,7 +445,16 @@ def edit_staff_save(request):
                 user.email=email
                 user.notification_email=notification_email
                 user.username=email
+                user.user_type = role_id
+                if institution_id:
+                    user.institution = Institution.objects.get(id=institution_id)
                 user.save()
+
+                # Profile creation logic
+                if role_id == "3" and not hasattr(user, 'students'):
+                    Students.objects.create(admin=user, address="", gender="", mentor=None)
+                elif role_id == "7" and not hasattr(user, 'hod'):
+                    HOD.objects.create(admin=user)
 
                 staff_model=Staffs.objects.get(admin=staff_id)
                 staff_model.address=address
@@ -515,7 +525,15 @@ def edit_student_save(request):
                     user.username=email
                     user.email=email
                     user.notification_email=notification_email
+                    user.user_type = form.cleaned_data["user_type"]
+                    user.institution = Institution.objects.get(id=form.cleaned_data["institution"])
                     user.save()
+
+                    # Profile creation logic
+                    if user.user_type == "2" and not hasattr(user, 'staffs'):
+                        Staffs.objects.create(admin=user, address="")
+                    elif user.user_type == "7" and not hasattr(user, 'hod'):
+                        HOD.objects.create(admin=user)
 
                     student=Students.objects.get(admin=student_id)
                     student.address=address

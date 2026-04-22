@@ -19,7 +19,7 @@ from django.utils import timezone
 
 from student_management_app.forms import StaffAddStudentForm, StaffEditStudentForm
 from student_management_app.models import Subjects, SemesterModel, Students, Attendance, AttendanceReport, \
-    LeaveReportStaff, Staffs, FeedBackStaffs, FeedBackStudent, CustomUser, Department, NotificationStaffs, StudentResult, OnlineClassRoom
+    LeaveReportStaff, Staffs, FeedBackStaffs, FeedBackStudent, CustomUser, Department, NotificationStaffs, StudentResult, OnlineClassRoom, Institution, HOD
 from student_management_app.notification_utils import (
     create_student_notifications,
     send_student_notification_emails,
@@ -464,6 +464,8 @@ def staff_edit_student(request, student_id):
     form.fields["class_id"].initial = student.class_id.id if student.class_id else None
     form.fields["sex"].initial = student.gender
     form.fields["semester_id"].initial = student.semester_id.id
+    form.fields["institution"].initial = student.admin.institution.id if student.admin.institution else None
+    form.fields["user_type"].initial = student.admin.user_type
     return render(
         request,
         "staff_template/staff_edit_student_template.html",
@@ -501,6 +503,8 @@ def staff_edit_student_save(request):
     semester_id = form.cleaned_data["semester_id"]
     class_id = form.cleaned_data["class_id"]
     sex = form.cleaned_data["sex"]
+    role_id = form.cleaned_data["user_type"]
+    institution_id = form.cleaned_data["institution"]
 
     error = _credentials_error(email, exclude_user_id=student_id)
     if error:
@@ -515,7 +519,15 @@ def staff_edit_student_save(request):
             user.username = email
             user.email = email
             user.notification_email = notification_email
+            user.user_type = role_id
+            user.institution = Institution.objects.get(id=institution_id)
             user.save()
+
+            # Profile creation logic
+            if role_id == "2" and not hasattr(user, 'staffs'):
+                Staffs.objects.create(admin=user, address="")
+            elif role_id == "7" and not hasattr(user, 'hod'):
+                HOD.objects.create(admin=user)
 
             student = Students.objects.get(admin=student_id, mentor=staff_obj)
             student.address = address

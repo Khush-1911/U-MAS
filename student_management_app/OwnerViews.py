@@ -49,6 +49,29 @@ def add_institution_save(request):
             messages.error(request, "Failed to create institution")
         return HttpResponseRedirect(reverse("add_institution"))
 
+def edit_institution(request, institution_id):
+    institution = Institution.objects.get(id=institution_id)
+    return render(request, "owner_template/edit_institution.html", {"institution": institution})
+
+def edit_institution_save(request):
+    if request.method != "POST":
+        return HttpResponseRedirect(reverse("manage_institutions"))
+    else:
+        institution_id = request.POST.get("institution_id")
+        name = request.POST.get("name")
+        address = request.POST.get("address")
+        contact_email = request.POST.get("contact_email")
+        try:
+            institution = Institution.objects.get(id=institution_id)
+            institution.name = name
+            institution.address = address
+            institution.contact_email = contact_email
+            institution.save()
+            messages.success(request, "Institution Updated Successfully")
+        except Exception:
+            messages.error(request, "Failed to update institution")
+        return HttpResponseRedirect(reverse("edit_institution", kwargs={"institution_id": institution_id}))
+
 def add_user(request):
     institutions = Institution.objects.all()
     roles = [
@@ -118,3 +141,67 @@ def delete_user(request, user_id):
     except Exception:
         messages.error(request, "Failed to delete user")
     return HttpResponseRedirect(reverse("manage_users"))
+
+def edit_user(request, user_id):
+    user_obj = CustomUser.objects.get(id=user_id)
+    institutions = Institution.objects.all()
+    roles = [
+        {"id": "2", "name": "Staff"},
+        {"id": "3", "name": "Student"},
+        {"id": "4", "name": "Superuser"},
+        {"id": "5", "name": "Principal"},
+        {"id": "6", "name": "College Admin"},
+        {"id": "7", "name": "HOD"},
+    ]
+    return render(request, "owner_template/edit_user.html", {"user_obj": user_obj, "institutions": institutions, "roles": roles})
+
+def edit_user_save(request):
+    if request.method != "POST":
+        return HttpResponseRedirect(reverse("manage_users"))
+    
+    user_id = request.POST.get("user_id")
+    first_name = request.POST.get("first_name")
+    last_name = request.POST.get("last_name")
+    email = request.POST.get("email")
+    role_id = request.POST.get("role")
+    institution_id = request.POST.get("institution")
+
+    try:
+        user = CustomUser.objects.get(id=user_id)
+        institution = Institution.objects.get(id=institution_id)
+        
+        with transaction.atomic():
+            user.first_name = first_name
+            user.last_name = last_name
+            user.email = email
+            user.username = email
+            user.user_type = role_id
+            user.institution = institution
+            user.save()
+
+            # Ensure the profile for the new role exists
+            if role_id == "2": # Staff
+                if not hasattr(user, 'staffs'):
+                    Staffs.objects.create(admin=user, address="")
+            elif role_id == "3": # Student
+                if not hasattr(user, 'students'):
+                    Students.objects.create(admin=user, address="", gender="", mentor=None)
+            elif role_id == "4": # Superuser
+                user.is_staff = True
+                user.is_superuser = True
+                user.save()
+            elif role_id == "5": # Principal
+                if not hasattr(user, 'principal'):
+                    Principal.objects.create(admin=user)
+            elif role_id == "6": # College Admin
+                if not hasattr(user, 'collegeadmin'):
+                    CollegeAdmin.objects.create(admin=user)
+            elif role_id == "7": # HOD
+                if not hasattr(user, 'hod'):
+                    HOD.objects.create(admin=user)
+            
+        messages.success(request, "User Updated Successfully")
+        return HttpResponseRedirect(reverse("edit_user", kwargs={"user_id": user_id}))
+    except Exception as e:
+        messages.error(request, f"Failed to update user: {str(e)}")
+        return HttpResponseRedirect(reverse("edit_user", kwargs={"user_id": user_id}))

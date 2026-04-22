@@ -39,6 +39,7 @@ Manage Institutions
                   <td>{{ inst.contact_email }}</td>
                   <td>{{ inst.address }}</td>
                   <td>
+                    <a href="{% url 'edit_institution' inst.id %}" class="btn btn-primary btn-sm">Edit</a>
                     <a href="{% url 'delete_institution' inst.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</a>
                   </td>
                 </tr>

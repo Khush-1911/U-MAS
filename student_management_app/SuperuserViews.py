@@ -22,3 +22,67 @@ def superuser_home(request):
         "department_count": department_count,
     }
     return render(request, "hod_template/home_content.html", context)
+
+def superuser_manage_users(request):
+    institution = request.user.institution
+    users = CustomUser.objects.filter(institution=institution).exclude(id=request.user.id)
+    return render(request, "superuser_template/manage_users.html", {"users": users})
+
+def superuser_edit_user(request, user_id):
+    institution = request.user.institution
+    user_obj = CustomUser.objects.get(id=user_id, institution=institution)
+    institutions = Institution.objects.all()
+    roles = [
+        {"id": "2", "name": "Staff"},
+        {"id": "3", "name": "Student"},
+        {"id": "5", "name": "Principal"},
+        {"id": "6", "name": "College Admin"},
+        {"id": "7", "name": "HOD"},
+    ]
+    return render(request, "superuser_template/edit_user.html", {"user_obj": user_obj, "institutions": institutions, "roles": roles})
+
+from django.db import transaction
+from student_management_app.models import HOD, CollegeAdmin, Principal
+
+def superuser_edit_user_save(request):
+    if request.method != "POST":
+        return HttpResponseRedirect(reverse("superuser_manage_users"))
+    
+    institution_auth = request.user.institution
+    user_id = request.POST.get("user_id")
+    first_name = request.POST.get("first_name")
+    last_name = request.POST.get("last_name")
+    email = request.POST.get("email")
+    role_id = request.POST.get("role")
+    institution_id = request.POST.get("institution")
+
+    try:
+        user = CustomUser.objects.get(id=user_id, institution=institution_auth)
+        institution = Institution.objects.get(id=institution_id)
+        
+        with transaction.atomic():
+            user.first_name = first_name
+            user.last_name = last_name
+            user.email = email
+            user.username = email
+            user.user_type = role_id
+            user.institution = institution
+            user.save()
+
+            # Profile creation logic
+            if role_id == "2" and not hasattr(user, 'staffs'):
+                Staffs.objects.create(admin=user, address="")
+            elif role_id == "3" and not hasattr(user, 'students'):
+                Students.objects.create(admin=user, address="", gender="", mentor=None)
+            elif role_id == "5" and not hasattr(user, 'principal'):
+                Principal.objects.create(admin=user)
+            elif role_id == "6" and not hasattr(user, 'collegeadmin'):
+                CollegeAdmin.objects.create(admin=user)
+            elif role_id == "7" and not hasattr(user, 'hod'):
+                HOD.objects.create(admin=user)
+            
+        messages.success(request, "User Updated Successfully")
+        return HttpResponseRedirect(reverse("superuser_edit_user", kwargs={"user_id": user_id}))
+    except Exception as e:
+        messages.error(request, f"Failed to update user: {str(e)}")
+        return HttpResponseRedirect(reverse("superuser_manage_users"))

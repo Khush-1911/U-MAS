@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ChoiceField
 
-from student_management_app.models import Department, SemesterModel, Staffs, Subjects, ClassModel
+from student_management_app.models import CustomUser, Department, SemesterModel, Staffs, Subjects, ClassModel, Institution
 
 
 def _semester_label(semester):
@@ -65,6 +65,8 @@ class EditStudentForm(forms.Form):
     sex=forms.ChoiceField(label="Sex",choices=gender_choice,widget=forms.Select(attrs={"class":"form-control"}))
     semester_id=forms.ChoiceField(label="Semester",choices=[],widget=forms.Select(attrs={"class":"form-control"}))
     mentor=forms.ChoiceField(label="Assigned Staff",choices=[],widget=forms.Select(attrs={"class":"form-control"}))
+    institution=forms.ChoiceField(label="Institution",choices=[],widget=forms.Select(attrs={"class":"form-control"}))
+    user_type=forms.ChoiceField(label="Role",choices=CustomUser.user_type_data,widget=forms.Select(attrs={"class":"form-control"}))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -79,6 +81,7 @@ class EditStudentForm(forms.Form):
             (staff.id, f"{staff.profile_id or staff.id} - {staff.admin.get_full_name() or staff.admin.username}")
             for staff in Staffs.objects.select_related("admin").all()
         ]
+        self.fields["institution"].choices = [(inst.id, inst.name) for inst in Institution.objects.all()]
 
 
 class StaffAddStudentForm(forms.Form):
@@ -120,6 +123,8 @@ class StaffEditStudentForm(forms.Form):
     class_id=forms.ChoiceField(label="Class",choices=[],widget=forms.Select(attrs={"class":"form-control"}))
     sex=forms.ChoiceField(label="Sex",choices=gender_choice,widget=forms.Select(attrs={"class":"form-control"}))
     semester_id=forms.ChoiceField(label="Semester",choices=[],widget=forms.Select(attrs={"class":"form-control"}))
+    institution=forms.ChoiceField(label="Institution",choices=[],widget=forms.Select(attrs={"class":"form-control"}))
+    user_type=forms.ChoiceField(label="Role",choices=CustomUser.user_type_data,widget=forms.Select(attrs={"class":"form-control"}))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -129,6 +134,9 @@ class StaffEditStudentForm(forms.Form):
         self.fields["semester_id"].choices = [
             (semester.id, _semester_label(semester))
             for semester in SemesterModel.object.all()
+        ]
+        self.fields["institution"].choices = [
+            (inst.id, inst.name) for inst in Institution.objects.all()
         ]
 
 class EditResultForm(forms.Form):

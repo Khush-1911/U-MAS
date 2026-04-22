@@ -52,6 +52,22 @@ Edit Staff  | #ID : {{ staff.admin.id }}
                     <input class="form-control" placeholder="Address" name="address" value="{{ staff.address }}">
                   </div>
                   <div class="form-group">
+                    <label>Institution</label>
+                    <select class="form-control" name="institution" required>
+                        {% for inst in institutions %}
+                            <option value="{{ inst.id }}" {% if staff.admin.institution.id == inst.id %}selected{% endif %}>{{ inst.name }}</option>
+                        {% endfor %}
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Role</label>
+                    <select class="form-control" name="role" required>
+                        {% for role in roles %}
+                            <option value="{{ role.0 }}" {% if staff.admin.user_type == role.0 %}selected{% endif %}>{{ role.1 }}</option>
+                        {% endfor %}
+                    </select>
+                  </div>
+                  <div class="form-group">
                     <label>Assign Students</label>
                     <div class="border rounded p-2" style="max-height: 280px; overflow-y: auto;">
                       {% for student in students %}

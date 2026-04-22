@@ -25,7 +25,6 @@ Manage Users
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Username</th>
                   <th>Email</th>
                   <th>Role</th>
                   <th>Institution</th>
@@ -36,7 +35,6 @@ Manage Users
                 {% for u in users %}
                 <tr>
                   <td>{{ u.id }}</td>
-                  <td>{{ u.username }}</td>
                   <td>{{ u.email }}</td>
                   <td>
                       {% if u.user_type == '1' %}Owner
@@ -50,6 +48,7 @@ Manage Users
                   </td>
                   <td>{{ u.institution.name|default:"Global" }}</td>
                   <td>
+                    <a href="{% url 'edit_user' u.id %}" class="btn btn-primary btn-sm">Edit</a>
                     <a href="{% url 'delete_user' u.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</a>
                   </td>
                 </tr>

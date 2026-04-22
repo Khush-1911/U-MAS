@@ -1,4 +1,4 @@
-{% extends 'principal_template/base_template.html' %}
+{% extends 'hod_template/base_template.html' %}
 {% block page_title %}
 Manage Users
 {% endblock page_title %}
@@ -40,7 +40,7 @@ Manage Users
                         {% if u.user_type == '7' %}HOD{% endif %}
                       </td>
                       <td>
-                        <a href="{% url 'principal_edit_user' u.id %}" class="btn btn-primary btn-sm">Edit</a>
+                        <a href="{% url 'superuser_edit_user' u.id %}" class="btn btn-primary btn-sm">Edit</a>
                       </td>
                     </tr>
                   {% endfor %}
