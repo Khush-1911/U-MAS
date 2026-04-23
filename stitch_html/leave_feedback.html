@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>U-MAS | Leave &amp; Feedback Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600;700&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-highest": "#e3dffe",
+                    "on-primary-fixed": "#07006c",
+                    "on-tertiary": "#ffffff",
+                    "outline": "#767586",
+                    "error": "#ba1a1a",
+                    "on-error": "#ffffff",
+                    "tertiary": "#20645b",
+                    "surface-variant": "#e3dffe",
+                    "inverse-primary": "#c1c1ff",
+                    "inverse-on-surface": "#f2eeff",
+                    "error-container": "#ffdad6",
+                    "on-primary": "#ffffff",
+                    "surface-tint": "#4849da",
+                    "surface-container-low": "#f6f2ff",
+                    "on-tertiary-container": "#e1fff8",
+                    "on-surface": "#1a1930",
+                    "on-primary-container": "#faf7ff",
+                    "on-tertiary-fixed": "#00201c",
+                    "on-secondary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container": "#efebff",
+                    "on-secondary-fixed": "#00201e",
+                    "on-secondary-fixed-variant": "#00504d",
+                    "on-error-container": "#93000a",
+                    "primary": "#4343d5",
+                    "on-tertiary-fixed-variant": "#005048",
+                    "on-surface-variant": "#464555",
+                    "inverse-surface": "#2f2e46",
+                    "on-background": "#1a1930",
+                    "primary-fixed-dim": "#c1c1ff",
+                    "primary-container": "#5d5fef",
+                    "tertiary-fixed-dim": "#92d3c7",
+                    "primary-fixed": "#e1e0ff",
+                    "secondary-container": "#82f2eb",
+                    "outline-variant": "#c7c4d7",
+                    "on-primary-fixed-variant": "#2e2bc2",
+                    "secondary-fixed-dim": "#67d8d1",
+                    "secondary-fixed": "#85f5ee",
+                    "tertiary-fixed": "#adefe3",
+                    "tertiary-container": "#3d7d73",
+                    "surface-dim": "#dad7f6",
+                    "surface-bright": "#fcf8ff",
+                    "secondary": "#006a66",
+                    "background": "#fcf8ff",
+                    "surface": "#fcf8ff",
+                    "surface-container-high": "#e9e5ff",
+                    "on-secondary-container": "#006f6a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "1.5rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Inter"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background">
+<!-- SideNavBar Component -->
+<aside class="h-screen w-64 fixed left-0 top-0 z-40 bg-slate-50 dark:bg-slate-950/50 backdrop-blur-md border-r border-indigo-50/10 flex flex-col pt-20 pb-8 h-full font-['Inter'] text-sm font-medium">
+<div class="px-6 mb-10">
+<h1 class="text-lg font-bold text-slate-900 dark:text-white">University Portal</h1>
+<p class="text-xs text-on-surface-variant opacity-70">Academic Management</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-indigo-500 hover:bg-indigo-50/30 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="domain">domain</span> Institution
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-indigo-500 hover:bg-indigo-50/30 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span> Users
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-indigo-500 hover:bg-indigo-50/30 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="event_available">event_available</span> Attendance
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-indigo-500 hover:bg-indigo-50/30 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span> Academic
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-indigo-600 dark:text-indigo-400 border-l-4 border-indigo-600 bg-indigo-50/50 dark:bg-indigo-900/20 duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span> Leave
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-indigo-500 hover:bg-indigo-50/30 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="chat_bubble_outline">chat_bubble_outline</span> Feedback
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-indigo-500 hover:bg-indigo-50/30 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span> Settings
+            </a>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full py-3 px-4 bg-primary text-white rounded-xl font-semibold shadow-lg shadow-indigo-200 hover:bg-primary-container transition-all active:scale-95">
+                New Academic Year
+            </button>
+</div>
+</aside>
+<!-- TopNavBar Component -->
+<header class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-[0_20px_40px_-10px_rgba(26,25,48,0.06)] flex justify-between items-center px-8 h-16 left-0 right-0">
+<div class="flex items-center gap-8 pl-64">
+<span class="text-xl font-bold tracking-tight bg-gradient-to-tr from-indigo-600 to-indigo-400 bg-clip-text text-transparent font-['Plus_Jakarta_Sans']">U-MAS</span>
+<div class="hidden md:flex gap-6">
+<a class="text-slate-500 dark:text-slate-400 hover:text-indigo-500 transition-colors font-medium" href="#">Dashboard</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-indigo-500 transition-colors font-medium" href="#">Analytics</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-indigo-500 transition-colors font-medium" href="#">Reports</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative flex items-center bg-slate-100 dark:bg-slate-800 rounded-full px-4 py-2 w-64">
+<span class="material-symbols-outlined text-slate-400 text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full font-body" placeholder="Search resources..." type="text"/>
+</div>
+<button class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-full transition-colors active:scale-95 duration-200 cursor-pointer">
+<span class="material-symbols-outlined text-slate-600" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-full transition-colors active:scale-95 duration-200 cursor-pointer">
+<span class="material-symbols-outlined text-slate-600" data-icon="help_outline">help_outline</span>
+</button>
+<img alt="User Profile Avatar" class="w-8 h-8 rounded-full border-2 border-primary-fixed" data-alt="portrait of a professional university administrator in business attire, clean background, high quality office lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1Th0jBpAqVdfNGNj7O2X2c8t4E1l3i4aTYJKj3rr8UpYfhAR99QaTExvCkzIBLqLWTT56WD_afCrU7cfqLDeXiPV1ci8lxSe4paD2pVPUdEBWXXMr9PcK8fHK4I6pnD-1TZFJ0qxVfXw6hc8ZfpjIXaen0qZ-uES44Sdg9XbPknJIOM3489xhHG8nZ9QiuVBqcU8VcqfHm2abBs0j7ogOITb5z_NDuTWwwGZdvnj_CraUp1ia8sudIjfj_KcAy_54PP01hh36LT-N"/>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 px-8 pb-12">
+<!-- Editorial Header -->
+<div class="flex justify-between items-end mb-12">
+<div>
+<span class="text-primary font-label font-bold tracking-widest text-xs uppercase">Administrative Center</span>
+<h2 class="text-4xl font-headline font-extrabold text-on-surface mt-2 tracking-tight">Leave &amp; Feedback</h2>
+<p class="text-on-surface-variant mt-2 max-w-md">Orchestrate institutional requests and maintain transparent communication across academic tiers.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-6 py-3 bg-surface-container-low text-primary font-semibold rounded-xl border border-outline-variant/15 hover:bg-surface-container transition-all">
+                    Export Log
+                </button>
+<button class="px-6 py-3 bg-gradient-to-tr from-primary to-primary-container text-white font-semibold rounded-xl shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all">
+                    Policy Update
+                </button>
+</div>
+</div>
+<!-- Tabbed Navigation Content -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Navigation Left Pillar -->
+<div class="col-span-12 lg:col-span-3">
+<div class="sticky top-24 space-y-4">
+<button class="w-full text-left p-6 rounded-xl bg-surface-container-lowest shadow-sm border-l-4 border-primary group">
+<span class="text-xs font-label font-bold text-primary block mb-1">SECTION 01</span>
+<h4 class="text-on-surface font-semibold text-lg">Leave Requests</h4>
+<p class="text-xs text-on-surface-variant mt-1">Pending approval for HODs</p>
+</button>
+<button class="w-full text-left p-6 rounded-xl hover:bg-surface-container transition-all group">
+<span class="text-xs font-label font-bold text-on-surface-variant/40 block mb-1">SECTION 02</span>
+<h4 class="text-on-surface-variant font-semibold text-lg">Apply for Leave</h4>
+<p class="text-xs text-on-surface-variant/60 mt-1">Self-service application portal</p>
+</button>
+<button class="w-full text-left p-6 rounded-xl hover:bg-surface-container transition-all group">
+<span class="text-xs font-label font-bold text-on-surface-variant/40 block mb-1">SECTION 03</span>
+<h4 class="text-on-surface-variant font-semibold text-lg">Feedback</h4>
+<p class="text-xs text-on-surface-variant/60 mt-1">Escalation and resolution logs</p>
+</button>
+</div>
+</div>
+<!-- Content Area: Bento Style -->
+<div class="col-span-12 lg:col-span-9 space-y-8">
+<!-- Section: Leave Requests (HOD View) -->
+<div class="bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/15">
+<div class="flex items-center justify-between mb-8">
+<h3 class="text-xl font-headline font-bold">Pending Requests</h3>
+<div class="flex gap-2">
+<span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold font-label">12 NEW</span>
+</div>
+</div>
+<!-- Clean Academic Table -->
+<div class="overflow-hidden">
+<table class="w-full text-left">
+<thead class="bg-surface-container-low">
+<tr>
+<th class="py-4 px-6 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider rounded-tl-xl">Applicant</th>
+<th class="py-4 px-6 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider">Leave Type</th>
+<th class="py-4 px-6 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider">Duration</th>
+<th class="py-4 px-6 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider text-right rounded-tr-xl">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-5 px-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-primary font-bold">JD</div>
+<div>
+<p class="font-headline font-semibold text-sm">Julianna De-silva</p>
+<p class="text-xs text-on-surface-variant">ID: 2024-ARCH-04</p>
+</div>
+</div>
+</td>
+<td class="py-5 px-6 text-sm font-body">Medical Emergency</td>
+<td class="py-5 px-6 text-sm font-body">24 Oct - 28 Oct</td>
+<td class="py-5 px-6 text-right space-x-2">
+<button class="px-4 py-2 rounded-lg bg-secondary/10 text-secondary font-bold text-xs hover:bg-secondary/20 transition-all">APPROVE</button>
+<button class="px-4 py-2 rounded-lg bg-error/10 text-error font-bold text-xs hover:bg-error/20 transition-all">REJECT</button>
+</td>
+</tr>
+<tr class="bg-surface-container-low/20 hover:bg-surface-container-low/50 transition-colors">
+<td class="py-5 px-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-primary font-bold">MK</div>
+<div>
+<p class="font-headline font-semibold text-sm">Marcus Kord</p>
+<p class="text-xs text-on-surface-variant">ID: STAFF-SOC-12</p>
+</div>
+</div>
+</td>
+<td class="py-5 px-6 text-sm font-body">Sabbatical (Research)</td>
+<td class="py-5 px-6 text-sm font-body">15 Nov - 15 Dec</td>
+<td class="py-5 px-6 text-right space-x-2">
+<button class="px-4 py-2 rounded-lg bg-secondary/10 text-secondary font-bold text-xs hover:bg-secondary/20 transition-all">APPROVE</button>
+<button class="px-4 py-2 rounded-lg bg-error/10 text-error font-bold text-xs hover:bg-error/20 transition-all">REJECT</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Section: Feedback Escalation Chain -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Feedback Log -->
+<div class="bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/15">
+<h3 class="text-xl font-headline font-bold mb-8">Institutional Feedback</h3>
+<div class="space-y-6">
+<!-- Escalation Item 1 -->
+<div class="p-4 rounded-xl bg-surface-container-low/30 border border-outline-variant/10">
+<div class="flex justify-between items-start mb-4">
+<span class="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-[10px] font-bold font-label">REPLIED</span>
+<span class="text-xs text-on-surface-variant">2 hours ago</span>
+</div>
+<p class="text-sm font-semibold mb-1">Lab Equipment Shortage</p>
+<p class="text-xs text-on-surface-variant line-clamp-2">"The second-year mechanical lab is missing critical pressure gauges..."</p>
+<div class="mt-4 flex items-center gap-2">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full border-2 border-white bg-slate-200 flex items-center justify-center text-[8px] font-bold">S</div>
+<div class="w-6 h-6 rounded-full border-2 border-white bg-indigo-200 flex items-center justify-center text-[8px] font-bold">F</div>
+</div>
+<span class="text-[10px] text-on-surface-variant font-medium">Student → Faculty → HOD</span>
+</div>
+<div class="mt-4 pt-4 border-t border-outline-variant/10 flex justify-end">
+<button class="text-primary text-xs font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">reply</span> VIEW THREAD
+                                    </button>
+</div>
+</div>
+<!-- Escalation Item 2 -->
+<div class="p-4 rounded-xl bg-white border border-outline-variant/10 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-bold font-label">FORWARDED</span>
+<span class="text-xs text-on-surface-variant">Yesterday</span>
+</div>
+<p class="text-sm font-semibold mb-1">Cafeteria Menu Diversity</p>
+<p class="text-xs text-on-surface-variant line-clamp-2">"International students have requested more varied dietary options..."</p>
+<div class="mt-4 flex items-center gap-2">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full border-2 border-white bg-slate-200 flex items-center justify-center text-[8px] font-bold">S</div>
+<div class="w-6 h-6 rounded-full border-2 border-white bg-indigo-200 flex items-center justify-center text-[8px] font-bold">A</div>
+</div>
+<span class="text-[10px] text-on-surface-variant font-medium">Student → Admin</span>
+</div>
+<div class="mt-4 pt-4 border-t border-outline-variant/10 flex justify-end">
+<button class="bg-primary text-white px-4 py-2 rounded-lg text-[10px] font-bold shadow-sm">
+                                        REPLY TO FACULTY
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Application Form -->
+<div class="bg-surface-container-high/40 rounded-xl p-8 border border-outline-variant/15 backdrop-blur-sm">
+<h3 class="text-xl font-headline font-bold mb-2">Apply for Leave</h3>
+<p class="text-xs text-on-surface-variant mb-8">Submit a formal request for academic or personal absence.</p>
+<form class="space-y-4">
+<div>
+<label class="block text-[10px] font-label font-bold text-on-surface-variant uppercase mb-2">Leave Category</label>
+<select class="w-full bg-white border-outline-variant/20 rounded-xl px-4 py-3 text-sm focus:ring-primary focus:border-primary transition-all">
+<option>Sick Leave</option>
+<option>Casual Leave</option>
+<option>Maternity/Paternity</option>
+<option>Official Duty</option>
+</select>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-[10px] font-label font-bold text-on-surface-variant uppercase mb-2">Start Date</label>
+<input class="w-full bg-white border-outline-variant/20 rounded-xl px-4 py-3 text-sm focus:ring-primary focus:border-primary" type="date"/>
+<div>
+<label class="block text-[10px] font-label font-bold text-on-surface-variant uppercase mb-2">End Date</label>
+<input class="w-full bg-white border-outline-variant/20 rounded-xl px-4 py-3 text-sm focus:ring-primary focus:border-primary" type="date"/>
+</div>
+</div>
+<div>
+<label class="block text-[10px] font-label font-bold text-on-surface-variant uppercase mb-2">Reason for Leave</label>
+<textarea class="w-full bg-white border-outline-variant/20 rounded-xl px-4 py-3 text-sm focus:ring-primary focus:border-primary" placeholder="Briefly explain your requirement..." rows="4"></textarea>
+</div>
+<div>
+<label class="block text-[10px] font-label font-bold text-on-surface-variant uppercase mb-2">Supporting Documents</label>
+<div class="w-full border-2 border-dashed border-outline-variant/30 rounded-xl p-6 text-center bg-white/50 hover:bg-white transition-all cursor-pointer">
+<span class="material-symbols-outlined text-primary mb-2">cloud_upload</span>
+<p class="text-xs text-on-surface-variant">Click to upload (PDF/JPG)</p>
+</div>
+</div>
+<button class="w-full py-4 bg-primary text-white font-bold rounded-xl shadow-xl shadow-primary/20 hover:scale-[1.01] active:scale-95 transition-all mt-4" type="button">
+                                SUBMIT APPLICATION
+                            </button>
+</div></form>
+</div>
+</div>
+<!-- Atmospheric Bottom Stats -->
+<div class="grid grid-cols-3 gap-6">
+<div class="p-6 bg-surface-container-low rounded-xl border border-outline-variant/10">
+<span class="text-xs font-label font-bold text-on-surface-variant opacity-60">AVG. RESPONSE TIME</span>
+<div class="text-2xl font-headline font-extrabold text-primary mt-1">4.2 Hours</div>
+<div class="mt-2 text-[10px] text-secondary font-bold">↑ 12% faster than last month</div>
+</div>
+<div class="p-6 bg-surface-container-low rounded-xl border border-outline-variant/10">
+<span class="text-xs font-label font-bold text-on-surface-variant opacity-60">TOTAL RESOLVED</span>
+<div class="text-2xl font-headline font-extrabold text-primary mt-1">892 Cases</div>
+<div class="mt-2 text-[10px] text-on-surface-variant font-bold">Q4 Academic Period</div>
+</div>
+<div class="p-6 bg-surface-container-low rounded-xl border border-outline-variant/10">
+<span class="text-xs font-label font-bold text-on-surface-variant opacity-60">SATISFACTION RATE</span>
+<div class="text-2xl font-headline font-extrabold text-primary mt-1">94.8%</div>
+<div class="mt-2 text-[10px] text-secondary font-bold">Institutional Benchmark Met</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual FAB (Hidden on this specific management screen as per policy, but structure ready) -->
+<!-- Suppression Logic: FAB is for Home/Dashboard mainly -->
+</body></html>

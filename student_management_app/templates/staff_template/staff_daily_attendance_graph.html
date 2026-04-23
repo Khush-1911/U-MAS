@@ -1,44 +1,38 @@
 {% extends 'staff_template/base_template.html' %}
 {% load static %}
-{% block page_title %}
-Daily Attendance Graph
-{% endblock page_title %}
+{% block page_title %}Daily Attendance Graph{% endblock page_title %}
+
 {% block main_content %}
-<section class="content">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-12">
-        <div class="card ">
-          <div class="card-header">
-            <h3 class="card-title" id="attendanceGraphTitle">
-              Students Present on {{ selected_date|date:'d-m-Y' }} ({{ present_count }}/{{ total_students }})
-            </h3>
-            <div class="card-tools">
-              <button class="btn btn-tool" id="prevDayBtn" type="button" title="Previous day">
-                <i class="fas fa-arrow-left"></i>
-              </button>
-              <button class="btn btn-tool" id="nextDayBtn" type="button" title="Next day">
-                <i class="fas fa-arrow-right"></i>
-              </button>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-md-6">
-                <h5 class="mb-3">Present Students</h5>
-                <ul class="list-group" id="presentList"></ul>
-              </div>
-              <div class="col-md-6">
-                <h5 class="mb-3">Absent Students</h5>
-                <ul class="list-group" id="absentList"></ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+<header class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
+  <div>
+    <h2 class="text-4xl font-extrabold text-on-surface font-headline tracking-tight" id="attendanceGraphTitle">
+      Students Present on {{ selected_date|date:'d-m-Y' }} ({{ present_count }}/{{ total_students }})
+    </h2>
   </div>
-</section>
+  <div class="flex items-center gap-2">
+    <button class="p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/10 text-on-surface-variant hover:bg-surface-container transition-colors" id="prevDayBtn" type="button" title="Previous day">
+      <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+    <button class="p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/10 text-on-surface-variant hover:bg-surface-container transition-colors" id="nextDayBtn" type="button" title="Next day">
+      <span class="material-symbols-outlined">arrow_forward</span>
+    </button>
+  </div>
+</header>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+  <div class="bg-surface-container-lowest rounded-2xl p-8">
+    <h5 class="font-headline font-bold text-secondary mb-4 flex items-center gap-2">
+      <span class="material-symbols-outlined">check_circle</span> Present Students
+    </h5>
+    <ul id="presentList" class="space-y-2"></ul>
+  </div>
+  <div class="bg-surface-container-lowest rounded-2xl p-8">
+    <h5 class="font-headline font-bold text-error mb-4 flex items-center gap-2">
+      <span class="material-symbols-outlined">cancel</span> Absent Students
+    </h5>
+    <ul id="absentList" class="space-y-2"></ul>
+  </div>
+</div>
 {% endblock main_content %}
 
 {% block custom_js %}
@@ -64,14 +58,14 @@ Daily Attendance Graph
       node.innerHTML = "";
       if (!items || !items.length) {
         var empty = document.createElement("li");
-        empty.className = "list-group-item";
+        empty.className = "px-4 py-3 rounded-xl bg-surface-container-low text-on-surface-variant text-sm font-body";
         empty.textContent = "No students";
         node.appendChild(empty);
         return;
       }
       items.forEach(function (name) {
         var li = document.createElement("li");
-        li.className = "list-group-item";
+        li.className = "px-4 py-3 rounded-xl bg-surface-container-low text-on-surface text-sm font-body font-medium";
         li.textContent = name;
         node.appendChild(li);
       });
@@ -115,7 +109,6 @@ Daily Attendance Graph
     }
 
     function updateArrowState() {
-      // Right arrow is forward navigation; disable on current day to block tomorrow.
       if (nextBtn) {
         var disableForward = currentDate >= todayDate;
         nextBtn.disabled = disableForward;

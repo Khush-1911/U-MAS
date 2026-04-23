@@ -1,56 +1,58 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html class="light" lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>U-MAS | HOD Portal</title>
-  <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
-  <link rel="stylesheet" href="{% static 'ui/app.css' %}">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>U-MAS | HOD Admin Portal</title>
+  {% include 'includes/tailwind_head.html' %}
   {% block custom_css %}{% endblock custom_css %}
 </head>
-<body>
-<div class="app-wrapper">
-  {% include 'hod_template/sidebar_template.html' with user=user id=id %}
-  
-  <div class="main-content">
-    <header class="app-header glass">
-      <div class="header-left">
-        <h2 class="text-gradient">{% block page_title %}{% endblock page_title %}</h2>
-      </div>
-      <div class="header-right">
-        <a href="{% url 'admin_profile' %}" class="user-profile-link">
-          <div class="user-profile">
-            <div class="avatar">{{ request.user.get_full_name|default:request.user.email|slice:":1"|upper }}</div>
-            <div class="user-info">
-              <span class="user-name">{{ request.user.get_full_name|default:request.user.email }}</span>
-              <span class="user-role">{{ user.get_user_type_display }}</span>
-            </div>
-          </div>
-        </a>
-        <div class="header-actions">
-          <a href="{% url 'logout' %}" class="logout-link" title="Logout">
-            <i class="fas fa-sign-out-alt"></i>
-          </a>
-        </div>
-      </div>
-    </header>
+<body class="bg-background text-on-surface font-body antialiased">
+  {% include 'hod_template/sidebar_template.html' %}
 
+  <!-- TopNavBar -->
+  <header class="ml-72 bg-white/80 backdrop-blur-xl sticky top-0 z-40 flex justify-between items-center w-auto px-8 py-4 shadow-[0_20px_40px_-10px_rgba(26,25,48,0.06)]">
+    <div class="flex items-center gap-4">
+      <h2 class="text-lg font-bold font-headline text-on-surface">{% block page_title %}{% endblock page_title %}</h2>
+    </div>
+    <div class="flex items-center gap-6">
+      <div class="flex items-center gap-4">
+        <a href="{% url 'admin_send_notification' %}" class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors relative">
+          <span class="material-symbols-outlined">notifications</span>
+        </a>
+      </div>
+      <div class="h-8 w-[1px] bg-outline-variant/30"></div>
+      <a href="{% url 'admin_profile' %}" class="flex items-center gap-3 cursor-pointer group no-underline">
+        <div class="text-right">
+          <p class="text-sm font-bold text-on-surface">{{ request.user.get_full_name|default:request.user.email }}</p>
+          <p class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">{{ user.get_user_type_display }}</p>
+        </div>
+        <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-fixed bg-primary flex items-center justify-center text-white font-bold text-sm">
+          {{ request.user.get_full_name|default:request.user.email|slice:":1"|upper }}
+        </div>
+      </a>
+      <a href="{% url 'logout' %}" class="p-2 text-on-surface-variant hover:text-error hover:bg-error-container rounded-full transition-colors" title="Logout">
+        <span class="material-symbols-outlined">logout</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Content Canvas -->
+  <main class="ml-72 p-10 min-h-screen bg-surface-container-low">
     {% if messages %}
-      <div class="message-container">
+      <div class="mb-6 space-y-3">
         {% for message in messages %}
-          <div class="alert alert-{{ message.tags }} glass">
+          <div class="px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 alert-{{ message.tags }}">
+            <span class="material-symbols-outlined text-lg">{% if message.tags == 'success' %}check_circle{% elif message.tags == 'error' or message.tags == 'danger' %}error{% elif message.tags == 'warning' %}warning{% else %}info{% endif %}</span>
             {{ message }}
           </div>
         {% endfor %}
       </div>
     {% endif %}
 
-    <div class="content-body">
-      {% block main_content %}{% endblock main_content %}
-    </div>
-  </div>
-</div>
+    {% block main_content %}{% endblock main_content %}
+  </main>
 
 <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
 <script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script>

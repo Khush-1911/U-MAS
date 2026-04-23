@@ -19,33 +19,33 @@
 
     <form action="/do_signup_student" method="post" id="demo-form" enctype="multipart/form-data">
       {% csrf_token %}
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" class="form-control" placeholder="you@example.com" name="email" required>
+      <div class="space-y-2">
+        <label class="block font-label text-sm font-bold text-on-surface-variant">Email</label>
+        <input type="email" class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" placeholder="you@example.com" name="email" required>
       </div>
       <div class="form-group" style="margin-top:12px;">
-        <label>First Name</label>
-        <input class="form-control" placeholder="First name" name="first_name" required>
+        <label class="block font-label text-sm font-bold text-on-surface-variant">First Name</label>
+        <input class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" placeholder="First name" name="first_name" required>
       </div>
       <div class="form-group" style="margin-top:12px;">
-        <label>Last Name</label>
-        <input class="form-control" placeholder="Last name" name="last_name" required>
+        <label class="block font-label text-sm font-bold text-on-surface-variant">Last Name</label>
+        <input class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" placeholder="Last name" name="last_name" required>
       </div>
       <div class="form-group" style="margin-top:12px;">
-        <label>Username</label>
-        <input class="form-control" placeholder="username" name="username" required>
+        <label class="block font-label text-sm font-bold text-on-surface-variant">Username</label>
+        <input class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" placeholder="username" name="username" required>
       </div>
       <div class="form-group" style="margin-top:12px;">
-        <label>Password</label>
-        <input type="password" class="form-control" placeholder="••••••••" name="password" required>
+        <label class="block font-label text-sm font-bold text-on-surface-variant">Password</label>
+        <input type="password" class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" placeholder="••••••••" name="password" required>
       </div>
       <div class="form-group" style="margin-top:12px;">
-        <label>Address</label>
-        <input class="form-control" placeholder="Address" name="address" required>
+        <label class="block font-label text-sm font-bold text-on-surface-variant">Address</label>
+        <input class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" placeholder="Address" name="address" required>
       </div>
       <div class="form-group" style="margin-top:12px;">
-        <label>Department</label>
-        <select class="form-control" name="department" required>
+        <label class="block font-label text-sm font-bold text-on-surface-variant">Department</label>
+        <select class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" name="department" required>
           <option value="">Select department</option>
           {% for department in departments %}
           <option value="{{ department.id }}">{{ department.department_name }}</option>
@@ -53,8 +53,8 @@
         </select>
       </div>
       <div class="form-group" style="margin-top:12px;">
-        <label>Semester</label>
-        <select class="form-control" name="semester" required>
+        <label class="block font-label text-sm font-bold text-on-surface-variant">Semester</label>
+        <select class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" name="semester" required>
           <option value="">Select semester</option>
           {% for semester in semesters %}
           <option value="{{ semester.id }}">{{ semester.semester_start_date|date:"d-m-Y" }} TO {{ semester.semester_end_date|date:"d-m-Y" }}</option>
@@ -62,20 +62,20 @@
         </select>
       </div>
       <div class="form-group" style="margin-top:12px;">
-        <label>Sex</label>
-        <select class="form-control" name="sex" required>
+        <label class="block font-label text-sm font-bold text-on-surface-variant">Sex</label>
+        <select class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" name="sex" required>
           <option value="">Select sex</option>
           <option value="Male">Male</option>
           <option value="Female">Female</option>
         </select>
       </div>
       <div class="form-group" style="margin-top:16px;">
-        <button type="submit" class="btn btn-primary btn-block">Signup Student</button>
+        <button type="submit" class="w-full py-4 premium-gradient text-white font-display font-bold rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform">Signup Student</button>
       </div>
       {% if messages %}
         {% for message in messages %}
           {% if message.tags == 'error' %}
-            <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+            <div class="px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 bg-error/10 text-error">{{ message }}</div>
           {% endif %}
         {% endfor %}
       {% endif %}

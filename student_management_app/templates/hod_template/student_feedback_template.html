@@ -3,99 +3,97 @@
 Forwarded Student Feedback
 {% endblock page_title %}
 {% block main_content %}
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-          <div class="row">
-              <div class="col-md-12">
-            <!-- general form elements -->
-            <div class="card ">
-              <div class="card-header">
-                <h3 class="card-title">Forwarded Student Feedback</h3>
+    
+            
+            <div class="bg-surface-container-lowest rounded-2xl overflow-hidden border border-outline-variant/10 shadow-xl shadow-indigo-900/5">
+              <div class="px-8 py-6 border-b border-outline-variant/10">
+                <h3 class="font-display font-extrabold text-on-surface text-2xl">Forwarded Scholar Feedback</h3>
+                <p class="text-on-surface-variant text-sm mt-1">Review escalated feedback from students and faculty responses.</p>
               </div>
-              <!-- /.card-header -->
-              <!-- form start -->
-                <div class="table">
-                    <table class="table">
-                        <tr>
-                            <th>ID</th>
-                            <th>Student ID</th>
-                            <th>Student Name</th>
-                            <th>Assigned Faculty</th>
-                            <th>Student Semester</th>
-                            <th>Message</th>
-                            <th>Staff Reply</th>
-                            <th>Forwarded On</th>
-                            <th>HOD Reply</th>
+              
+              <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-surface-container-low/50">
+                            <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">ID</th>
+                            <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">Scholar / Faculty</th>
+                            <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">Academics</th>
+                            <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">Dialogue</th>
+                            <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">Timestamp</th>
+                            <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant text-right">Decision</th>
                         </tr>
+                    </thead>
+                    <tbody>
                         {% for feedback in feedbacks %}
-                        <tr>
-                            <td>{{ feedback.id }}</td>
-                            <td>{{ feedback.student_id.admin.id }}</td>
-                            <td>{{ feedback.student_id.admin.first_name }} {{ feedback.student_id.admin.last_name }}</td>
-                            <td>
-                                {% if feedback.staff_id %}
-                                  {{ feedback.staff_id.profile_id|default:feedback.staff_id.id }} -
-                                  {{ feedback.staff_id.admin.get_full_name|default:feedback.staff_id.admin.username }}
-                                {% else %}
-                                  Not assigned
+                        <tr class="group hover:bg-primary-fixed/20 transition-colors {% if forloop.counter|divisibleby:2 %}bg-surface-container-low/20{% else %}bg-white{% endif %}">
+                            <td class="px-8 py-6 text-sm font-body">{{ feedback.id }}</td>
+                            <td class="px-8 py-6">
+                                <div class="space-y-1">
+                                    <p class="font-display font-bold text-on-surface leading-tight">S: {{ feedback.student_id.admin.get_full_name }}</p>
+                                    <p class="text-[10px] text-on-surface-variant font-label uppercase tracking-tighter">
+                                        F: {% if feedback.staff_id %}{{ feedback.staff_id.admin.get_full_name }}{% else %}Unassigned{% endif %}
+                                    </p>
+                                </div>
+                            </td>
+                            <td class="px-8 py-6">
+                                <p class="text-xs text-on-surface font-medium">{{ feedback.student_id.semester_id.semester_start_date|date:"Y" }} - {{ feedback.student_id.semester_id.semester_end_date|date:"Y" }}</p>
+                                <p class="text-[10px] text-on-surface-variant font-label uppercase">{{ feedback.student_id.class_id.class_name }}</p>
+                            </td>
+                            <td class="px-8 py-6 space-y-2">
+                                <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant/10 max-w-xs">
+                                    <p class="text-xs font-body text-on-surface italic">"{{ feedback.feedback }}"</p>
+                                </div>
+                                {% if feedback.feedback_reply %}
+                                <div class="p-3 rounded-lg bg-primary/5 border border-primary/10 max-w-xs ml-4">
+                                    <p class="text-[10px] font-label text-primary uppercase font-bold mb-1">Faculty Reply:</p>
+                                    <p class="text-xs font-body text-on-surface-variant">"{{ feedback.feedback_reply }}"</p>
+                                </div>
                                 {% endif %}
                             </td>
-                            <td>{{ feedback.student_id.semester_id.semester_start_date }} - {{ feedback.student_id.semester_id.semester_end_date }}</td>
-                            <td>{{ feedback.feedback }}</td>
-                            <td>{{ feedback.feedback_reply|default:"No faculty reply yet" }}</td>
-                            <td>{{ feedback.forwarded_at|default:feedback.created_at }}</td>
-                            <td>
+                            <td class="px-8 py-6 text-sm font-body text-on-surface-variant">{{ feedback.forwarded_at|default:feedback.created_at|date:"M d, Y" }}</td>
+                            <td class="px-8 py-6 text-right">
                                 {% if feedback.hod_reply == "" %}
-                                <button class="btn btn-success reply_open_modal" data-toggle="modal" data-target="#reply_modal" data-feedback-id="{{ feedback.id }}" data-student-name="{{ feedback.student_id.admin.first_name }} {{ feedback.student_id.admin.last_name }}">Reply</button>
+                                <button class="reply_open_modal px-4 py-2 rounded-lg bg-secondary/10 text-secondary text-xs font-label font-bold uppercase tracking-wider hover:bg-secondary/20 transition-colors cursor-pointer border-none" data-feedback-id="{{ feedback.id }}" data-student-name="{{ feedback.student_id.admin.get_full_name }}">Adjudicate</button>
                                 {% else %}
-                                {{ feedback.hod_reply }}
+                                <span class="px-3 py-1 rounded-full bg-surface-container text-on-surface-variant text-xs font-bold font-label">Closed</span>
                                 {% endif %}
                             </td>
-
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="9">No student feedback has been forwarded to HOD.</td>
+                            <td colspan="6" class="px-8 py-16 text-center">
+                                <span class="material-symbols-outlined text-6xl text-outline-variant/50 mb-4 block">forum</span>
+                                <p class="text-on-surface-variant font-body">No escalated feedback available.</p>
+                            </td>
                         </tr>
                         {% endfor %}
-                    </table>
-                </div>
-
+                    </tbody>
+                </table>
+              </div>
             </div>
-            <!-- /.card -->
 
-
-
-          </div>
-          </div>
+  <!-- Response Modal -->
+  <div class="fixed inset-0 bg-slate-900/45 hidden items-center justify-center p-6 z-[2000]" id="reply_modal">
+    <div class="w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden">
+      <div class="flex items-center justify-between px-6 py-5 border-b border-outline-variant/20">
+        <h4 class="font-headline font-bold text-on-surface text-lg">Final Adjudication</h4>
+        <button type="button" class="modal-close-btn w-9 h-9 rounded-full bg-surface-container hover:bg-surface-container-highest flex items-center justify-center text-on-surface-variant transition-colors text-xl leading-none border-none cursor-pointer">&times;</button>
       </div>
-    </section>
-  <!-- Modal -->
-  <div class="modal fade" id="reply_modal" role="dialog">
-    <div class="modal-dialog">
-
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Reply</h4>
-                      <button type="button" class="close" data-dismiss="modal">&times;</button>
-
+      <div class="p-6 space-y-4">
+        <p class="text-sm font-body text-on-surface-variant">Scholar: <span id="reply_name" class="font-bold text-primary"></span></p>
+        <input type="hidden" id="reply_id" name="reply_id">
+        <div class="space-y-2">
+            <label class="block font-label text-sm font-bold text-on-surface-variant">Administrative Decision</label>
+            <textarea class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body resize-y" rows="5" id="reply_message" placeholder="Type your final decision here..."></textarea>
         </div>
-        <div class="modal-body">
-          <p>Reply To : <span id="reply_name"></span></p>
-            <input type="hidden" id="reply_id" name="reply_id">
-            <textarea class="form-control" rows="5" id="reply_message"></textarea>
-            <button id="reply_btn" class="btn btn-info btn-block">Reply</button>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
+        <button id="reply_btn" class="w-full py-3 premium-gradient text-white font-label font-bold rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform border-none cursor-pointer">Transmit Decision</button>
       </div>
-
+      <div class="px-6 py-4 border-t border-outline-variant/20 text-right">
+        <button type="button" class="modal-close-btn px-4 py-2 bg-surface-container text-on-surface-variant font-label font-bold rounded-lg hover:bg-surface-container-highest transition-colors border-none cursor-pointer">Cancel</button>
+      </div>
     </div>
   </div>
-    <!-- /.content -->
+    
 {% endblock main_content %}
 {% block custom_js %}
 <script>
@@ -106,8 +104,16 @@ Forwarded Student Feedback
             $("#reply_id").val(id);
             $("#reply_name").text(name);
             $("#reply_message").val("");
+            $("#reply_modal").removeClass("hidden").addClass("flex");
         });
 
+        $(".modal-close-btn").click(function(){
+            $("#reply_modal").removeClass("flex").addClass("hidden");
+        });
+
+        $("#reply_modal").click(function(e){
+            if(e.target === this) $(this).removeClass("flex").addClass("hidden");
+        });
 
         $(document).on("click","#reply_btn",function(){
 

@@ -3,21 +3,16 @@
 Send Notification
 {% endblock page_title %}
 {% block main_content %}
-<section class="content">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card ">
-          <div class="card-header">
-            <h3 class="card-title">Send Notification</h3>
-          </div>
+
+        <div class="bg-surface-container-lowest rounded-2xl overflow-hidden">
+          <div class="px-8 py-5 border-b border-outline-variant/10"><h3 class="font-headline font-bold text-on-surface text-lg">Send Notification</h3></div>
           <form action="{% url 'send_bulk_notification' %}" method="post">
             {% csrf_token %}
-            <div class="card-body">
-              <div class="form-group">
-                <label>Title of Notification</label>
+            <div class="p-8 space-y-6">
+              <div class="space-y-2">
+                <label class="block font-label text-sm font-bold text-on-surface-variant">Title of Notification</label>
                 <input
-                  class="form-control"
+                  class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body"
                   type="text"
                   name="title"
                   maxlength="255"
@@ -26,14 +21,14 @@ Send Notification
                 >
               </div>
 
-              <div class="form-group">
-                <label>Body of Notification</label>
-                <textarea class="form-control" rows="4" name="message" placeholder="Enter notification message" required></textarea>
+              <div class="space-y-2">
+                <label class="block font-label text-sm font-bold text-on-surface-variant">Body of Notification</label>
+                <textarea class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body resize-y" rows="4" name="message" placeholder="Enter notification message" required></textarea>
               </div>
 
-              <div class="form-group">
-                <label>Select Whom to Send</label>
-                <select class="form-control" name="target_group" id="target_group" required>
+              <div class="space-y-2">
+                <label class="block font-label text-sm font-bold text-on-surface-variant">Select Whom to Send</label>
+                <select class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" name="target_group" id="target_group" required>
                   <option value="">Select option</option>
                   <option value="staff">Staff</option>
                   <option value="student">Student</option>
@@ -42,8 +37,8 @@ Send Notification
               </div>
 
               <div class="form-group" id="department_wrap" style="display:none;">
-                <label>Select Department</label>
-                <select class="form-control" name="department_id" id="department_id">
+                <label class="block font-label text-sm font-bold text-on-surface-variant">Select Department</label>
+                <select class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" name="department_id" id="department_id">
                   <option value="">Select department</option>
                   <option value="all_departments">All Departments</option>
                   {% for department in departments %}
@@ -53,8 +48,8 @@ Send Notification
               </div>
 
               <div class="form-group" id="staff_department_wrap" style="display:none;">
-                <label>Select Department for Staff</label>
-                <select class="form-control" name="staff_department_id" id="staff_department_id">
+                <label class="block font-label text-sm font-bold text-on-surface-variant">Select Department for Staff</label>
+                <select class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" name="staff_department_id" id="staff_department_id">
                   <option value="">Select department</option>
                   <option value="all_departments">All Departments</option>
                   {% for department in departments %}
@@ -64,69 +59,67 @@ Send Notification
               </div>
 
               <div id="staff_wrap" style="display:none;">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                  <label class="mb-0">Select Staff</label>
-                  <button class="btn btn-sm btn-info" type="button" id="select_all_staff">All Staff</button>
+                <div class="flex justify-between items-center mb-2">
+                  <label class="block font-label text-sm font-bold text-on-surface-variant">Select Staff Members</label>
+                  <button class="px-3 py-1 rounded-lg bg-primary/10 text-primary text-[10px] font-label font-bold uppercase tracking-wider hover:bg-primary/20 transition-colors border-none cursor-pointer" type="button" id="select_all_staff">Select All Staff</button>
                 </div>
                 <div class="border rounded p-2" style="max-height: 260px; overflow-y: auto;">
                   {% for staff in staffs %}
                   <div class="form-check mb-1 staff-item">
                     <input class="form-check-input staff-checkbox" type="checkbox" name="staff_ids" value="{{ staff.id }}" id="staff_{{ staff.id }}">
-                    <label class="form-check-label" for="staff_{{ staff.id }}">
+                    <label class="text-sm font-body text-on-surface cursor-pointer" for="staff_{{ staff.id }}">
                       {{ staff.profile_id|default:staff.id }} - {{ staff.admin.get_full_name|default:staff.admin.username }}
                     </label>
                   </div>
                   {% empty %}
-                  <p class="text-muted mb-0">No staff available.</p>
+                  <p class="text-on-surface-variant text-sm">No staff available.</p>
                   {% endfor %}
                 </div>
               </div>
 
               <div id="student_wrap" style="display:none;">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                  <label class="mb-0">Select Students</label>
-                  <button class="btn btn-sm btn-info" type="button" id="select_all_students">All Students</button>
+                <div class="flex justify-between items-center mb-2">
+                  <label class="block font-label text-sm font-bold text-on-surface-variant">Select Students</label>
+                  <button class="px-3 py-1 rounded-lg bg-primary/10 text-primary text-[10px] font-label font-bold uppercase tracking-wider hover:bg-primary/20 transition-colors border-none cursor-pointer" type="button" id="select_all_students">Select All Students</button>
                 </div>
                 <div class="border rounded p-2" style="max-height: 260px; overflow-y: auto;">
                   {% for student in students %}
                   <div class="form-check mb-1 student-item" data-department-id="{{ student.class_id.department.id }}">
                       <input class="form-check-input student-checkbox" type="checkbox" name="student_ids" value="{{ student.admin.id }}" id="student_{{ student.admin.id }}">
-                      <label class="form-check-label" for="student_{{ student.admin.id }}">
+                      <label class="text-sm font-body text-on-surface cursor-pointer" for="student_{{ student.admin.id }}">
                       {{ student.profile_id|default:student.id }} - {{ student.admin.get_full_name|default:student.admin.username }} ({{ student.class_id.class_name }} - {{ student.class_id.department.department_name }})
                     </label>
                   </div>
                   {% empty %}
-                  <p class="text-muted mb-0">No students available.</p>
+                  <p class="text-on-surface-variant text-sm">No students available.</p>
                   {% endfor %}
                 </div>
               </div>
 
-              <div id="all_wrap" class="alert alert-info mt-3" style="display:none;">
-                This will send the notification to all staff and all students.
+              <div id="all_wrap" class="px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 bg-primary/10 text-primary" style="display:none;">
+                <span class="material-symbols-outlined">info</span>
+                <span>Broadcast message to all institutional personnel (Staff + Students).</span>
               </div>
 
               <div class="form-group mt-3">
                 {% if messages %}
                   {% for message in messages %}
                     {% if message.tags == 'error' %}
-                      <div class="alert alert-danger">{{ message }}</div>
+                      <div class="px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 bg-error/10 text-error">{{ message }}</div>
                     {% endif %}
                     {% if message.tags == 'success' %}
-                      <div class="alert alert-success">{{ message }}</div>
+                      <div class="px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 bg-green-100 text-green-700">{{ message }}</div>
                     {% endif %}
                   {% endfor %}
                 {% endif %}
               </div>
             </div>
-            <div class="card-footer">
-              <button type="submit" class="btn btn-primary btn-block">Send</button>
+            <div class="px-8 py-6 border-t border-outline-variant/20">
+              <button type="submit" class="w-full py-4 premium-gradient text-white font-display font-bold rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform">Send</button>
             </div>
           </form>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
+      
 {% endblock main_content %}
 {% block custom_js %}
 <script>

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>U-MAS Live Classroom - Staff View</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Manrope:wght@500;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-container": "#82f2eb",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-highest": "#e3dffe",
+                    "on-secondary-fixed": "#00201e",
+                    "secondary-fixed": "#85f5ee",
+                    "on-primary-fixed": "#07006c",
+                    "surface-container": "#efebff",
+                    "surface-dim": "#dad7f6",
+                    "on-surface-variant": "#464555",
+                    "surface-container-low": "#f6f2ff",
+                    "tertiary-fixed": "#adefe3",
+                    "primary-fixed": "#e1e0ff",
+                    "on-primary-container": "#faf7ff",
+                    "on-secondary": "#ffffff",
+                    "on-primary-fixed-variant": "#2e2bc2",
+                    "inverse-surface": "#2f2e46",
+                    "background": "#fcf8ff",
+                    "surface-container-high": "#e9e5ff",
+                    "inverse-primary": "#c1c1ff",
+                    "on-background": "#1a1930",
+                    "outline-variant": "#c7c4d7",
+                    "on-tertiary-fixed-variant": "#005048",
+                    "on-tertiary-fixed": "#00201c",
+                    "secondary": "#006a66",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed-dim": "#92d3c7",
+                    "secondary-fixed-dim": "#67d8d1",
+                    "on-secondary-fixed-variant": "#00504d",
+                    "inverse-on-surface": "#f2eeff",
+                    "surface-tint": "#4849da",
+                    "on-tertiary-container": "#e1fff8",
+                    "on-primary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "primary-fixed-dim": "#c1c1ff",
+                    "surface-variant": "#e3dffe",
+                    "primary": "#4343d5",
+                    "surface-bright": "#fcf8ff",
+                    "tertiary-container": "#3d7d73",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-container": "#006f6a",
+                    "primary-container": "#5d5fef",
+                    "on-error-container": "#93000a",
+                    "tertiary": "#20645b",
+                    "outline": "#767586",
+                    "error-container": "#ffdad6",
+                    "on-surface": "#1a1930",
+                    "surface": "#fcf8ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Inter"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-effect {
+            backdrop-filter: blur(40px);
+        }
+    </style>
+</head>
+<body class="bg-surface-container-low font-body text-on-surface">
+<div class="flex h-screen overflow-hidden">
+<!-- SideNavBar (Shared Component) -->
+<aside class="fixed left-0 top-0 h-screen w-72 bg-slate-50/90 dark:bg-slate-900/90 backdrop-blur-3xl flex flex-col py-8 border-r border-slate-200/50 dark:border-slate-800/50 z-50">
+<div class="px-8 mb-10">
+<h1 class="text-2xl font-black text-indigo-700 dark:text-indigo-300 tracking-tighter">U-MAS</h1>
+<p class="text-xs font-label text-slate-500 uppercase tracking-widest mt-1">Academic Portal</p>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 py-3 px-6 hover:bg-indigo-50/30 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 py-3 px-6 hover:bg-indigo-50/30 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-medium">Management</span>
+</a>
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 py-3 px-6 hover:bg-indigo-50/30 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="fact_check">fact_check</span>
+<span class="font-medium">Attendance</span>
+</a>
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 py-3 px-6 hover:bg-indigo-50/30 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+<span class="font-medium">Results</span>
+</a>
+<!-- Active Item -->
+<a class="flex items-center gap-3 text-indigo-700 dark:text-indigo-300 bg-indigo-50/50 dark:bg-indigo-900/30 rounded-r-full border-l-4 border-indigo-600 py-3 px-6 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="video_call" style="font-variation-settings: 'FILL' 1;">video_call</span>
+<span class="font-bold">Live Classes</span>
+</a>
+</nav>
+<div class="px-6 mt-auto flex flex-col gap-1 border-t border-slate-200/50 pt-6">
+<a class="flex items-center gap-3 text-slate-500 py-2 px-3 hover:text-indigo-600 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-sm">Settings</span>
+</a>
+<a class="flex items-center gap-3 text-slate-500 py-2 px-3 hover:text-indigo-600 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+<span class="text-sm">Support</span>
+</a>
+<a class="flex items-center gap-3 text-error py-2 px-3 hover:bg-error/5 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="text-sm">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 ml-72 flex flex-col min-w-0 bg-surface-container-low">
+<!-- Header: Subject and Topic -->
+<header class="h-20 px-8 flex items-center justify-between bg-white/80 backdrop-blur-2xl sticky top-0 z-40 border-none shadow-[0_20px_40px_-10px_rgba(26,25,48,0.06)]">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-primary-container flex items-center justify-center text-on-primary-container shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined" data-icon="architecture">architecture</span>
+</div>
+<div>
+<h2 class="font-headline font-extrabold text-xl text-on-surface tracking-tight leading-none">Advanced Structural Engineering</h2>
+<div class="flex items-center gap-2 mt-1">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-label font-bold bg-secondary/10 text-secondary uppercase tracking-wider">Topic 04</span>
+<span class="text-sm font-medium text-on-surface-variant">Seismic Analysis of Multi-Storey Frames</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-label font-bold text-on-surface-variant uppercase tracking-widest">Session Duration</span>
+<span class="font-headline font-bold text-primary tabular-nums">00:42:15</span>
+</div>
+<div class="h-10 w-[1px] bg-outline-variant/30"></div>
+<div class="flex items-center gap-3">
+<button class="p-2.5 rounded-xl hover:bg-surface-container-high transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2.5 rounded-xl hover:bg-surface-container-high transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<img alt="Administrator profile picture" class="w-10 h-10 rounded-full border-2 border-primary/20 p-0.5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD35fWZjGzBO8ZIucBH8VlZd0i-EgJ3IlE4gJDED6jEjS7HSNtSNWkvfI4iEJoVTNZbryYeiczTWepuCfaoJEUfQcWZOXV1RM9xGRHgg6ajcJL0mdYfUhwouf7mZZv0rT9Ga1XbMIs2LImRY-5-VNdOrAP39qwW7ybItljeD_V6JP5-HizYe_w70QszixvXQ-faCn-MZhDLsTp73FyrTS6RaR41FI0DT8jkXyQOrifaKmmcCaq0tlJBeJM-qyhElc4cocbKnfI1u-Mu"/>
+</div>
+</div>
+</header>
+<div class="flex-1 p-6 flex gap-6 overflow-hidden">
+<!-- Left: Main Video / Whiteboard -->
+<section class="flex-[3] flex flex-col gap-4 min-w-0">
+<div class="relative flex-1 bg-slate-950 rounded-3xl overflow-hidden shadow-2xl group">
+<!-- Main Video Feed / Whiteboard Visual -->
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-full h-full bg-slate-900 flex items-center justify-center relative">
+<!-- Background Image for Whiteboard -->
+<div class="absolute inset-0 opacity-40 mix-blend-overlay bg-no-repeat bg-cover" data-alt="complex engineering blueprints and mathematical equations drawn on a digital whiteboard with glowing blue lines and architectural diagrams on dark background" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCwK_Q0CcclNE2BFwRRstcL_sNhW45pY9YwvAcGlxM6p8Aat4SVeCAAUgOayx_ZaGiTwX6GgiZZIBchX2AGfEnuQTw7gGj-cF4aUmsLv9ttDHHame2TrADhEKw5hGrFKfOtVSHMZUkvuyBiG1VVYnMP4nf6CjbBtOan3MOtWBUST4wrGHaRSunb8JEyUrMi6mf3BqU5abdUNO9zfikAOmWH0jZAc_HAYRPnQF2JOxixXms5rmDMhQUkx0VJUEE7qqfancslyz_i8CtS')"></div>
+<div class="relative z-10 text-center">
+<div class="flex justify-center mb-6">
+<div class="relative">
+<img alt="Staff Portrait" class="w-24 h-24 rounded-2xl border-4 border-primary shadow-2xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDng2KiTYG5N2jLMVQ97BCDDr3pISlQs3j6MbM4R43iLP6Fz546011hfcJ_ZL44P7S09hwxq2aQJT1f7AyLhmPEtC41TZbyjuULqWKyc8QY5sMSj3bauCi2hXl78eJVfUBu12Mewcyv4lwuiAdCW5kqqGP7YiKGa6NPNQBOMD5GI7Kdccw5lpLS2p373eqyV4pDb_b5C42xEimw94zBwYWpCnwOtDm-rCNSvnzW33Q-LaOuJ67aecNC8zOLhPJO3Lw-bAc6O18o3WnI"/>
+<div class="absolute -bottom-2 -right-2 w-8 h-8 bg-secondary rounded-full flex items-center justify-center border-4 border-slate-900">
+<span class="material-symbols-outlined text-white text-xs" data-icon="mic">mic</span>
+</div>
+</div>
+</div>
+<h3 class="text-white font-headline font-bold text-xl">Dr. Elias Vance</h3>
+<p class="text-indigo-300 font-label text-sm uppercase tracking-widest mt-1">Presenting Screen</p>
+</div>
+</div>
+</div>
+<!-- Video Overlays -->
+<div class="absolute top-6 left-6 flex gap-2">
+<div class="px-3 py-1.5 rounded-lg bg-error text-white text-xs font-bold font-label flex items-center gap-2 shadow-lg">
+<span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+                                REC 00:42:12
+                            </div>
+<div class="px-3 py-1.5 rounded-lg bg-black/40 backdrop-blur-md text-white text-xs font-bold font-label flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="visibility">visibility</span>
+                                142 Viewing
+                            </div>
+</div>
+<!-- Whiteboard Controls (Floating) -->
+<div class="absolute top-6 right-6 flex flex-col gap-2">
+<button class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md text-white flex items-center justify-center transition-all">
+<span class="material-symbols-outlined" data-icon="draw">draw</span>
+</button>
+<button class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md text-white flex items-center justify-center transition-all">
+<span class="material-symbols-outlined" data-icon="rectangle">rectangle</span>
+</button>
+<button class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md text-white flex items-center justify-center transition-all">
+<span class="material-symbols-outlined" data-icon="text_fields">text_fields</span>
+</button>
+<button class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md text-white flex items-center justify-center transition-all">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+<!-- Class Controls Footer -->
+<div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-slate-900/80 backdrop-blur-3xl px-8 py-4 rounded-3xl shadow-2xl border border-white/5">
+<button class="w-12 h-12 rounded-2xl bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all active:scale-95">
+<span class="material-symbols-outlined" data-icon="mic" style="font-variation-settings: 'FILL' 1;">mic</span>
+</button>
+<button class="w-12 h-12 rounded-2xl bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all active:scale-95">
+<span class="material-symbols-outlined" data-icon="videocam" style="font-variation-settings: 'FILL' 1;">videocam</span>
+</button>
+<div class="w-[1px] h-8 bg-white/10 mx-2"></div>
+<button class="w-12 h-12 rounded-2xl bg-secondary-container text-on-secondary-container flex items-center justify-center transition-all shadow-lg shadow-secondary/20 active:scale-95">
+<span class="material-symbols-outlined" data-icon="present_to_all">present_to_all</span>
+</button>
+<button class="w-12 h-12 rounded-2xl bg-primary text-white flex items-center justify-center transition-all shadow-lg shadow-primary/20 active:scale-95">
+<span class="material-symbols-outlined" data-icon="fiber_manual_record" style="font-variation-settings: 'FILL' 1;">fiber_manual_record</span>
+</button>
+<button class="w-12 h-12 rounded-2xl bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all active:scale-95">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+</button>
+<div class="w-[1px] h-8 bg-white/10 mx-2"></div>
+<button class="px-6 h-12 rounded-2xl bg-error text-white font-headline font-bold flex items-center gap-2 transition-all hover:bg-error/90 active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="call_end">call_end</span>
+                                End Session
+                            </button>
+</div>
+</div>
+<!-- Mini Carousel of Active Speakers/Recent Participants -->
+<div class="h-28 flex gap-4 overflow-x-auto pb-2 no-scrollbar">
+<div class="min-w-[120px] bg-white rounded-2xl p-2 border border-outline-variant/10 shadow-sm relative overflow-hidden group">
+<img class="w-full h-full object-cover rounded-xl grayscale group-hover:grayscale-0 transition-all" data-alt="portrait of a serious male university student with glasses minimalist background soft studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxKKUL4jtOfB3o0lCxT3YjBEDVn7Sw6fMAMiH7BduziVkBLp_sF4DTIO8EFFaDUCaAohG-Lc4Br0Tk50W0QsneTdGb5vNdKelsZIR8Se4JEw5H2tPF7XK996Hq9zKZsl6Dbixn5EsTEz9ZRpiKYx5Oq2OuGQH6Gl00QGOyiDlaLMm7GSArAx01CAunAduevCpR4-aAp9DgwGN3I_j-jrqAu6oOSLTsoVQyNduKDj4MUnfdzUP-PafVTuYSmEHJYCQ8yv4kt-44QiDH"/>
+<div class="absolute bottom-2 left-2 right-2 bg-black/60 backdrop-blur-sm rounded-lg p-1">
+<p class="text-[9px] text-white font-medium text-center truncate">Marcus Chen</p>
+</div>
+</div>
+<div class="min-w-[120px] bg-white rounded-2xl p-2 border border-outline-variant/10 shadow-sm relative overflow-hidden group">
+<img class="w-full h-full object-cover rounded-xl grayscale group-hover:grayscale-0 transition-all" data-alt="portrait of a young female engineering student smiling bright clean composition neutral tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4VzW1OadJx4Ax6PpDY2bHGyY4jrNqgIurigVybG00iz7uPHbF4Y8bGLyH6i87KiqfTc1Mo3l78eqz-sUx05aeTJXIr3xOFb22jfkzp6quoe6hsM6qOxCUo-e30oer4uTg2_1dR2y7BhJP8wWeRA4EijUnSlQZHvfqWKTwSi0igGv13zCuyAts7FwA71jPhvp3CdnXLVfuwGAzCX-a8N2HVvCSX7Zu9tg1MN6tQ11V1RwrUaMV05vfYI6AOZzILxsV7kKc16vVu_eq"/>
+<div class="absolute bottom-2 left-2 right-2 bg-black/60 backdrop-blur-sm rounded-lg p-1">
+<p class="text-[9px] text-white font-medium text-center truncate">Aisha Rahman</p>
+</div>
+</div>
+<div class="min-w-[120px] bg-white rounded-2xl p-2 border border-outline-variant/10 shadow-sm relative overflow-hidden group">
+<img class="w-full h-full object-cover rounded-xl grayscale group-hover:grayscale-0 transition-all" data-alt="portrait of a focused male student in a modern library cinematic lighting background blur" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3Q8iRTHrwgUh00r3_bwQV27kf7e3z_oBd8TqpC59qcz8eh7RIZMXfnN7dnFdYSeGDfKIRcuifK1oDKmdoX3YF9NnlvYI69nSka5CEHjHy8YEv6tdquR555GHAup9yqbzdLtVw3WAzhx3cigMFOQVV9SiQv8C7HKwOIapQ7SmvfAhGCoESXvM7ldC1L6LVYs2KGeOFoTXifFYUscVxlGaas7Lk3XIAdig1OKkFxWIVcgOlNztnJGMFvH_AwA1KPD8p7eVVshtg_s3C"/>
+<div class="absolute bottom-2 left-2 right-2 bg-black/60 backdrop-blur-sm rounded-lg p-1">
+<p class="text-[9px] text-white font-medium text-center truncate">Julian Frost</p>
+</div>
+</div>
+<div class="min-w-[120px] flex items-center justify-center bg-surface-container-high rounded-2xl border border-dashed border-outline-variant/40">
+<span class="text-xs font-bold text-on-surface-variant">+139 more</span>
+</div>
+</div>
+</section>
+<!-- Right: Tabs (Participants & Chat) -->
+<aside class="w-96 flex flex-col gap-6">
+<!-- Participant List -->
+<div class="flex-1 flex flex-col bg-surface-container-lowest rounded-[2rem] shadow-[0_20px_40px_-10px_rgba(26,25,48,0.04)] overflow-hidden">
+<div class="p-6 border-b border-surface-container-high flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="groups">groups</span>
+<h3 class="font-headline font-bold text-on-surface">Participants</h3>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-primary/10 text-primary font-bold text-xs">142</span>
+</div>
+<div class="px-4 py-3">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm" data-icon="search">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-xl py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary/20 placeholder:text-outline" placeholder="Find student..." type="text"/>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto px-4 space-y-1">
+<!-- Staff -->
+<div class="p-3 rounded-2xl bg-primary/5 flex items-center justify-between group">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold text-xs border-2 border-white">EV</div>
+<div>
+<p class="text-sm font-bold text-on-surface leading-tight">Dr. Elias Vance</p>
+<p class="text-[10px] font-label font-bold text-primary uppercase">Host / Presenter</p>
+</div>
+</div>
+<div class="flex gap-1">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="mic">mic</span>
+<span class="material-symbols-outlined text-primary text-lg" data-icon="videocam">videocam</span>
+</div>
+</div>
+<!-- Student 1 -->
+<div class="p-3 rounded-2xl flex items-center justify-between hover:bg-surface-container-high transition-colors group">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-on-surface-variant font-bold text-xs border-2 border-white">MC</div>
+<div>
+<p class="text-sm font-medium text-on-surface leading-tight">Marcus Chen</p>
+<p class="text-[10px] font-label text-on-surface-variant uppercase">Student</p>
+</div>
+</div>
+<div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined text-lg" data-icon="mic_off">mic_off</span></button>
+<button class="text-on-surface-variant hover:text-error"><span class="material-symbols-outlined text-lg" data-icon="remove_circle">remove_circle</span></button>
+</div>
+<div class="flex gap-1 group-hover:hidden">
+<span class="material-symbols-outlined text-outline text-lg" data-icon="mic_off">mic_off</span>
+<span class="material-symbols-outlined text-outline text-lg" data-icon="videocam_off">videocam_off</span>
+</div>
+</div>
+<!-- Student 2 -->
+<div class="p-3 rounded-2xl flex items-center justify-between hover:bg-surface-container-high transition-colors group">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-on-surface-variant font-bold text-xs border-2 border-white">AR</div>
+<div>
+<p class="text-sm font-medium text-on-surface leading-tight">Aisha Rahman</p>
+<p class="text-[10px] font-label text-on-surface-variant uppercase">Student</p>
+</div>
+</div>
+<div class="flex gap-1">
+<span class="material-symbols-outlined text-secondary text-lg" data-icon="front_hand" style="font-variation-settings: 'FILL' 1;">front_hand</span>
+</div>
+</div>
+<!-- Student 3 -->
+<div class="p-3 rounded-2xl flex items-center justify-between hover:bg-surface-container-high transition-colors group">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-on-surface-variant font-bold text-xs border-2 border-white">JF</div>
+<div>
+<p class="text-sm font-medium text-on-surface leading-tight">Julian Frost</p>
+<p class="text-[10px] font-label text-on-surface-variant uppercase">Student</p>
+</div>
+</div>
+<div class="flex gap-1 group-hover:hidden">
+<span class="material-symbols-outlined text-outline text-lg" data-icon="mic_off">mic_off</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Chat Panel -->
+<div class="h-[400px] flex flex-col bg-surface-container-lowest rounded-[2rem] shadow-[0_20px_40px_-10px_rgba(26,25,48,0.04)] overflow-hidden">
+<div class="p-6 border-b border-surface-container-high flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="forum">forum</span>
+<h3 class="font-headline font-bold text-on-surface">Class Chat</h3>
+</div>
+<div class="flex-1 overflow-y-auto p-4 space-y-4">
+<!-- Message 1 -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="text-[11px] font-bold text-on-surface-variant">System</span>
+<span class="text-[10px] text-outline">10:02 AM</span>
+</div>
+<p class="text-xs bg-surface-container-high p-3 rounded-2xl rounded-tl-none italic text-on-surface-variant">Recording has started. Please be aware of the university privacy policy.</p>
+</div>
+<!-- Message 2 -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="text-[11px] font-bold text-primary">Julian Frost</span>
+<span class="text-[10px] text-outline">10:15 AM</span>
+</div>
+<p class="text-xs bg-primary/5 p-3 rounded-2xl rounded-tl-none text-on-surface">Dr. Vance, could you clarify the variable 'K' in the stiffness matrix again?</p>
+</div>
+<!-- Message 3 -->
+<div class="flex flex-col gap-1 items-end">
+<div class="flex items-center gap-2">
+<span class="text-[10px] text-outline">10:16 AM</span>
+<span class="text-[11px] font-bold text-secondary">You</span>
+</div>
+<p class="text-xs bg-secondary-container/30 p-3 rounded-2xl rounded-tr-none text-on-surface">Sure Julian, I'll go back to Slide 12 in just a moment.</p>
+</div>
+<!-- Message 4 -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="text-[11px] font-bold text-primary">Aisha Rahman</span>
+<span class="text-[10px] text-outline">10:41 AM</span>
+</div>
+<p class="text-xs bg-primary/5 p-3 rounded-2xl rounded-tl-none text-on-surface">The visualization on the whiteboard is very helpful, thank you!</p>
+</div>
+</div>
+<div class="p-4 bg-surface-container-low">
+<div class="flex gap-2">
+<input class="flex-1 bg-surface-container-lowest border-none rounded-xl py-2 px-4 text-sm focus:ring-2 focus:ring-primary/20" placeholder="Type a message..." type="text"/>
+<button class="w-10 h-10 bg-primary text-white rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-sm" data-icon="send">send</span>
+</button>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</main>
+</div>
+</body></html>

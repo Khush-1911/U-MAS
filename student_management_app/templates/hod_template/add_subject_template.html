@@ -1,73 +1,58 @@
 {% extends 'hod_template/base_template.html' %}
-{% block page_title %}
-Add Subject
-{% endblock page_title %}
+{% block page_title %}Add Subject{% endblock page_title %}
+
 {% block main_content %}
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-          <div class="row">
-              <div class="col-md-12">
-            <!-- general form elements -->
-            <div class="card ">
-              <div class="card-header">
-                <h3 class="card-title">Add Subject</h3>
-              </div>
-              <!-- /.card-header -->
-              <!-- form start -->
-              <form role="form" action="/add_subject_save" method="post">
-                <div class="form-group">
-                  {% if messages %}
-                    {% for message in messages %}
-                    {% if message.tags == 'error' %}
-                    <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
-                    {% endif %}
-                    {% if message.tags == 'success' %}
-                    <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
-                    {% endif %}
-                    {% endfor %}
-                  {% endif %}
-                </div>
-                  {% csrf_token %}
-                <div class="card-body">
-                  <div class="form-group">
-                    <label>Subject Name </label>
-                    <input class="form-control" name="subject_name" placeholder="Enter Subject">
-                  </div>
-                   <div class="form-group">
-                    <label>Class</label>
-                    <select class="form-control" name="class">
-                        {% for class in classes %}
-                            <option value="{{ class.id }}">{{ class.class_name }} ({{ class.department.department_name }})</option>
-                        {% endfor %}
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label>Staff</label>
-                    <select class="form-control" name="staff">
-                        {% for staff in staffs %}
-                          <option value="{{ staff.id }}">{{ staff.first_name }} {{ staff.last_name }}</option>
-                        {% endfor %}
-                    </select>
-                  </div>
-                   
+<div class="max-w-3xl">
+  <header class="mb-10">
+    <h2 class="text-4xl font-extrabold text-on-surface font-headline tracking-tight">Add Subject</h2>
+    <p class="text-on-surface-variant font-body mt-2">Create a new academic subject and assign it to a class and faculty member.</p>
+  </header>
 
-                </div>
-                <!-- /.card-body -->
-
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-primary btn-block">Add Subject</button>
-                </div>
-              </form>
+  <div class="bg-surface-container-lowest rounded-2xl p-8">
+    {% if messages %}
+      <div class="space-y-3 mb-6">
+        {% for message in messages %}
+          {% if message.tags == 'error' %}
+            <div class="px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 bg-error/10 text-error">
+              <span class="material-symbols-outlined text-lg">error</span>{{ message }}
             </div>
-            <!-- /.card -->
-
-
-
-          </div>
-          </div>
+          {% endif %}
+          {% if message.tags == 'success' %}
+            <div class="px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 bg-green-100 text-green-700">
+              <span class="material-symbols-outlined text-lg">check_circle</span>{{ message }}
+            </div>
+          {% endif %}
+        {% endfor %}
       </div>
-    </section>
-    <!-- /.content -->
-{% endblock main_content %}
+    {% endif %}
 
+    <form role="form" action="/add_subject_save" method="post" class="space-y-6">
+      {% csrf_token %}
+      <div class="space-y-2">
+        <label class="block font-label text-sm font-bold text-on-surface-variant">Subject Name</label>
+        <input name="subject_name" placeholder="Enter Subject" class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body">
+      </div>
+      <div class="space-y-2">
+        <label class="block font-label text-sm font-bold text-on-surface-variant">Class</label>
+        <select name="class" class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body">
+          {% for class in classes %}
+            <option value="{{ class.id }}">{{ class.class_name }} ({{ class.department.department_name }})</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="space-y-2">
+        <label class="block font-label text-sm font-bold text-on-surface-variant">Staff</label>
+        <select name="staff" class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body">
+          {% for staff in staffs %}
+            <option value="{{ staff.id }}">{{ staff.first_name }} {{ staff.last_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="pt-6 border-t border-outline-variant/20">
+        <button type="submit" class="w-full py-4 premium-gradient text-white font-display font-bold rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform">Add Subject</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock main_content %}

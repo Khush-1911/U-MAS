@@ -1,59 +1,55 @@
 {% extends 'hod_template/base_template.html' %}
-{% block page_title %}
-Manage Department
-{% endblock page_title %}
+{% block page_title %}Manage Department{% endblock page_title %}
+
 {% block main_content %}
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+  <div class="space-y-1">
+    <h2 class="text-4xl font-display font-extrabold text-on-surface tracking-tight">Department Registry</h2>
+    <p class="text-on-surface-variant max-w-lg">Manage all academic departments within the institution.</p>
+  </div>
+</div>
 
-
-           <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Department Details</h3>
-
-                <div class="card-tools">
-                  <div class="input-group input-group-sm" style="width: 150px;">
-                    <input name="table_search" class="form-control float-right" placeholder="Search">
-
-                    <div class="input-group-append">
-                      <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
-                    </div>
-                  </div>
-                </div>
+<div class="bg-surface-container-lowest rounded-xl shadow-xl shadow-indigo-900/5 overflow-hidden border border-outline-variant/10">
+  <div class="overflow-x-auto">
+    <table class="w-full text-left border-collapse">
+      <thead>
+        <tr class="bg-surface-container-low/50">
+          <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">ID</th>
+          <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">Department Name</th>
+          <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for department in departments %}
+        <tr class="group hover:bg-primary-fixed/20 transition-colors {% if forloop.counter|divisibleby:2 %}bg-surface-container-low/20{% else %}bg-white{% endif %}">
+          <td class="px-8 py-6">
+            <span class="px-2 py-1 rounded-lg bg-surface-container text-on-surface-variant text-xs font-label font-bold">{{ department.id }}</span>
+          </td>
+          <td class="px-8 py-6">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-lg bg-tertiary-container/10 flex items-center justify-center text-tertiary">
+                <span class="material-symbols-outlined">account_tree</span>
               </div>
-              <!-- /.card-header -->
-              <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Department Name</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  {% for department in departments %}
-                    <tr>
-                      <td>{{ department.id }}</td>
-                      <td>{{ department.department_name }}</td>
-                      <td>
-                        <a href="/edit_department/{{ department.id }}" class="btn btn-success">Edit</a>
-                        <a href="{% url 'delete_department' department_id=department.id %}" class="btn btn-danger" onclick="return confirm('Delete this department?');">Delete</a>
-                      </td>
-                    </tr>
-                  {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-              <!-- /.card-body -->
+              <p class="font-display font-bold text-on-surface">{{ department.department_name }}</p>
             </div>
-            <!-- /.card -->
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- /.content -->
+          </td>
+          <td class="px-8 py-6 text-right">
+            <div class="flex items-center justify-end gap-2">
+              <a href="/edit_department/{{ department.id }}" class="px-4 py-2 rounded-lg bg-primary/10 text-primary text-xs font-label font-bold uppercase tracking-wider hover:bg-primary/20 transition-colors no-underline">Edit</a>
+              <a href="{% url 'delete_department' department_id=department.id %}" class="px-4 py-2 rounded-lg bg-error/10 text-error text-xs font-label font-bold uppercase tracking-wider hover:bg-error/20 transition-colors no-underline" onclick="return confirm('Delete this department?');">Delete</a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="3" class="px-8 py-16 text-center">
+            <span class="material-symbols-outlined text-6xl text-outline-variant/50 mb-4 block">account_tree</span>
+            <p class="text-on-surface-variant font-body">No departments found.</p>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock main_content %}

@@ -10,7 +10,7 @@
   <link rel="stylesheet" type="text/css" href="{% static "others/emojionearea.min.css" %}">
 
   <script src="{% static "others/jquery.min.js" %} "></script>
-  <link href="{% static "others/bootstrap.min.css" %} " rel="stylesheet">
+  {% include 'includes/tailwind_head.html' %}
   <script src="{% static "others/node_modules/webrtc-adapter/out/adapter.js" %}"></script>
   <script src="{% static "others/RTCMultiConnection.min.js" %}"></script>
   <script src="{% static "others/socket.io.js" %}"></script>
@@ -171,8 +171,8 @@ hr {
             <span style="vertical-align: middle;"></span>
             <img src="https://www.webrtc-experiment.com/images/key-press.gif" style="height: 12px; vertical-align: middle;">
         </div>
-        <textarea id="txt-chat-message"></textarea>
-        <button class="btn btn-primary" id="btn-chat-message" disabled style="border-radius: 0px;margin: 0px;    border: 1px solid grey; width: 70%;">Send</button>
+        <textarea id="txt-chat-message" class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body resize-y"></textarea>
+        <button class="w-full py-3 premium-gradient text-white font-display font-bold rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform" id="btn-chat-message" disabled>Send</button>
         <img id="btn-attach-file" src="https://www.webrtc-experiment.com/images/attach-file.png" title="Attach a File" style="display: inline-block;width: 10%;">
         <img id="btn-share-screen" src="https://www.webrtc-experiment.com/images/share-screen.png" title="Share Your Screen" style="display: inline-block;width: 10%;">
     </div>
@@ -440,7 +440,6 @@ $('#txt-chat-message').emojioneArea({
                 });
             }
 
-
             clearTimeout(keyPressTimer);
             numberOfKeys++;
 
@@ -573,10 +572,10 @@ connection.onFileStart = function(file) {
             userFullName = connection.peersBackup[file.remoteUserId].extra.userFullName;
         }
 
-        div.innerHTML = '<b>You (to: ' + userFullName + '):</b><br><label>0%</label> <progress></progress>';
+        div.innerHTML = '<b>You (to: ' + userFullName + '):</b><br><label class="block font-label text-sm font-bold text-on-surface-variant">0%</label> <progress></progress>';
         div.style.background = '#cbffcb';
     } else {
-        div.innerHTML = '<b>' + getFullName(file.userid) + ':</b><br><label>0%</label> <progress></progress>';
+        div.innerHTML = '<b>' + getFullName(file.userid) + ':</b><br><label class="block font-label text-sm font-bold text-on-surface-variant">0%</label> <progress></progress>';
     }
 
     div.title = file.name;

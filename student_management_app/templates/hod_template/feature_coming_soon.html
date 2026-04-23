@@ -1,19 +1,17 @@
 {% extends 'hod_template/base_template.html' %}
-{% block page_title %}
-Feature Under Development
-{% endblock page_title %}
+{% block page_title %}Feature Under Development{% endblock page_title %}
 
 {% block main_content %}
-    <div class="card glass" style="text-align: center; padding: 4rem 2rem;">
-      <div style="font-size: 4rem; color: var(--primary); margin-bottom: 1.5rem;">
-        <i class="fas fa-tools"></i>
-      </div>
-      <h2 class="text-gradient">Expansion in Progress</h2>
-      <p style="max-width: 500px; margin: 1rem auto; color: var(--on-surface-variant);">
-        This feature is part of our upcoming system orchestration update. Our architects are currently refining the logic to ensure a premium experience.
-      </p>
-      <div style="margin-top: 2rem;">
-        <button onclick="window.history.back()" class="btn btn-secondary">Return to Previous Module</button>
-      </div>
-    </div>
+<div class="flex items-center justify-center min-h-[60vh]">
+  <div class="bg-surface-container-lowest rounded-2xl p-16 text-center max-w-lg">
+    <span class="material-symbols-outlined text-7xl text-primary mb-6 block">construction</span>
+    <h2 class="text-3xl font-extrabold font-headline bg-gradient-to-r from-primary to-primary-container bg-clip-text text-transparent mb-4">Expansion in Progress</h2>
+    <p class="text-on-surface-variant font-body mb-8">
+      This feature is part of our upcoming system orchestration update. Our architects are currently refining the logic to ensure a premium experience.
+    </p>
+    <button onclick="window.history.back()" class="px-6 py-3 bg-surface-container-highest text-on-surface font-label font-bold rounded-xl hover:bg-surface-container transition-colors">
+      Return to Previous Module
+    </button>
+  </div>
+</div>
 {% endblock main_content %}

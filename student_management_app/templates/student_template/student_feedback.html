@@ -3,118 +3,132 @@
 Feedback Message
 {% endblock page_title %}
 {% block main_content %}
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-          <div class="row">
-              <div class="col-md-12">
-            <!-- general form elements -->
-            <div class="card ">
-              <div class="card-header">
-                <h3 class="card-title">Send Feedback to Your Faculty</h3>
+    
+            
+            <div class="bg-surface-container-lowest rounded-2xl overflow-hidden border border-outline-variant/10 shadow-xl shadow-indigo-900/5">
+              <div class="px-8 py-6 border-b border-outline-variant/10">
+                <h3 class="font-display font-extrabold text-on-surface text-2xl">Academic Consultation</h3>
+                <p class="text-on-surface-variant text-sm mt-1">Submit inquiries or feedback to your designated faculty mentor.</p>
               </div>
-              <!-- /.card-header -->
-              <!-- form start -->
+              
                <form action="{% url 'student_feedback_save' %}" method="post">
-                <div class="card-body">
+                <div class="p-8 space-y-6">
                     {% csrf_token %}
-                  <div class="form-group">
+                  <div class="space-y-2">
                     {% if mentor %}
-                      <div class="alert alert-info" style="margin-bottom:15px">
-                        Your feedback will be sent to
-                        <strong>
-                          {{ mentor.profile_id|default:mentor.id }} -
-                          {{ mentor.admin.get_full_name|default:mentor.admin.username }}
-                        </strong>.
+                      <div class="p-4 rounded-xl bg-primary/10 border border-primary/20 flex items-center gap-3">
+                        <span class="material-symbols-outlined text-primary">person_search</span>
+                        <div>
+                            <p class="text-[10px] font-label font-bold text-primary uppercase tracking-widest">Target Mentor:</p>
+                            <p class="text-sm font-body font-bold text-on-surface">
+                              {{ mentor.admin.get_full_name }}
+                              <span class="text-[10px] text-on-surface-variant ml-2 tracking-tighter">({{ mentor.profile_id|default:mentor.id }})</span>
+                            </p>
+                        </div>
                       </div>
                     {% else %}
-                      <div class="alert alert-warning" style="margin-bottom:15px">
-                        No faculty is assigned to you yet, so feedback cannot be sent right now.
+                      <div class="px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 bg-error/10 text-error">
+                        <span class="material-symbols-outlined">person_off</span>
+                        Mentor attribution pending. Feedback channel deactivated.
                       </div>
                     {% endif %}
                   </div>
-                  <div class="form-group">
-                    <label>Feedback Message</label>
-                    <textarea class="form-control" rows="6" name="feedback_msg" {% if not mentor %}disabled{% endif %}></textarea>
+                  <div class="space-y-2">
+                    <label class="block font-label text-sm font-bold text-on-surface-variant uppercase tracking-widest">Inquiry Content</label>
+                    <textarea class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body resize-y" rows="6" name="feedback_msg" placeholder="Describe your concern or inquiry..." {% if not mentor %}disabled{% endif %}></textarea>
                   </div>
-                   <div class="form-group">
+                   <div class="space-y-2">
                       {% if messages %}
                         {% for message in messages %}
                         {% if message.tags == 'error' %}
-                        <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+                        <div class="px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 bg-error/10 text-error">{{ message }}</div>
                         {% endif %}
                         {% if message.tags == 'success' %}
-                        <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+                        <div class="px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 bg-secondary/10 text-secondary">{{ message }}</div>
                         {% endif %}
                         {% endfor %}
                       {% endif %}
                     </div>
-
                 </div>
-                <!-- /.card-body -->
-
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-primary btn-block" id="fetch_student" {% if not mentor %}disabled{% endif %}>Send Feedback</button>
+                
+                <div class="px-8 py-6 border-t border-outline-variant/20">
+                  <button type="submit" class="w-full py-4 premium-gradient text-white font-display font-bold rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform disabled:opacity-50 disabled:cursor-not-allowed border-none cursor-pointer" id="fetch_student" {% if not mentor %}disabled{% endif %}>Dispatch Consultation Inquiry</button>
                 </div>
                </form>
             </div>
 
-            <!-- /.card -->
-           <div class="card ">
-              <div class="card-header">
-                <h3 class="card-title">Feedback History</h3>
+            
+            <div class="bg-surface-container-lowest rounded-2xl overflow-hidden border border-outline-variant/10 shadow-xl shadow-indigo-900/5">
+              <div class="px-8 py-6 border-b border-outline-variant/10">
+                <h3 class="font-display font-extrabold text-on-surface text-2xl">Consultation Archives</h3>
+                <p class="text-on-surface-variant text-sm mt-1">Review historical dialogue and administrative resolutions.</p>
               </div>
 
-               <div class="table">
-               <table class="table">
-                   <tr>
-                       <th>ID</th>
-                       <th>Sent To</th>
-                       <th>Feedback Message</th>
-                       <th>Faculty Reply</th>
-                       <th>HOD Reply</th>
-                       <th>Status</th>
-                   </tr>
-                   {% for row in feedback_data %}
-                        <tr>
-                            <td>{{ row.id }}</td>
-                            <td>
-                              {% if row.staff_id %}
-                                {{ row.staff_id.profile_id|default:row.staff_id.id }} -
-                                {{ row.staff_id.admin.get_full_name|default:row.staff_id.admin.username }}
-                              {% else %}
-                                Not assigned
-                              {% endif %}
+               <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-surface-container-low/50">
+                            <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">Mentor Attribution</th>
+                            <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">Your Dispatch</th>
+                            <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">Administrative Status</th>
+                            <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant text-right">Resolution Ledger</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in feedback_data %}
+                        <tr class="group hover:bg-primary-fixed/20 transition-colors {% if forloop.counter|divisibleby:2 %}bg-surface-container-low/20{% else %}bg-white{% endif %}">
+                            <td class="px-8 py-6">
+                                {% if row.staff_id %}
+                                  <p class="font-display font-bold text-on-surface leading-tight">{{ row.staff_id.admin.get_full_name }}</p>
+                                  <p class="text-[10px] text-on-surface-variant font-label uppercase tracking-widest">ID: {{ row.staff_id.profile_id|default:row.staff_id.id }}</p>
+                                {% else %}
+                                  <span class="text-xs font-body italic text-on-surface-variant">Unattributed</span>
+                                {% endif %}
                             </td>
-                            <td>{{ row.feedback }}</td>
-                            <td>{{ row.feedback_reply|default:"Pending" }}</td>
-                            <td>{{ row.hod_reply|default:"Not forwarded / no reply" }}</td>
-                            <td>
-                              {% if row.hod_reply %}
-                                Replied by HOD
-                              {% elif row.forwarded_to_hod %}
-                                Forwarded to HOD
-                              {% elif row.feedback_reply %}
-                                Replied by Faculty
-                              {% else %}
-                                Sent to Faculty
-                              {% endif %}
+                            <td class="px-8 py-6 text-sm font-body text-on-surface-variant max-w-xs truncate">{{ row.feedback }}</td>
+                            <td class="px-8 py-6">
+                                {% if row.hod_reply %}
+                                  <span class="px-3 py-1 rounded-full bg-secondary/10 text-secondary text-[10px] font-bold font-label uppercase tracking-widest flex items-center w-fit gap-1">
+                                    <span class="material-symbols-outlined text-xs">verified</span> HOD Resolved
+                                  </span>
+                                {% elif row.forwarded_to_hod %}
+                                  <span class="px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold font-label uppercase tracking-widest flex items-center w-fit gap-1">
+                                    <span class="material-symbols-outlined text-xs">forward_to_inbox</span> Escalated
+                                  </span>
+                                {% elif row.feedback_reply %}
+                                  <span class="px-3 py-1 rounded-full bg-secondary/10 text-secondary text-[10px] font-bold font-label uppercase tracking-widest flex items-center w-fit gap-1">
+                                    <span class="material-symbols-outlined text-xs">chat_bubble</span> Faculty Replied
+                                  </span>
+                                {% else %}
+                                  <span class="px-3 py-1 rounded-full bg-surface-container text-on-surface-variant text-[10px] font-bold font-label uppercase tracking-widest">Processing</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-8 py-6 text-right">
+                                <div class="space-y-2">
+                                    {% if row.feedback_reply %}
+                                    <div class="inline-block p-3 rounded-xl bg-surface-container-low border border-outline-variant/10 text-left max-w-[240px]">
+                                        <p class="text-[9px] font-label font-bold text-on-surface-variant uppercase tracking-widest mb-1">Faculty:</p>
+                                        <p class="text-xs font-body text-on-surface italic truncate">{{ row.feedback_reply }}</p>
+                                    </div>
+                                    {% endif %}
+                                    {% if row.hod_reply %}
+                                    <div class="inline-block p-3 rounded-xl bg-secondary/5 border border-secondary/10 text-left max-w-[240px]">
+                                        <p class="text-[9px] font-label font-bold text-secondary uppercase tracking-widest mb-1">HOD Office:</p>
+                                        <p class="text-xs font-body text-on-surface italic truncate">{{ row.hod_reply }}</p>
+                                    </div>
+                                    {% endif %}
+                                </div>
                             </td>
                         </tr>
-                   {% empty %}
+                        {% empty %}
                         <tr>
-                            <td colspan="6">No feedback sent yet.</td>
+                            <td colspan="4" class="px-8 py-12 text-center text-on-surface-variant font-body">Your consultation ledger is currently empty.</td>
                         </tr>
-                   {% endfor %}
-               </table>
+                        {% endfor %}
+                    </tbody>
+                </table>
                </div>
             </div>
 
-
-
-          </div>
-          </div>
-      </div>
-    </section>
-    <!-- /.content -->
+          
 {% endblock main_content %}

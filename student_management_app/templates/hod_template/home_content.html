@@ -1,106 +1,88 @@
 {% extends 'hod_template/base_template.html' %}
-{% block page_title %}
-Home
-{% endblock page_title %}
+{% block page_title %}Home{% endblock page_title %}
+
 {% block main_content %}
-    <div class="metrics-grid">
-      <div class="metric-card">
-        <div class="metric-icon">
-          <i class="fas fa-user-graduate"></i>
-        </div>
-        <div class="metric-info">
-          <span class="metric-value">{{ student_count }}</span>
-          <span class="metric-label">Total Students</span>
-        </div>
-      </div>
+<!-- Header -->
+<header class="mb-10">
+  <h2 class="text-4xl font-extrabold text-on-surface font-headline tracking-tight">Administrative Dashboard</h2>
+  <p class="text-on-surface-variant font-body mt-2 text-lg opacity-80">Institutional analytics, personnel metrics, and academic insights.</p>
+</header>
 
-      <div class="metric-card">
-        <div class="metric-icon">
-          <i class="fas fa-user-tie"></i>
-        </div>
-        <div class="metric-info">
-          <span class="metric-value">{{ staff_count }}</span>
-          <span class="metric-label">Faculty Members</span>
-        </div>
-      </div>
-
-      <div class="metric-card">
-        <div class="metric-icon">
-          <i class="fas fa-archway"></i>
-        </div>
-        <div class="metric-info">
-          <span class="metric-value">{{ department_count }}</span>
-          <span class="metric-label">Departments</span>
-        </div>
-      </div>
-
-      <div class="metric-card">
-        <div class="metric-icon">
-          <i class="fas fa-book-open"></i>
-        </div>
-        <div class="metric-info">
-          <span class="metric-value">{{ subject_count }}</span>
-          <span class="metric-label">Active Subjects</span>
-        </div>
-      </div>
+<!-- Bento Grid Metrics -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+    <div class="p-3 rounded-xl bg-primary-container/10 text-primary w-fit">
+      <span class="material-symbols-outlined text-3xl">school</span>
     </div>
-
-    <div class="charts-grid">
-      <div class="chart-card">
-        <div class="chart-header">
-          <h3>Staff vs Student Distribution</h3>
-        </div>
-        <div class="chart-body">
-          <canvas id="pieChart" style="min-height: 250px; height: 250px;"></canvas>
-        </div>
-      </div>
-
-      <div class="chart-card">
-        <div class="chart-header">
-          <h3>Subjects per Department</h3>
-        </div>
-        <div class="chart-body">
-          <canvas id="donutChart" style="min-height: 250px; height: 250px;"></canvas>
-        </div>
-      </div>
-
-      <div class="chart-card">
-        <div class="chart-header">
-          <h3>Student Enrollment by Dept</h3>
-        </div>
-        <div class="chart-body">
-          <canvas id="pieChart3" style="min-height: 250px; height: 250px;"></canvas>
-        </div>
-      </div>
-
-      <div class="chart-card">
-        <div class="chart-header">
-          <h3>Student Enrollment by Subject</h3>
-        </div>
-        <div class="chart-body">
-          <canvas id="pieChart4" style="min-height: 250px; height: 250px;"></canvas>
-        </div>
-      </div>
-
-      <div class="chart-card" style="grid-column: span 2;">
-        <div class="chart-header">
-          <h3>Faculty Leaves vs Attendance</h3>
-        </div>
-        <div class="chart-body">
-          <canvas id="barChart1" style="min-height: 300px; height: 300px;"></canvas>
-        </div>
-      </div>
-
-      <div class="chart-card" style="grid-column: span 2;">
-        <div class="chart-header">
-          <h3>Student Leaves vs Attendance</h3>
-        </div>
-        <div class="chart-body">
-          <canvas id="barChart2" style="min-height: 300px; height: 300px;"></canvas>
-        </div>
-      </div>
+    <div class="mt-8">
+      <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Total Students</p>
+      <h3 class="text-4xl font-extrabold font-headline mt-1">{{ student_count }}</h3>
     </div>
+  </div>
+
+  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+    <div class="p-3 rounded-xl bg-secondary-container/10 text-secondary w-fit">
+      <span class="material-symbols-outlined text-3xl">badge</span>
+    </div>
+    <div class="mt-8">
+      <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Faculty Members</p>
+      <h3 class="text-4xl font-extrabold font-headline mt-1">{{ staff_count }}</h3>
+    </div>
+  </div>
+
+  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+    <div class="p-3 rounded-xl bg-tertiary-container/10 text-tertiary w-fit">
+      <span class="material-symbols-outlined text-3xl">account_tree</span>
+    </div>
+    <div class="mt-8">
+      <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Departments</p>
+      <h3 class="text-4xl font-extrabold font-headline mt-1">{{ department_count }}</h3>
+    </div>
+  </div>
+
+  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+    <div class="p-3 rounded-xl bg-error-container/30 text-error w-fit">
+      <span class="material-symbols-outlined text-3xl">menu_book</span>
+    </div>
+    <div class="mt-8">
+      <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Active Subjects</p>
+      <h3 class="text-4xl font-extrabold font-headline mt-1">{{ subject_count }}</h3>
+    </div>
+  </div>
+</section>
+
+<!-- Charts -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+  <div class="bg-surface-container-lowest rounded-2xl p-8">
+    <h4 class="text-xl font-bold font-headline mb-6">Staff vs Student Distribution</h4>
+    <canvas id="pieChart" style="min-height: 250px; height: 250px;"></canvas>
+  </div>
+  <div class="bg-surface-container-lowest rounded-2xl p-8">
+    <h4 class="text-xl font-bold font-headline mb-6">Subjects per Department</h4>
+    <canvas id="donutChart" style="min-height: 250px; height: 250px;"></canvas>
+  </div>
+  <div class="bg-surface-container-lowest rounded-2xl p-8">
+    <h4 class="text-xl font-bold font-headline mb-6">Student Enrollment by Dept</h4>
+    <canvas id="pieChart3" style="min-height: 250px; height: 250px;"></canvas>
+  </div>
+  <div class="bg-surface-container-lowest rounded-2xl p-8">
+    <h4 class="text-xl font-bold font-headline mb-6">Student Enrollment by Subject</h4>
+    <canvas id="pieChart4" style="min-height: 250px; height: 250px;"></canvas>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 gap-8">
+  <div class="bg-surface-container-lowest rounded-2xl p-8">
+    <h4 class="text-xl font-bold font-headline mb-6">Faculty Leaves vs Attendance</h4>
+    <canvas id="barChart1" style="min-height: 300px; height: 300px;"></canvas>
+  </div>
+  <div class="bg-surface-container-lowest rounded-2xl p-8">
+    <h4 class="text-xl font-bold font-headline mb-6">Student Leaves vs Attendance</h4>
+    <canvas id="barChart2" style="min-height: 300px; height: 300px;"></canvas>
+  </div>
+</div>
 {% endblock main_content %}
+
 {% block custom_js %}
 <script>
     $(document).ready(function(){
@@ -120,6 +102,7 @@ Home
                     {
                       data: [{{ student_count }},{{ staff_count }}],
                       backgroundColor : createUniqueChartColors(2),
+                      borderWidth: 0
                     }
                   ]
              };
@@ -128,16 +111,14 @@ Home
             var pieOptions     = {
               maintainAspectRatio : false,
               responsive : true,
+              plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 16 } } }
             }
-            //Create pie or douhnut chart
-            // You can switch between pie and douhnut using the method below.
             var pieChart = new Chart(pieChartCanvas, {
               type: 'pie',
               data: pieData,
               options: pieOptions
             });
 
-            //Second Chart for Total Subject in Each Department
                 var subject_count_list={{ subject_count_list }};
                 var department_name_list={{ department_name_list|safe }};
                 var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
@@ -147,23 +128,22 @@ Home
                     {
                       data: subject_count_list,
                       backgroundColor : createUniqueChartColors(subject_count_list.length),
+                      borderWidth: 0
                     }
                   ]
                 }
                 var donutOptions     = {
                   maintainAspectRatio : false,
                   responsive : true,
+                  cutout: '65%',
+                  plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 16 } } }
                 }
-                //Create pie or douhnut chart
-                // You can switch between pie and douhnut using the method below.
                 var donutChart = new Chart(donutChartCanvas, {
                   type: 'doughnut',
                   data: donutData,
                   options: donutOptions
                 });
 
-
-                //show total student in each department
                 var student_count_list_in_department={{ student_count_list_in_department }};
 
                   var pieData2        = {
@@ -172,6 +152,7 @@ Home
                             {
                               data: student_count_list_in_department,
                               backgroundColor : createUniqueChartColors(student_count_list_in_department.length),
+                              borderWidth: 0
                             }
                           ]
                      };
@@ -180,6 +161,7 @@ Home
                     var pieOptions2     = {
                       maintainAspectRatio : false,
                       responsive : true,
+                      plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 16 } } }
                     }
                     var pieChart = new Chart(pieChartCanvas2, {
                       type: 'pie',
@@ -187,7 +169,6 @@ Home
                       options: pieOptions2
                     });
 
-                //show total student in each Subject
                 var student_count_list_in_subject={{ student_count_list_in_subject }};
                 var subject_list={{ subject_list|safe }};
 
@@ -197,6 +178,7 @@ Home
                             {
                               data: student_count_list_in_subject,
                               backgroundColor : createUniqueChartColors(student_count_list_in_subject.length),
+                              borderWidth: 0
                             }
                           ]
                      };
@@ -205,6 +187,7 @@ Home
                     var pieOption3     = {
                       maintainAspectRatio : false,
                       responsive : true,
+                      plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 16 } } }
                     }
                     var pieChart = new Chart(pieChartCanvas3, {
                       type: 'pie',
@@ -212,7 +195,6 @@ Home
                       options: pieOption3
                     });
 
-                        ///Staff Leave vs Attendance Bar Chart
                         var attendance_present_list_staff={{ attendance_present_list_staff }};
                         var attendance_absent_list_staff={{ attendance_absent_list_staff }};
                         var staff_name_list={{ staff_name_list|safe }};
@@ -221,24 +203,14 @@ Home
                           datasets: [
                             {
                               label               : 'Leaves',
-                              backgroundColor     : 'rgba(60,141,188,0.9)',
-                              borderColor         : 'rgba(60,141,188,0.8)',
-                              pointRadius          : false,
-                              pointColor          : '#3b8bba',
-                              pointStrokeColor    : 'rgba(60,141,188,1)',
-                              pointHighlightFill  : '#fff',
-                              pointHighlightStroke: 'rgba(60,141,188,1)',
+                              backgroundColor     : '#4343d5',
+                              borderRadius        : 8,
                               data                : attendance_absent_list_staff
                             },
                             {
                               label               : 'Attendance',
-                              backgroundColor     : 'rgba(210, 214, 222, 1)',
-                              borderColor         : 'rgba(210, 214, 222, 1)',
-                              pointRadius         : false,
-                              pointColor          : 'rgba(210, 214, 222, 1)',
-                              pointStrokeColor    : '#c1c7d1',
-                              pointHighlightFill  : '#fff',
-                              pointHighlightStroke: 'rgba(220,220,220,1)',
+                              backgroundColor     : 'rgba(67, 67, 213, 0.15)',
+                              borderRadius        : 8,
                               data                : attendance_present_list_staff
                             },
                           ]
@@ -252,7 +224,8 @@ Home
                         var barChartOptions = {
                           responsive              : true,
                           maintainAspectRatio     : false,
-                          datasetFill             : false
+                          plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 16 } } },
+                          scales: { y: { grid: { display: false } }, x: { grid: { display: false } } }
                         }
 
                         var barChart = new Chart(barChartCanvas, {
@@ -261,7 +234,6 @@ Home
                           options: barChartOptions
                         })
 
-                        //Student Leaves vs Attendance
                         var attendance_present_list_student={{ attendance_present_list_student }};
                         var attendance_absent_list_student={{ attendance_absent_list_student }};
                         var student_name_list={{ student_name_list|safe }};
@@ -270,24 +242,14 @@ Home
                           datasets: [
                             {
                               label               : 'Leaves',
-                              backgroundColor     : 'rgba(60,141,188,0.9)',
-                              borderColor         : 'rgba(60,141,188,0.8)',
-                              pointRadius          : false,
-                              pointColor          : '#3b8bba',
-                              pointStrokeColor    : 'rgba(60,141,188,1)',
-                              pointHighlightFill  : '#fff',
-                              pointHighlightStroke: 'rgba(60,141,188,1)',
+                              backgroundColor     : '#006a66',
+                              borderRadius        : 8,
                               data                : attendance_absent_list_student
                             },
                             {
                               label               : 'Attendance',
-                              backgroundColor     : 'rgba(210, 214, 222, 1)',
-                              borderColor         : 'rgba(210, 214, 222, 1)',
-                              pointRadius         : false,
-                              pointColor          : 'rgba(210, 214, 222, 1)',
-                              pointStrokeColor    : '#c1c7d1',
-                              pointHighlightFill  : '#fff',
-                              pointHighlightStroke: 'rgba(220,220,220,1)',
+                              backgroundColor     : 'rgba(0, 106, 102, 0.15)',
+                              borderRadius        : 8,
                               data                : attendance_present_list_student
                             },
                           ]
@@ -301,7 +263,8 @@ Home
                         var barChartOptions2 = {
                           responsive              : true,
                           maintainAspectRatio     : false,
-                          datasetFill             : false
+                          plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 16 } } },
+                          scales: { y: { grid: { display: false } }, x: { grid: { display: false } } }
                         }
 
                         var barChart2 = new Chart(barChartCanvas2, {
@@ -309,8 +272,6 @@ Home
                           data: barChartData2,
                           options: barChartOptions2
                         })
-
-
 
     });
 </script>

@@ -3,77 +3,71 @@
 Edit Staff  | #ID : {{ staff.admin.id }}
 {% endblock page_title %}
 {% block main_content %}
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-          <div class="row">
-              <div class="col-md-12">
-            <!-- general form elements -->
-            <div class="card ">
-              <div class="card-header">
-                <h3 class="card-title">Edit Staff</h3>
-              </div>
-              <!-- /.card-header -->
-              <!-- form start -->
+    
+            
+            <div class="bg-surface-container-lowest rounded-2xl overflow-hidden">
+              <div class="px-8 py-5 border-b border-outline-variant/10"><h3 class="font-headline font-bold text-on-surface text-lg">Edit Staff</h3></div>
+              
+              
               <form role="form" action="/edit_staff_save" method="post">
-                <div class="form-group">
+                <div class="space-y-2">
                   {% if messages %}
                     {% for message in messages %}
                     {% if message.tags == 'error' %}
-                    <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+                    <div class="px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 bg-error/10 text-error">{{ message }}</div>
                     {% endif %}
                     {% if message.tags == 'success' %}
-                    <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+                    <div class="px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 bg-green-100 text-green-700">{{ message }}</div>
                     {% endif %}
                     {% endfor %}
                   {% endif %}
                 </div>
                   {% csrf_token %}
-                <div class="card-body">
-                  <div class="form-group">
-                    <label>Email address</label>
-                    <input type="email" class="form-control" name="email" placeholder="Enter email" value="{{ staff.admin.email }}">
+                <div class="p-8 space-y-6">
+                  <div class="space-y-2">
+                    <label class="block font-label text-sm font-bold text-on-surface-variant">Email address</label>
+                    <input type="email" class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" name="email" placeholder="Enter email" value="{{ staff.admin.email }}">
                   </div>
-                  <div class="form-group">
-                    <label>Notification Email</label>
-                    <input type="email" class="form-control" name="notification_email" placeholder="Optional: defaults to email address" value="{{ staff.admin.notification_email }}">
+                  <div class="space-y-2">
+                    <label class="block font-label text-sm font-bold text-on-surface-variant">Notification Email</label>
+                    <input type="email" class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" name="notification_email" placeholder="Optional: defaults to email address" value="{{ staff.admin.notification_email }}">
                   </div>
-                   <div class="form-group">
-                    <label>First Name</label>
-                    <input class="form-control" placeholder="First Name" name="first_name" value="{{ staff.admin.first_name }}">
+                   <div class="space-y-2">
+                    <label class="block font-label text-sm font-bold text-on-surface-variant">First Name</label>
+                    <input class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" placeholder="First Name" name="first_name" value="{{ staff.admin.first_name }}">
                   </div>
-                   <div class="form-group">
-                    <label>Last Name</label>
-                    <input class="form-control" placeholder="Last Name" name="last_name" value="{{ staff.admin.last_name }}">
+                   <div class="space-y-2">
+                    <label class="block font-label text-sm font-bold text-on-surface-variant">Last Name</label>
+                    <input class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" placeholder="Last Name" name="last_name" value="{{ staff.admin.last_name }}">
                     <input type="hidden"  name="staff_id" value="{{ staff.admin.id }}">
                   </div>
-                  <div class="form-group">
-                    <label>Address</label>
-                    <input class="form-control" placeholder="Address" name="address" value="{{ staff.address }}">
+                  <div class="space-y-2">
+                    <label class="block font-label text-sm font-bold text-on-surface-variant">Address</label>
+                    <input class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" placeholder="Address" name="address" value="{{ staff.address }}">
                   </div>
-                  <div class="form-group">
-                    <label>Institution</label>
-                    <select class="form-control" name="institution" required>
+                  <div class="space-y-2">
+                    <label class="block font-label text-sm font-bold text-on-surface-variant">Institution</label>
+                    <select class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" name="institution" required>
                         {% for inst in institutions %}
                             <option value="{{ inst.id }}" {% if staff.admin.institution.id == inst.id %}selected{% endif %}>{{ inst.name }}</option>
                         {% endfor %}
                     </select>
                   </div>
-                  <div class="form-group">
-                    <label>Role</label>
-                    <select class="form-control" name="role" required>
+                  <div class="space-y-2">
+                    <label class="block font-label text-sm font-bold text-on-surface-variant">Role</label>
+                    <select class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" name="role" required>
                         {% for role in roles %}
                             <option value="{{ role.0 }}" {% if staff.admin.user_type == role.0 %}selected{% endif %}>{{ role.1 }}</option>
                         {% endfor %}
                     </select>
                   </div>
-                  <div class="form-group">
-                    <label>Assign Students</label>
+                  <div class="space-y-2">
+                    <label class="block font-label text-sm font-bold text-on-surface-variant">Assign Students</label>
                     <div class="border rounded p-2" style="max-height: 280px; overflow-y: auto;">
                       {% for student in students %}
-                        <div class="form-check mb-1">
-                          <input class="form-check-input" type="checkbox" name="assigned_students" value="{{ student.admin.id }}" id="student_{{ student.admin.id }}" {% if student.admin.id in selected_student_ids %}checked{% endif %}>
-                          <label class="form-check-label" for="student_{{ student.admin.id }}">
+                        <div class="flex items-center gap-2 py-1">
+                          <input class="w-4 h-4 accent-indigo-600 rounded" type="checkbox" name="assigned_students" value="{{ student.admin.id }}" id="student_{{ student.admin.id }}" {% if student.admin.id in selected_student_ids %}checked{% endif %}>
+                          <label class="text-sm font-body text-on-surface cursor-pointer" for="student_{{ student.admin.id }}">
                             {{ student.profile_id }} - {{ student.admin.get_full_name|default:student.admin.username }}
                             {% if student.mentor %}
                               (Current: {{ student.mentor.profile_id }} - {{ student.mentor.admin.get_full_name|default:student.mentor.admin.username }})
@@ -83,28 +77,22 @@ Edit Staff  | #ID : {{ staff.admin.id }}
                           </label>
                         </div>
                       {% empty %}
-                        <p class="text-muted mb-0">No students available.</p>
+                        <p class="text-on-surface-variant text-sm">No students available.</p>
                       {% endfor %}
                     </div>
-                    <small class="form-text text-muted">Selected students will be assigned to this staff. Unselected current students will be unassigned.</small>
+                    <p class="text-xs text-on-surface-variant mt-1">Selected students will be assigned to this staff. Unselected current students will be unassigned.</p>
                   </div>
                       
 
                 </div>
-                <!-- /.card-body -->
+                
 
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-primary btn-block">Save Staff</button>
+                <div class="px-8 py-6 border-t border-outline-variant/20">
+                  <button type="submit" class="w-full py-4 premium-gradient text-white font-display font-bold rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform">Save Staff</button>
                 </div>
               </form>
             </div>
-            <!-- /.card -->
+            
 
-
-
-          </div>
-          </div>
-      </div>
-    </section>
-    <!-- /.content -->
+          
 {% endblock main_content %}

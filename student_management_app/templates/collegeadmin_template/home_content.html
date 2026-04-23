@@ -1,41 +1,49 @@
 {% extends 'collegeadmin_template/base_template.html' %}
-{% block page_title %}
-Institutional Oversight
-{% endblock page_title %}
+{% block page_title %}Institutional Oversight{% endblock page_title %}
 
 {% block main_content %}
-    <div class="metrics-grid">
-      <div class="metric-card glass">
-        <div class="metric-icon" style="background: var(--surface-container-low); color: var(--primary);">
-          <i class="fas fa-users"></i>
-        </div>
-        <div class="metric-info">
-          <span class="metric-label">Institutional Scholars</span>
-          <h3 class="metric-value">{{ student_count }}</h3>
-          <span class="metric-trend"><i class="fas fa-check-double"></i> Total Students</span>
-        </div>
-      </div>
+<!-- Header -->
+<header class="mb-10">
+  <h2 class="text-4xl font-extrabold text-on-surface font-headline tracking-tight">Institutional Oversight</h2>
+  <p class="text-on-surface-variant font-body mt-2 text-lg opacity-80">Comprehensive monitoring of institutional resources and personnel.</p>
+</header>
 
-      <div class="metric-card glass">
-        <div class="metric-icon" style="background: var(--surface-container-low); color: #15803d;">
-          <i class="fas fa-user-tie"></i>
-        </div>
-        <div class="metric-info">
-          <span class="metric-label">Academic Officers</span>
-          <h3 class="metric-value">{{ staff_count }}</h3>
-          <span class="metric-trend up"><i class="fas fa-shield-alt"></i> Total Staff</span>
-        </div>
-      </div>
+<!-- Bento Grid Metrics -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+    <div class="p-3 rounded-xl bg-primary-container/10 text-primary w-fit">
+      <span class="material-symbols-outlined text-3xl">groups</span>
     </div>
+    <div class="mt-8">
+      <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Institutional Scholars</p>
+      <h3 class="text-4xl font-extrabold font-headline mt-1">{{ student_count }}</h3>
+      <span class="text-xs text-on-surface-variant font-body mt-2 block">Total Students</span>
+    </div>
+  </div>
 
-    <div class="card glass" style="margin-top: 2rem;">
-      <div class="chart-header">
-        <h3>Administrative Intel</h3>
-        <p>Comprehensive monitoring of institutional resources and personnel.</p>
-      </div>
-      <div style="padding: 2rem; text-align: center; color: var(--on-surface-variant);">
-        <i class="fas fa-city fa-3x" style="margin-bottom: 1rem; opacity: 0.5;"></i>
-        <p>Resource utilization reports are being generated...</p>
-      </div>
+  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+    <div class="p-3 rounded-xl bg-secondary-container/10 text-secondary w-fit">
+      <span class="material-symbols-outlined text-3xl">badge</span>
     </div>
+    <div class="mt-8">
+      <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Academic Officers</p>
+      <h3 class="text-4xl font-extrabold font-headline mt-1">{{ staff_count }}</h3>
+      <span class="text-xs text-on-surface-variant font-body mt-2 block">Total Staff</span>
+    </div>
+  </div>
+</section>
+
+<!-- Activity Card -->
+<div class="bg-surface-container-lowest rounded-2xl p-8">
+  <div class="flex justify-between items-center mb-8">
+    <div>
+      <h4 class="text-xl font-bold font-headline">Administrative Intel</h4>
+      <p class="text-sm text-on-surface-variant font-body">Comprehensive monitoring of institutional resources and personnel.</p>
+    </div>
+  </div>
+  <div class="py-12 text-center text-on-surface-variant">
+    <span class="material-symbols-outlined text-6xl opacity-30 mb-4 block">apartment</span>
+    <p class="font-body">Resource utilization reports are being generated...</p>
+  </div>
+</div>
 {% endblock main_content %}

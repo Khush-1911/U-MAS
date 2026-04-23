@@ -3,11 +3,7 @@
 Feedback Message
 {% endblock page_title %}
 {% block main_content %}
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-          <div class="row">
-              <div class="col-md-12">
+    
             {% if messages %}
               {% for message in messages %}
                 <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% else %}info{% endif %}" style="margin-top:10px">
@@ -16,120 +12,131 @@ Feedback Message
               {% endfor %}
             {% endif %}
 
-            <div class="card ">
-              <div class="card-header">
-                <h3 class="card-title">Student Feedback Inbox</h3>
+            <div class="bg-surface-container-lowest rounded-2xl overflow-hidden border border-outline-variant/10 shadow-xl shadow-indigo-900/5">
+              <div class="px-8 py-6 border-b border-outline-variant/10">
+                <h3 class="font-display font-extrabold text-on-surface text-2xl">Scholar Feedback Portal</h3>
+                <p class="text-on-surface-variant text-sm mt-1">Review and facilitate responses to inquiries from your assigned scholars.</p>
               </div>
-              <div class="card-body table-responsive p-0">
-                <table class="table table-hover">
-                  <tr>
-                    <th>ID</th>
-                    <th>Student</th>
-                    <th>Message</th>
-                    <th>Faculty Reply</th>
-                    <th>HOD Status</th>
-                    <th>Actions</th>
-                  </tr>
-                  {% for row in student_feedback_data %}
-                    <tr>
-                      <td>{{ row.id }}</td>
-                      <td>
-                        {{ row.student_id.profile_id|default:row.student_id.id }} -
-                        {{ row.student_id.admin.get_full_name|default:row.student_id.admin.username }}
-                      </td>
-                      <td>{{ row.feedback }}</td>
-                      <td>{{ row.feedback_reply|default:"Pending" }}</td>
-                      <td>
-                        {% if row.hod_reply %}
-                          Replied by HOD
-                        {% elif row.forwarded_to_hod %}
-                          Forwarded to HOD{% if row.forwarded_at %} on {{ row.forwarded_at }}{% endif %}
-                        {% else %}
-                          Not forwarded
-                        {% endif %}
-                      </td>
-                      <td style="min-width: 280px;">
-                        <form action="{% url 'staff_student_feedback_reply' %}" method="post" style="margin-bottom:10px;">
-                          {% csrf_token %}
-                          <input type="hidden" name="feedback_id" value="{{ row.id }}">
-                          <textarea class="form-control" rows="2" name="reply_message" placeholder="Reply to the student">{{ row.feedback_reply }}</textarea>
-                          <button type="submit" class="btn btn-primary btn-sm" style="margin-top:8px;">Save Reply</button>
-                        </form>
-                        <form action="{% url 'staff_student_feedback_forward' %}" method="post">
-                          {% csrf_token %}
-                          <input type="hidden" name="feedback_id" value="{{ row.id }}">
-                          <button type="submit" class="btn btn-warning btn-sm" {% if row.forwarded_to_hod %}disabled{% endif %}>
-                            {% if row.forwarded_to_hod %}Already Forwarded{% else %}Forward to HOD{% endif %}
-                          </button>
-                        </form>
-                      </td>
-                    </tr>
-                  {% empty %}
-                    <tr>
-                      <td colspan="6">No student feedback has been assigned to you yet.</td>
-                    </tr>
-                  {% endfor %}
+              <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-surface-container-low/50">
+                            <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">Scholar / ID</th>
+                            <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">Inquiry Core</th>
+                            <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">Administrative Path</th>
+                            <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant text-right">Action Interface</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in student_feedback_data %}
+                        <tr class="group hover:bg-primary-fixed/20 transition-colors {% if forloop.counter|divisibleby:2 %}bg-surface-container-low/20{% else %}bg-white{% endif %}">
+                            <td class="px-8 py-6">
+                                <p class="font-display font-bold text-on-surface leading-tight">{{ row.student_id.admin.get_full_name }}</p>
+                                <p class="text-[10px] text-on-surface-variant font-label uppercase tracking-widest">ID: {{ row.student_id.profile_id|default:row.student_id.id }}</p>
+                            </td>
+                            <td class="px-8 py-6 text-sm font-body text-on-surface-variant max-w-xs truncate">{{ row.feedback }}</td>
+                            <td class="px-8 py-6">
+                                {% if row.hod_reply %}
+                                  <span class="flex items-center gap-1 text-secondary font-bold text-[10px] font-label uppercase tracking-wider">
+                                    <span class="material-symbols-outlined text-xs">verified</span> Resolve by HOD
+                                  </span>
+                                {% elif row.forwarded_to_hod %}
+                                  <span class="flex items-center gap-1 text-primary font-bold text-[10px] font-label uppercase tracking-wider">
+                                    <span class="material-symbols-outlined text-xs">forward_to_inbox</span> Escalated
+                                  </span>
+                                {% else %}
+                                  <span class="text-on-surface-variant font-bold text-[10px] font-label uppercase tracking-wider">Direct Dialogue</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-8 py-6 text-right space-y-4 min-w-[320px]">
+                                <form action="{% url 'staff_student_feedback_reply' %}" method="post" class="space-y-2">
+                                  {% csrf_token %}
+                                  <input type="hidden" name="feedback_id" value="{{ row.id }}">
+                                  <textarea class="w-full px-4 py-2 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body text-xs resize-y" rows="2" name="reply_message" placeholder="Draft your response...">{{ row.feedback_reply }}</textarea>
+                                  <button type="submit" class="w-full py-2 bg-primary/10 text-primary font-label font-bold text-[10px] uppercase tracking-widest rounded-lg hover:bg-primary/20 transition-colors border-none cursor-pointer">Commit Response</button>
+                                </form>
+                                <form action="{% url 'staff_student_feedback_forward' %}" method="post">
+                                  {% csrf_token %}
+                                  <input type="hidden" name="feedback_id" value="{{ row.id }}">
+                                  <button type="submit" class="w-full py-2 bg-secondary/10 text-secondary font-label font-bold text-[10px] uppercase tracking-widest rounded-lg hover:bg-secondary/20 transition-colors border-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" {% if row.forwarded_to_hod %}disabled{% endif %}>
+                                    {% if row.forwarded_to_hod %}Escalation Finalized{% else %}Escalate to HOD{% endif %}
+                                  </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="px-8 py-12 text-center text-on-surface-variant font-body">No pending scholar inquiries.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
                 </table>
               </div>
             </div>
 
-            <!-- general form elements -->
-            <div class="card ">
-              <div class="card-header">
-                <h3 class="card-title">Send Your Own Feedback to HOD</h3>
+            
+            <div class="bg-surface-container-lowest rounded-2xl overflow-hidden border border-outline-variant/10 shadow-xl shadow-indigo-900/5">
+              <div class="px-8 py-6 border-b border-outline-variant/10">
+                <h3 class="font-display font-extrabold text-on-surface text-2xl">Administrative Dispatch</h3>
+                <p class="text-on-surface-variant text-sm mt-1">Direct communication channel to the Head of Department.</p>
               </div>
-              <!-- /.card-header -->
-              <!-- form start -->
+              
                <form action="{% url 'staff_feedback_save' %}" method="post">
-                <div class="card-body">
-
+                <div class="p-8 space-y-6">
                     {% csrf_token %}
-                  <div class="form-group">
-                    <label>Feedback Message</label>
-                    <textarea class="form-control" rows="6" name="feedback_msg"></textarea>
+                  <div class="space-y-2">
+                    <label class="block font-label text-sm font-bold text-on-surface-variant uppercase tracking-widest">Message Core</label>
+                    <textarea class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body resize-y" rows="6" name="feedback_msg" placeholder="Draft your communication to the HOD..."></textarea>
                   </div>
                 </div>
-                <!-- /.card-body -->
-
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-primary btn-block" id="fetch_student">Send Feedback to HOD</button>
+                
+                <div class="px-8 py-6 border-t border-outline-variant/20">
+                  <button type="submit" class="w-full py-4 premium-gradient text-white font-display font-bold rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform border-none cursor-pointer">Transmit to Administration</button>
                 </div>
                </form>
             </div>
 
-            <!-- /.card -->
-           <div class="card ">
-              <div class="card-header">
-                <h3 class="card-title">Your Feedback History with HOD</h3>
+            
+           <div class="bg-surface-container-lowest rounded-2xl overflow-hidden border border-outline-variant/10 shadow-xl shadow-indigo-900/5">
+              <div class="px-8 py-6 border-b border-outline-variant/10">
+                <h3 class="font-display font-extrabold text-on-surface text-2xl">Dialogue Archives</h3>
+                <p class="text-on-surface-variant text-sm mt-1">Review historical correspondence with the departmental office.</p>
               </div>
 
-               <div class="table">
-               <table class="table">
-                   <tr>
-                       <th>ID</th>
-                       <th>Feedback Message</th>
-                       <th>Feedback Reply</th>
-                   </tr>
-                   {% for row in feedback_data %}
-                        <tr>
-                            <td>{{ row.id }}</td>
-                            <td>{{ row.feedback }}</td>
-                            <td>{{ row.feedback_reply }}</td>
+               <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-surface-container-low/50">
+                            <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">ID</th>
+                            <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">Your Dispatch</th>
+                            <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant text-right">Administrative Reply</th>
                         </tr>
-                   {% empty %}
-                        <tr>
-                            <td colspan="3">No feedback history available.</td>
+                    </thead>
+                    <tbody>
+                        {% for row in feedback_data %}
+                        <tr class="group hover:bg-primary-fixed/20 transition-colors {% if forloop.counter|divisibleby:2 %}bg-surface-container-low/20{% else %}bg-white{% endif %}">
+                            <td class="px-8 py-6 text-sm font-body">{{ row.id }}</td>
+                            <td class="px-8 py-6 text-sm font-body text-on-surface-variant max-w-xs">{{ row.feedback }}</td>
+                            <td class="px-8 py-6 text-right">
+                                {% if row.feedback_reply %}
+                                <div class="inline-block p-4 rounded-2xl bg-secondary/10 border border-secondary/20 text-left max-w-sm">
+                                    <p class="text-[10px] font-label font-bold text-secondary uppercase tracking-widest mb-1">Office Response:</p>
+                                    <p class="text-xs font-body text-on-surface italic">"{{ row.feedback_reply }}"</p>
+                                </div>
+                                {% else %}
+                                <span class="px-3 py-1 rounded-full bg-surface-container text-on-surface-variant text-[10px] font-bold font-label uppercase tracking-widest">Awaiting Review</span>
+                                {% endif %}
+                            </td>
                         </tr>
-                   {% endfor %}
-               </table>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="px-8 py-12 text-center text-on-surface-variant font-body">No historical dialogue found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
                </div>
             </div>
 
-
-
-          </div>
-          </div>
-      </div>
-    </section>
-    <!-- /.content -->
+          
 {% endblock main_content %}

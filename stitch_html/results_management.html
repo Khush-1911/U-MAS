@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>U-MAS | Results &amp; Academic Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Manrope:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-highest": "#e3dffe",
+                        "on-primary-fixed": "#07006c",
+                        "on-tertiary": "#ffffff",
+                        "outline": "#767586",
+                        "error": "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "tertiary": "#20645b",
+                        "surface-variant": "#e3dffe",
+                        "inverse-primary": "#c1c1ff",
+                        "inverse-on-surface": "#f2eeff",
+                        "error-container": "#ffdad6",
+                        "on-primary": "#ffffff",
+                        "surface-tint": "#4849da",
+                        "surface-container-low": "#f6f2ff",
+                        "on-tertiary-container": "#e1fff8",
+                        "on-surface": "#1a1930",
+                        "on-primary-container": "#faf7ff",
+                        "on-tertiary-fixed": "#00201c",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#efebff",
+                        "on-secondary-fixed": "#00201e",
+                        "on-secondary-fixed-variant": "#00504d",
+                        "on-error-container": "#93000a",
+                        "primary": "#4343d5",
+                        "on-tertiary-fixed-variant": "#005048",
+                        "on-surface-variant": "#464555",
+                        "inverse-surface": "#2f2e46",
+                        "on-background": "#1a1930",
+                        "primary-fixed-dim": "#c1c1ff",
+                        "primary-container": "#5d5fef",
+                        "tertiary-fixed-dim": "#92d3c7",
+                        "primary-fixed": "#e1e0ff",
+                        "secondary-container": "#82f2eb",
+                        "outline-variant": "#c7c4d7",
+                        "on-primary-fixed-variant": "#2e2bc2",
+                        "secondary-fixed-dim": "#67d8d1",
+                        "secondary-fixed": "#85f5ee",
+                        "tertiary-fixed": "#adefe3",
+                        "tertiary-container": "#3d7d73",
+                        "surface-dim": "#dad7f6",
+                        "surface-bright": "#fcf8ff",
+                        "secondary": "#006a66",
+                        "background": "#fcf8ff",
+                        "surface": "#fcf8ff",
+                        "surface-container-high": "#e9e5ff",
+                        "on-secondary-container": "#006f6a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "3xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="bg-background font-body text-on-surface">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-[0_20px_40px_-10px_rgba(26,25,48,0.06)] flex justify-between items-center w-full px-8 h-16">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tight bg-gradient-to-tr from-indigo-600 to-indigo-400 bg-clip-text text-transparent font-headline">U-MAS</span>
+<div class="hidden md:flex gap-6 items-center">
+<a class="font-headline font-medium tracking-tight text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 pb-1" href="#">Dashboard</a>
+<a class="font-headline font-medium tracking-tight text-slate-500 dark:text-slate-400 hover:text-indigo-500 transition-colors" href="#">Analytics</a>
+<a class="font-headline font-medium tracking-tight text-slate-500 dark:text-slate-400 hover:text-indigo-500 transition-colors" href="#">Reports</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors rounded-full active:scale-95 duration-200 cursor-pointer">
+<span class="material-symbols-outlined text-slate-500">notifications</span>
+</div>
+<div class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors rounded-full active:scale-95 duration-200 cursor-pointer">
+<span class="material-symbols-outlined text-slate-500">help_outline</span>
+</div>
+<img alt="User Profile Avatar" class="w-8 h-8 rounded-full object-cover ring-2 ring-indigo-100" data-alt="close-up portrait of a professional woman with a friendly expression in a brightly lit modern office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzrMcaoqKVqhIzWXbheVY7H9uoKhAeRKKtbrZrn2dbZdnko7j4UH_g85pXSQsW2YtCaUG8hgg1g3W7TczMtpQfMr3v5vsbblXcvrUMhZnr9Y1udjwCKlhFUhFDk8GwN1HUmZeoYFOKWmKuu2QsyDIQXjq7CGyi0p9ilVE_W3iRQGc9NRBZHzpb7YO2ZTx1x5_1l-I4Uvdqfa-3xmuIKe_adYwY2KK5GYOYlHDmddENN_I_plg_Vt7JgYH7PzQNp4I7_1S_pKuT0mWM"/>
+</div>
+</nav>
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 z-40 bg-slate-50 dark:bg-slate-950/50 backdrop-blur-md border-r border-indigo-50/10 flex flex-col pt-20 pb-8">
+<div class="px-6 mb-8">
+<h2 class="text-lg font-bold text-slate-900 dark:text-white font-headline">University Portal</h2>
+<p class="text-xs text-on-surface-variant font-label">Academic Management</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-indigo-500 hover:bg-indigo-50/30 dark:hover:bg-indigo-900/10 transition-all duration-200 ease-in-out font-medium text-sm" href="#">
+<span class="material-symbols-outlined">domain</span> Institution
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-indigo-500 hover:bg-indigo-50/30 dark:hover:bg-indigo-900/10 transition-all duration-200 ease-in-out font-medium text-sm" href="#">
+<span class="material-symbols-outlined">group</span> Users
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-indigo-500 hover:bg-indigo-50/30 dark:hover:bg-indigo-900/10 transition-all duration-200 ease-in-out font-medium text-sm" href="#">
+<span class="material-symbols-outlined">event_available</span> Attendance
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-indigo-600 dark:text-indigo-400 border-l-4 border-indigo-600 bg-indigo-50/50 dark:bg-indigo-900/20 transition-all duration-200 ease-in-out font-medium text-sm" href="#">
+<span class="material-symbols-outlined">menu_book</span> Academic
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-indigo-500 hover:bg-indigo-50/30 dark:hover:bg-indigo-900/10 transition-all duration-200 ease-in-out font-medium text-sm" href="#">
+<span class="material-symbols-outlined">calendar_today</span> Leave
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-indigo-500 hover:bg-indigo-50/30 dark:hover:bg-indigo-900/10 transition-all duration-200 ease-in-out font-medium text-sm" href="#">
+<span class="material-symbols-outlined">chat_bubble_outline</span> Feedback
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-indigo-500 hover:bg-indigo-50/30 dark:hover:bg-indigo-900/10 transition-all duration-200 ease-in-out font-medium text-sm" href="#">
+<span class="material-symbols-outlined">settings</span> Settings
+            </a>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full py-3 px-4 bg-gradient-to-tr from-primary to-primary-container text-white rounded-xl font-headline font-bold text-sm shadow-lg shadow-primary/20 active:scale-95 transition-transform">
+                New Academic Year
+            </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 px-10 pb-20 min-h-screen">
+<!-- Header Section -->
+<header class="mb-10 flex flex-col md:flex-row justify-between items-end gap-6">
+<div class="max-w-2xl">
+<span class="font-label text-xs uppercase tracking-widest text-primary font-bold mb-2 block">Lumina Academic Style</span>
+<h1 class="text-4xl font-extrabold font-headline text-on-surface tracking-tight mb-2">Results &amp; Management</h1>
+<p class="text-on-surface-variant leading-relaxed">Advanced academic grading hub for faculty, students, and institutional administrators. Manage credentials with cryptographic precision and intellectual clarity.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-6 py-2.5 bg-surface-container-high rounded-full text-primary font-headline font-semibold text-sm active:scale-95 transition-all">
+<span class="material-symbols-outlined text-lg">download</span>
+                    Export Global Data
+                </button>
+</div>
+</header>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-6">
+<!-- ADMIN: Bulk Upload (Large) -->
+<section class="col-span-12 lg:col-span-8 bg-surface-container-lowest rounded-3xl p-8 border border-outline-variant/15 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-64 h-64 bg-indigo-50/50 rounded-full blur-3xl -mr-32 -mt-32"></div>
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-8">
+<div>
+<h2 class="text-2xl font-headline font-bold text-on-surface">Bulk Grade Upload</h2>
+<p class="text-on-surface-variant text-sm mt-1">Institutional data synchronization via CSV/XLSX</p>
+</div>
+<a class="text-sm font-label font-bold text-primary flex items-center gap-1 hover:underline" href="#">
+<span class="material-symbols-outlined text-sm">download_2</span>
+                            Download Excel Template
+                        </a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Upload Dropzone -->
+<div class="border-2 border-dashed border-outline-variant rounded-2xl p-10 flex flex-col items-center justify-center bg-surface-container-low/30 hover:bg-surface-container-low transition-colors cursor-pointer group">
+<div class="w-16 h-16 bg-primary-container/10 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl text-primary">cloud_upload</span>
+</div>
+<p class="font-headline font-bold text-on-surface">Drop file here</p>
+<p class="text-xs text-on-surface-variant mt-1 text-center">Supported formats: .csv, .xlsx, .xls<br/>(Max file size: 12MB)</p>
+</div>
+<!-- Reporting / Status -->
+<div class="flex flex-col gap-4">
+<div class="p-4 rounded-2xl bg-secondary/5 border border-secondary/10 flex items-center gap-4">
+<div class="w-10 h-10 bg-secondary/10 rounded-xl flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div>
+<p class="text-xs font-label text-secondary font-bold uppercase tracking-tight">Last Success</p>
+<p class="text-sm font-headline font-semibold text-on-surface">CS_Grade_Sheet_V2.xlsx</p>
+<p class="text-[10px] text-on-surface-variant">420 rows processed successfully</p>
+</div>
+</div>
+<div class="p-4 rounded-2xl bg-error/5 border border-error/10 flex items-center gap-4">
+<div class="w-10 h-10 bg-error/10 rounded-xl flex items-center justify-center text-error">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">report</span>
+</div>
+<div class="flex-1">
+<p class="text-xs font-label text-error font-bold uppercase tracking-tight">Error Reporting</p>
+<p class="text-sm font-headline font-semibold text-on-surface">Missing Student ID: Row 14, 22</p>
+<p class="text-[10px] text-on-surface-variant">Correction required before full ingestion</p>
+</div>
+<button class="text-xs font-bold text-error bg-error/10 px-3 py-1.5 rounded-lg hover:bg-error/20 transition-colors">Details</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- STAFF: Quick Entry (Right Sidebar-ish) -->
+<section class="col-span-12 lg:col-span-4 bg-surface-container-low rounded-3xl p-8 border border-outline-variant/15 flex flex-col">
+<div class="mb-6">
+<h2 class="text-xl font-headline font-bold text-on-surface">Staff Entry</h2>
+<p class="text-on-surface-variant text-sm mt-1">Manual Add/Update for specific units</p>
+</div>
+<form class="space-y-5 flex-1">
+<div>
+<label class="block text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider mb-2">Subject Selection</label>
+<select class="w-full bg-surface-container-lowest border-none rounded-xl text-sm font-body focus:ring-2 focus:ring-primary h-12 px-4 shadow-sm">
+<option>Advanced Quantum Mechanics (QM402)</option>
+<option>Computational Fluid Dynamics (CFD301)</option>
+<option>Linear Algebra II (LA201)</option>
+</select>
+</div>
+<div>
+<label class="block text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider mb-2">Student Identifier</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-lowest border-none rounded-xl text-sm font-body focus:ring-2 focus:ring-primary h-12 pl-12 pr-4 shadow-sm" placeholder="ID or Name" type="text"/>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider mb-2">Raw Score</label>
+<input class="w-full bg-surface-container-lowest border-none rounded-xl text-sm font-body focus:ring-2 focus:ring-primary h-12 px-4 shadow-sm" placeholder="0-100" type="number"/>
+</div>
+<div>
+<label class="block text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider mb-2">Grade Letter</label>
+<input class="w-full bg-surface-container-lowest border-none rounded-xl text-sm font-body focus:ring-2 focus:ring-primary h-12 px-4 shadow-sm" placeholder="A+" type="text"/>
+</div>
+</div>
+<button class="w-full bg-on-surface text-white py-4 rounded-2xl font-headline font-bold mt-auto active:scale-95 transition-all shadow-xl shadow-on-surface/10 flex items-center justify-center gap-2" type="submit">
+<span class="material-symbols-outlined">save</span>
+                        Confirm Submission
+                    </button>
+</form>
+</section>
+<!-- STUDENT: Result View (Wide) -->
+<section class="col-span-12 bg-surface-container-lowest rounded-3xl overflow-hidden border border-outline-variant/15">
+<div class="p-8 border-b border-surface-container flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<h2 class="text-2xl font-headline font-bold text-on-surface">Academic Performance Records</h2>
+<p class="text-on-surface-variant text-sm mt-1">Detailed breakdown for Semester Fall 2023</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right">
+<p class="text-[10px] font-label font-bold text-on-surface-variant uppercase tracking-widest">Cumulative GPA</p>
+<p class="text-3xl font-headline font-extrabold text-primary">3.92</p>
+</div>
+<div class="h-12 w-[1px] bg-outline-variant/20 mx-2"></div>
+<div class="text-right">
+<p class="text-[10px] font-label font-bold text-on-surface-variant uppercase tracking-widest">Status</p>
+<span class="px-3 py-1 rounded-full bg-secondary/10 text-secondary text-xs font-label font-bold">Excellent Standing</span>
+</div>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-left">
+<th class="px-8 py-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-widest">Course Code</th>
+<th class="px-8 py-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-widest">Subject Title</th>
+<th class="px-8 py-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-widest">Credits</th>
+<th class="px-8 py-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-widest">Raw Marks</th>
+<th class="px-8 py-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-widest">Grade Letter</th>
+<th class="px-8 py-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-widest">Points</th>
+<th class="px-8 py-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-widest">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="px-8 py-6 font-headline font-semibold text-primary">PHY-402</td>
+<td class="px-8 py-6 font-headline font-bold text-on-surface">Quantum Field Theory II</td>
+<td class="px-8 py-6 text-on-surface-variant">4.0</td>
+<td class="px-8 py-6 text-on-surface-variant">
+<div class="flex items-center gap-2">
+<div class="w-24 h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="bg-primary h-full" style="width: 94%;"></div>
+</div>
+<span class="font-bold">94</span>
+</div>
+</td>
+<td class="px-8 py-6">
+<span class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center font-headline font-extrabold text-sm shadow-md shadow-primary/20">A+</span>
+</td>
+<td class="px-8 py-6 font-bold">4.00</td>
+<td class="px-8 py-6">
+<span class="px-3 py-1 rounded-full bg-secondary/10 text-secondary text-[10px] font-label font-bold uppercase">Distinction</span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="bg-surface-container-low/30 hover:bg-surface-container-low/50 transition-colors group">
+<td class="px-8 py-6 font-headline font-semibold text-primary">MAT-312</td>
+<td class="px-8 py-6 font-headline font-bold text-on-surface">Topology &amp; Manifolds</td>
+<td class="px-8 py-6 text-on-surface-variant">3.0</td>
+<td class="px-8 py-6 text-on-surface-variant">
+<div class="flex items-center gap-2">
+<div class="w-24 h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="bg-primary h-full" style="width: 88%;"></div>
+</div>
+<span class="font-bold">88</span>
+</div>
+</td>
+<td class="px-8 py-6">
+<span class="w-10 h-10 rounded-xl bg-surface-container-highest text-primary flex items-center justify-center font-headline font-extrabold text-sm border border-primary/20">A</span>
+</td>
+<td class="px-8 py-6 font-bold">3.85</td>
+<td class="px-8 py-6">
+<span class="px-3 py-1 rounded-full bg-secondary/10 text-secondary text-[10px] font-label font-bold uppercase">Passed</span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="px-8 py-6 font-headline font-semibold text-primary">CS-450</td>
+<td class="px-8 py-6 font-headline font-bold text-on-surface">Neural Architecture Search</td>
+<td class="px-8 py-6 text-on-surface-variant">4.0</td>
+<td class="px-8 py-6 text-on-surface-variant">
+<div class="flex items-center gap-2">
+<div class="w-24 h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="bg-primary h-full" style="width: 97%;"></div>
+</div>
+<span class="font-bold">97</span>
+</div>
+</td>
+<td class="px-8 py-6">
+<span class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center font-headline font-extrabold text-sm shadow-md shadow-primary/20">A+</span>
+</td>
+<td class="px-8 py-6 font-bold">4.00</td>
+<td class="px-8 py-6">
+<span class="px-3 py-1 rounded-full bg-secondary/10 text-secondary text-[10px] font-label font-bold uppercase">Dean's List</span>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="bg-surface-container-low/30 hover:bg-surface-container-low/50 transition-colors group">
+<td class="px-8 py-6 font-headline font-semibold text-primary">BIO-201</td>
+<td class="px-8 py-6 font-headline font-bold text-on-surface">Molecular Genetics</td>
+<td class="px-8 py-6 text-on-surface-variant">3.0</td>
+<td class="px-8 py-6 text-on-surface-variant">
+<div class="flex items-center gap-2">
+<div class="w-24 h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="bg-primary h-full" style="width: 79%;"></div>
+</div>
+<span class="font-bold">79</span>
+</div>
+</td>
+<td class="px-8 py-6">
+<span class="w-10 h-10 rounded-xl bg-surface-container-highest text-primary flex items-center justify-center font-headline font-extrabold text-sm border border-primary/20">B+</span>
+</td>
+<td class="px-8 py-6 font-bold">3.30</td>
+<td class="px-8 py-6">
+<span class="px-3 py-1 rounded-full bg-secondary/10 text-secondary text-[10px] font-label font-bold uppercase">Passed</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination/Footer of Table -->
+<div class="p-6 bg-surface-container-low/50 flex justify-between items-center">
+<p class="text-xs font-label text-on-surface-variant">Showing 1 to 4 of 12 registered subjects</p>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded-lg bg-surface-container-lowest flex items-center justify-center text-on-surface-variant hover:bg-white transition-colors border border-outline-variant/10">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center font-bold text-xs">1</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-lowest flex items-center justify-center text-on-surface-variant hover:bg-white transition-colors border border-outline-variant/10">2</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-lowest flex items-center justify-center text-on-surface-variant hover:bg-white transition-colors border border-outline-variant/10">3</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-lowest flex items-center justify-center text-on-surface-variant hover:bg-white transition-colors border border-outline-variant/10">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Bottom Mobile Nav -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 bg-white/90 backdrop-blur-xl flex justify-around items-center h-20 border-t-none shadow-[0_-10px_30px_rgba(0,0,0,0.05)]">
+<div class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="text-[10px] font-label font-bold uppercase">Home</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="text-[10px] font-label font-bold uppercase">Academic</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined">analytics</span>
+<span class="text-[10px] font-label font-bold uppercase">Results</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-label font-bold uppercase">Settings</span>
+</div>
+</nav>
+</body></html>

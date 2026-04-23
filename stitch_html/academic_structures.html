@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>U-MAS | Academic Structures</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Manrope:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-container": "#3d7d73",
+                    "secondary": "#006a66",
+                    "tertiary-fixed": "#adefe3",
+                    "tertiary": "#20645b",
+                    "outline-variant": "#c7c4d7",
+                    "on-secondary-container": "#006f6a",
+                    "error-container": "#ffdad6",
+                    "inverse-primary": "#c1c1ff",
+                    "on-error-container": "#93000a",
+                    "surface-dim": "#dad7f6",
+                    "secondary-fixed": "#85f5ee",
+                    "on-tertiary-fixed": "#00201c",
+                    "on-tertiary-container": "#e1fff8",
+                    "tertiary-fixed-dim": "#92d3c7",
+                    "surface-container": "#efebff",
+                    "on-surface-variant": "#464555",
+                    "on-tertiary": "#ffffff",
+                    "on-surface": "#1a1930",
+                    "surface-variant": "#e3dffe",
+                    "secondary-fixed-dim": "#67d8d1",
+                    "on-secondary-fixed-variant": "#00504d",
+                    "on-primary": "#ffffff",
+                    "surface-container-highest": "#e3dffe",
+                    "surface": "#fcf8ff",
+                    "on-secondary-fixed": "#00201e",
+                    "inverse-on-surface": "#f2eeff",
+                    "surface-tint": "#4849da",
+                    "primary-container": "#5d5fef",
+                    "on-tertiary-fixed-variant": "#005048",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-container": "#faf7ff",
+                    "background": "#fcf8ff",
+                    "surface-container-high": "#e9e5ff",
+                    "primary-fixed": "#e1e0ff",
+                    "on-secondary": "#ffffff",
+                    "on-primary-fixed-variant": "#2e2bc2",
+                    "outline": "#767586",
+                    "on-error": "#ffffff",
+                    "primary-fixed-dim": "#c1c1ff",
+                    "error": "#ba1a1a",
+                    "secondary-container": "#82f2eb",
+                    "primary": "#4343d5",
+                    "surface-bright": "#fcf8ff",
+                    "on-background": "#1a1930",
+                    "on-primary-fixed": "#07006c",
+                    "surface-container-low": "#f6f2ff",
+                    "inverse-surface": "#2f2e46"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "2xl": "1.5rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "display": ["Plus Jakarta Sans"],
+                    "body": ["Inter"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-pill::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            height: 1.5rem;
+            width: 4px;
+            background: linear-gradient(to bottom, #4343d5, #5d5fef);
+            border-radius: 0 9999px 9999px 0;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- SideNavBar -->
+<aside class="h-screen w-72 fixed left-0 top-0 z-50 bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur-2xl flex flex-col border-r border-slate-200/50 dark:border-slate-800/50 py-10 shadow-xl shadow-indigo-900/5 dark:shadow-none">
+<div class="px-8 mb-10">
+<h1 class="text-2xl font-black bg-gradient-to-br from-indigo-600 to-indigo-400 bg-clip-text text-transparent">U-MAS</h1>
+<p class="text-xs font-label uppercase tracking-widest text-on-surface-variant/60 mt-1">Academic Portal</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="text-slate-500 flex items-center gap-3 px-8 py-3 hover:bg-white/50 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-['Inter'] text-sm font-medium">Dashboard</span>
+</a>
+<a class="relative text-indigo-600 font-bold active-pill flex items-center gap-3 px-8 py-3 bg-white/50" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance">account_balance</span>
+<span class="font-['Inter'] text-sm font-medium">Institutional</span>
+</a>
+<a class="text-slate-500 flex items-center gap-3 px-8 py-3 hover:bg-white/50 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+<span class="font-['Inter'] text-sm font-medium">Academic</span>
+</a>
+<a class="text-slate-500 flex items-center gap-3 px-8 py-3 hover:bg-white/50 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="notifications_active">notifications_active</span>
+<span class="font-['Inter'] text-sm font-medium">Notifications</span>
+</a>
+<a class="text-slate-500 flex items-center gap-3 px-8 py-3 hover:bg-white/50 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-['Inter'] text-sm font-medium">Profile</span>
+</a>
+</nav>
+<div class="px-6 mb-8">
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-white py-3 px-4 rounded-xl font-semibold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                New Registration
+            </button>
+</div>
+<footer class="mt-auto pt-6 border-t border-slate-200/50 mx-6 flex flex-col gap-1">
+<a class="text-slate-500 flex items-center gap-3 px-2 py-2 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-['Inter'] text-sm font-medium">Settings</span>
+</a>
+<a class="text-slate-500 flex items-center gap-3 px-2 py-2 hover:text-error transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-['Inter'] text-sm font-medium">Logout</span>
+</a>
+</footer>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-72 min-h-screen bg-surface-container-low">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-40 bg-white/80 backdrop-blur-xl px-8 py-4 flex justify-between items-center shadow-[0_20px_40px_-10px_rgba(26,25,48,0.06)]">
+<div class="flex items-center gap-6 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="w-full bg-slate-50 border-none rounded-xl py-2 pl-11 pr-4 focus:ring-2 focus:ring-primary/20 text-sm placeholder:text-outline" placeholder="Search academic structures..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-5">
+<button class="text-slate-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-slate-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+<div class="h-8 w-[1px] bg-slate-200"></div>
+<div class="flex items-center gap-3">
+<div class="text-right">
+<p class="text-xs font-bold text-on-surface">Dr. Julian Vance</p>
+<p class="text-[10px] text-on-surface-variant font-label uppercase tracking-wider">Head of Department</p>
+</div>
+<img alt="Administrator Profile" class="w-10 h-10 rounded-full border-2 border-primary/20 object-cover" data-alt="close-up portrait of a professional male educator with glasses and a friendly expression in a brightly lit academic office" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIDL1vX76zJt3ICjD8QkPBAry31Fz9w0IGWeCTQyWJa_XocHDO0nj-mfzN8gqDHIE99SAxLYQLUalgWa49CKVBh5L8WHKfUTrA8lhVv00IeGJ2qKFxMVOaGPkdqlJmO5Y4JlEj3Hp35ORJJ3zv1jSSWhbsuV5YjzPgSgG6nxJMRD9G5eai_xCVevYv29U-qweZWZWW1W92YDC1KrpggaGP0aMCltgO4WH82JdsX9m-btqC640_1tUEUNQ7gRJRBalnR1u_31ZvD_nj"/>
+</div>
+</div>
+</header>
+<div class="p-10 max-w-7xl mx-auto">
+<!-- Header Section -->
+<div class="mb-10 flex justify-between items-end">
+<div>
+<nav class="flex items-center gap-2 text-xs font-label text-on-surface-variant/70 mb-2">
+<span>Organization</span>
+<span class="material-symbols-outlined text-[10px]" data-icon="chevron_right">chevron_right</span>
+<span class="text-primary font-bold">Academic Structures</span>
+</nav>
+<h2 class="text-4xl font-headline font-extrabold tracking-tight text-on-surface">Institutional Framework</h2>
+<p class="text-on-surface-variant mt-2 max-w-lg">Manage the core organizational hierarchy including departmental links, subject mapping, and academic periodization.</p>
+</div>
+<div class="flex gap-3">
+<button class="bg-surface-container-highest px-6 py-3 rounded-xl font-semibold text-primary flex items-center gap-2 hover:bg-primary-fixed transition-colors">
+<span class="material-symbols-outlined" data-icon="file_download">file_download</span>
+                        Export Report
+                    </button>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Departments Section (Large Card) -->
+<section class="col-span-12 lg:col-span-8 bg-surface-container-lowest rounded-2xl p-8 shadow-sm">
+<div class="flex justify-between items-center mb-8">
+<div class="flex items-center gap-4">
+<div class="bg-primary/10 p-3 rounded-xl">
+<span class="material-symbols-outlined text-primary" data-icon="corporate_fare">corporate_fare</span>
+</div>
+<h3 class="text-xl font-bold">Departments</h3>
+</div>
+<button class="bg-primary text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 hover:shadow-lg hover:shadow-primary/20 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="add_business">add_business</span>
+                            Add Department
+                        </button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="p-6 bg-surface-container-low rounded-xl group hover:bg-primary-fixed transition-all cursor-pointer">
+<div class="flex justify-between mb-4">
+<span class="text-xs font-label bg-secondary/10 text-secondary px-2 py-1 rounded-full">Active</span>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors" data-icon="more_vert">more_vert</span>
+</div>
+<h4 class="font-headline font-bold text-lg mb-1">Faculty of Engineering</h4>
+<p class="text-sm text-on-surface-variant mb-4">12 Classes • 45 Faculty Members</p>
+<div class="flex -space-x-2">
+<img class="w-8 h-8 rounded-full border-2 border-surface-container-low object-cover" data-alt="portrait of a female professor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBL2Ab7iAhn6Gf-ynPOAFsP3tgljvB_JnL8WHLG9hzmkjVOHlh8v-wIVwiSu9miJOh3QxVT7t7om7nqJNDymGgMPu5Cg9nU30JoJbn7nmKRC7q6nkmGad8JQVINYCWHVM33AfrLVdWu-gthntfks76ou5F4TiP_soHkJI5bQq_ywagh6tOFFc3pBHxPwtEUQMUlcTY8iIDNIFCi3FoactEyq0hcaac-a_JQO37F4TVMGiVd_U4GaBb0oTODkgfoPX6bt5kAjTZVN51J"/>
+<img class="w-8 h-8 rounded-full border-2 border-surface-container-low object-cover" data-alt="portrait of a male researcher" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBn-WMGD8DpvjvQPJa9EkVvjdMp1jpsFMie-0Ji8HmzjjvUoutaJdF2yoINVG5htONCcFzt0j_xZum40QYBU30b_ryU9UXwqby9lsXE92TtdkFrzi3rZEkDCQJTdAPy6f5ujTG49v0RRHkJJKJDm23p3C1I2NjqqoSW3n5c6xnrzbe9KPnwTqspWsCHPCDNWXPsNDy_poVoHZUOLJMzjk9RKlYzhAR2aTrbAuaKweTOMbqLtTZrlwRRGyQPFnI9K0_3vghLr9RpZnV3"/>
+<div class="w-8 h-8 rounded-full bg-outline-variant text-[10px] flex items-center justify-center font-bold text-on-surface-variant">+43</div>
+</div>
+</div>
+<div class="p-6 bg-surface-container-low rounded-xl group hover:bg-primary-fixed transition-all cursor-pointer">
+<div class="flex justify-between mb-4">
+<span class="text-xs font-label bg-secondary/10 text-secondary px-2 py-1 rounded-full">Active</span>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors" data-icon="more_vert">more_vert</span>
+</div>
+<h4 class="font-headline font-bold text-lg mb-1">Computer Science</h4>
+<p class="text-sm text-on-surface-variant mb-4">8 Classes • 32 Faculty Members</p>
+<div class="flex -space-x-2">
+<img class="w-8 h-8 rounded-full border-2 border-surface-container-low object-cover" data-alt="portrait of a female software academic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCX5nLv7vqNeAEF-lju3QmlKPPKOtVtg_0tquOFGd3h-90_3H1auEqXBsUB54Kiyk0nsxcuKPJbciS9TuHeLHZkcUM1etI0YXleu2MS_i5-hITFdxC8ECiHwnhLkpOiX-Qd_njoSy2P52xUYVPbhc4vK6lQgNbrZ6hHo0wFLBQqTVJ3X6mWh8FvlNLyxqDErfvqtBoEWB7zUHxrvLM0-a-A0Gfd9u8gVZaD_v4y9AQXDF0i8wqclH0CBSOhSjBQvHkDo5GU_OyyFfsy"/>
+<img class="w-8 h-8 rounded-full border-2 border-surface-container-low object-cover" data-alt="portrait of a male tech professor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsE6g4cgZTAKsLLIgYy6v_nQQM7mBNVAbzRqhs4ylhcYSB-sbGbMrb0alayGfob86cVfri8hQlXB_8sZ00ACc_xYoP46OG41qQNznJYsaLwXNhjabtPzURDUfb8HHYTUGYW_H4mX_up-CtLiF1eUpr8PQmkXNjIyXJuk9IIfQT3ytPkgwswNS9VUHQZAJXPpktXJlQz4m4BAewbl-nyTr72803yzXOD7cITJsMUbDp-aT1Qlt-at50FQV6E5_XLENzvWCwPmyZMvv-"/>
+<div class="w-8 h-8 rounded-full bg-outline-variant text-[10px] flex items-center justify-center font-bold text-on-surface-variant">+30</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Semester Dates (Side Card) -->
+<section class="col-span-12 lg:col-span-4 bg-white/40 backdrop-blur-md rounded-2xl p-8 border border-outline-variant/15 shadow-sm">
+<div class="flex items-center gap-4 mb-8">
+<div class="bg-tertiary/10 p-3 rounded-xl">
+<span class="material-symbols-outlined text-tertiary" data-icon="calendar_month">calendar_month</span>
+</div>
+<h3 class="text-xl font-bold">Semesters</h3>
+</div>
+<div class="space-y-6">
+<div class="relative pl-8 before:absolute before:left-0 before:top-2 before:bottom-0 before:w-[2px] before:bg-slate-200">
+<div class="absolute left-[-5px] top-2 w-3 h-3 rounded-full bg-primary ring-4 ring-primary/10"></div>
+<p class="text-xs font-label text-primary font-bold uppercase tracking-wider mb-1">Current</p>
+<h4 class="font-bold text-on-surface">Fall Semester 2023</h4>
+<p class="text-sm text-on-surface-variant">Sep 01 - Dec 22</p>
+<button class="mt-3 text-xs font-bold text-primary hover:underline">Edit Dates</button>
+</div>
+<div class="relative pl-8 before:absolute before:left-0 before:top-2 before:bottom-0 before:w-[2px] before:bg-slate-200">
+<div class="absolute left-[-5px] top-2 w-3 h-3 rounded-full bg-slate-300"></div>
+<p class="text-xs font-label text-on-surface-variant font-bold uppercase tracking-wider mb-1">Upcoming</p>
+<h4 class="font-bold text-on-surface">Spring Semester 2024</h4>
+<p class="text-sm text-on-surface-variant">Jan 15 - May 30</p>
+<button class="mt-3 text-xs font-bold text-primary hover:underline">Configure</button>
+</div>
+</div>
+<div class="mt-10 p-4 bg-surface-container rounded-xl">
+<h5 class="text-sm font-bold mb-2">Registration Window</h5>
+<div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+<div class="bg-secondary h-full w-[65%]"></div>
+</div>
+<p class="text-[10px] text-on-surface-variant mt-2">65% Through registration period. Closes in 4 days.</p>
+</div>
+</section>
+<!-- Subjects & Staff Linking (Full Width) -->
+<section class="col-span-12 bg-surface-container-lowest rounded-2xl p-8 shadow-sm overflow-hidden">
+<div class="flex justify-between items-center mb-10">
+<div class="flex items-center gap-4">
+<div class="bg-secondary/10 p-3 rounded-xl">
+<span class="material-symbols-outlined text-secondary" data-icon="auto_stories">auto_stories</span>
+</div>
+<h3 class="text-xl font-bold">Subject &amp; Staff Linking</h3>
+</div>
+<div class="flex gap-2">
+<div class="flex border border-outline-variant/30 rounded-xl overflow-hidden text-sm">
+<button class="px-4 py-2 bg-primary text-white font-semibold">Active Mapping</button>
+<button class="px-4 py-2 hover:bg-slate-50 transition-colors">Pending Review</button>
+</div>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="text-on-surface-variant font-label text-xs uppercase tracking-widest">
+<th class="pb-6 px-4">Subject Name</th>
+<th class="pb-6 px-4">Subject Code</th>
+<th class="pb-6 px-4">Assigned Staff</th>
+<th class="pb-6 px-4">Linked Classes</th>
+<th class="pb-6 px-4">Credits</th>
+<th class="pb-6 px-4 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="text-sm">
+<tr class="hover:bg-surface transition-colors border-b border-surface-container-high last:border-0">
+<td class="py-4 px-4 font-headline font-bold">Advanced Algorithms</td>
+<td class="py-4 px-4 text-on-surface-variant">CS-402</td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-2">
+<img class="w-6 h-6 rounded-full object-cover" data-alt="portrait of female computer science professor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLDLmLfX985lsrEqHD5tahmyHBc9YsHDRu2GLEmwga-DepdJhAonP-AuljEk3KrHFmzYyzegh7h3u6bMgz1ktIMbKoZ4URmHbaH-sDRKYhh9UqkT50pxwXZIJvag7PU1Csuo65R5MhJPuekqcmILEToY3yPOWT3phIqHrBANtDumoGUXZf3K6OkfbVglNw1LI-SvcCxurd74fx5--dlybdwu0Yfz4wsrZc-3iS8gtbE2fi6QElZvJ-tFbZND0CE23KkELRIljs-6jy"/>
+<span>Prof. Sarah Chen</span>
+</div>
+</td>
+<td class="py-4 px-4">
+<div class="flex gap-1 flex-wrap">
+<span class="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded font-bold">B.Tech-A</span>
+<span class="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded font-bold">B.Tech-C</span>
+</div>
+</td>
+<td class="py-4 px-4 font-label font-bold">4.0</td>
+<td class="py-4 px-4 text-right">
+<button class="text-primary font-bold hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="link">link</span>
+</button>
+</td>
+</tr>
+<tr class="bg-surface-container-low/30 hover:bg-surface transition-colors border-b border-surface-container-high last:border-0">
+<td class="py-4 px-4 font-headline font-bold">Machine Learning</td>
+<td class="py-4 px-4 text-on-surface-variant">CS-510</td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-2">
+<img class="w-6 h-6 rounded-full object-cover" data-alt="portrait of male machine learning researcher" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQwvTCsaWgVfAFOVj5GvkNaz9gByLrsO2w2jneNAeIEVTnmDZPfdqK7jBgUFSZzr-C9u3uWjTQ7TckKQNCilQEIuPWeBeSaKLoXyusDu0lsXa0F49UK56mXFhAis4QIVCfDHzPoOdx5xUZb1Zhk8ngAuWtuHD4qO6yWAm6kThVUM6_A0aNV9L-38PQZjJn5LDIGRRh1iqNVo8HrgNkfco_m9hlV-pssQS6ydd8uAdLyGOqGlk1m9_JWlBo0MZsPnkANMi2-TIxUzgf"/>
+<span>Dr. Marcus Thorne</span>
+</div>
+</td>
+<td class="py-4 px-4">
+<div class="flex gap-1 flex-wrap">
+<span class="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded font-bold">M.Tech-AI</span>
+</div>
+</td>
+<td class="py-4 px-4 font-label font-bold">3.5</td>
+<td class="py-4 px-4 text-right">
+<button class="text-primary font-bold hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="link">link</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface transition-colors border-b border-surface-container-high last:border-0">
+<td class="py-4 px-4 font-headline font-bold">Quantum Computing</td>
+<td class="py-4 px-4 text-on-surface-variant">PH-312</td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-2 italic text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="person_off">person_off</span>
+<span>Unassigned</span>
+</div>
+</td>
+<td class="py-4 px-4">
+<div class="flex gap-1 flex-wrap">
+<span class="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded font-bold">B.Sc-H</span>
+</div>
+</td>
+<td class="py-4 px-4 font-label font-bold">3.0</td>
+<td class="py-4 px-4 text-right">
+<button class="text-primary font-bold hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="link">link</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="mt-8 flex justify-center">
+<button class="text-primary font-bold text-sm flex items-center gap-1 hover:gap-2 transition-all">
+                            View All Subjects
+                            <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</section>
+<!-- Quick Actions / Metrics (Footer Grid) -->
+<div class="col-span-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-gradient-to-br from-primary to-primary-container p-6 rounded-2xl text-white shadow-lg shadow-primary/20">
+<h4 class="text-sm font-label uppercase tracking-widest opacity-80 mb-4">Conflict Resolution</h4>
+<div class="flex items-center justify-between">
+<div class="text-3xl font-extrabold">04</div>
+<span class="material-symbols-outlined text-4xl opacity-50" data-icon="warning">warning</span>
+</div>
+<p class="text-xs mt-2">Classroom schedule overlaps detected.</p>
+<button class="mt-4 w-full bg-white/20 hover:bg-white/30 py-2 rounded-lg text-xs font-bold transition-colors">Resolve Now</button>
+</div>
+<div class="bg-surface-container-highest p-6 rounded-2xl shadow-sm border border-outline-variant/20">
+<h4 class="text-sm font-label uppercase tracking-widest text-on-surface-variant mb-4">Total Capacity</h4>
+<div class="flex items-center justify-between">
+<div class="text-3xl font-extrabold text-on-surface">2,450</div>
+<span class="material-symbols-outlined text-4xl text-secondary opacity-50" data-icon="groups">groups</span>
+</div>
+<p class="text-xs mt-2 text-on-surface-variant">Across all linked departments.</p>
+<button class="mt-4 w-full bg-secondary/10 hover:bg-secondary/20 text-secondary py-2 rounded-lg text-xs font-bold transition-colors">Manage Slots</button>
+</div>
+<div class="bg-surface-container-highest p-6 rounded-2xl shadow-sm border border-outline-variant/20">
+<h4 class="text-sm font-label uppercase tracking-widest text-on-surface-variant mb-4">Staff Utilization</h4>
+<div class="flex items-center justify-between">
+<div class="text-3xl font-extrabold text-on-surface">92%</div>
+<span class="material-symbols-outlined text-4xl text-primary opacity-50" data-icon="leaderboard">leaderboard</span>
+</div>
+<div class="mt-2 w-full bg-slate-200 h-1 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[92%]"></div>
+</div>
+<button class="mt-4 w-full bg-primary/10 hover:bg-primary/20 text-primary py-2 rounded-lg text-xs font-bold transition-colors">Review Loads</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

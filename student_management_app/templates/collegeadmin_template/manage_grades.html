@@ -1,46 +1,49 @@
 {% extends 'collegeadmin_template/base_template.html' %}
-{% block page_title %}
-Bulk Upload Grades
-{% endblock page_title %}
+{% block page_title %}Bulk Upload Grades{% endblock page_title %}
+
 {% block main_content %}
-    <section class="content">
-      <div class="container-fluid">
-          <div class="row">
-              <div class="col-md-12">
-            <div class="card ">
-              <div class="card-header">
-                <h3 class="card-title">Upload Grades (CSV/Excel)</h3>
-              </div>
-              <form role="form" action="/collegeadmin_manage_grades_save" method="post" enctype="multipart/form-data">
-                  {% csrf_token %}
-                <div class="card-body">
-                  <div class="form-group">
-                    <label>Upload File</label>
-                    <input type="file" class="form-control" name="file" accept=".csv,.xls,.xlsx" required>
-                    <small class="form-text text-muted">
-                        Expected Columns: <code>student_profile_id</code>, <code>subject_name</code>, <code>exam_marks</code>, <code>assignment_marks</code>
-                    </small>
-                  </div>
-                   <div class="form-group">
-                      {% if messages %}
-                        {% for message in messages %}
-                        {% if message.tags == 'error' %}
-                        <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
-                        {% endif %}
-                        {% if message.tags == 'success' %}
-                        <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
-                        {% endif %}
-                        {% endfor %}
-                      {% endif %}
-                    </div>
-                </div>
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-primary btn-block">Upload Grades</button>
-                </div>
-              </form>
-            </div>
-          </div>
-          </div>
+<div class="max-w-3xl">
+  <header class="mb-10">
+    <h2 class="text-4xl font-extrabold text-on-surface font-headline tracking-tight">Grade Management</h2>
+    <p class="text-on-surface-variant font-body mt-2">Upload student grades via CSV or Excel file.</p>
+  </header>
+
+  <div class="bg-surface-container-lowest rounded-2xl p-8">
+    <form role="form" action="/collegeadmin_manage_grades_save" method="post" enctype="multipart/form-data" class="space-y-8">
+      {% csrf_token %}
+      <div class="space-y-2">
+        <label class="block font-label text-sm font-bold text-on-surface-variant">Upload File</label>
+        <input type="file" name="file" accept=".csv,.xls,.xlsx" required class="w-full py-3 px-4 border-2 border-dashed border-outline-variant/30 rounded-xl bg-surface-container-low text-on-surface-variant cursor-pointer hover:border-primary/40 hover:bg-primary-fixed/10 transition-all font-body">
+        <p class="text-xs text-on-surface-variant mt-2">
+          Expected Columns: <code class="px-1.5 py-0.5 bg-surface-container rounded text-primary text-[11px]">student_profile_id</code>, <code class="px-1.5 py-0.5 bg-surface-container rounded text-primary text-[11px]">subject_name</code>, <code class="px-1.5 py-0.5 bg-surface-container rounded text-primary text-[11px]">exam_marks</code>, <code class="px-1.5 py-0.5 bg-surface-container rounded text-primary text-[11px]">assignment_marks</code>
+        </p>
       </div>
-    </section>
+
+      {% if messages %}
+        <div class="space-y-3">
+          {% for message in messages %}
+            {% if message.tags == 'error' %}
+              <div class="px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 bg-error/10 text-error">
+                <span class="material-symbols-outlined text-lg">error</span>
+                {{ message }}
+              </div>
+            {% endif %}
+            {% if message.tags == 'success' %}
+              <div class="px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 bg-green-100 text-green-700">
+                <span class="material-symbols-outlined text-lg">check_circle</span>
+                {{ message }}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="pt-6 border-t border-outline-variant/20">
+        <button type="submit" class="w-full py-4 premium-gradient text-white font-display font-bold rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform">
+          Upload Grades
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock main_content %}

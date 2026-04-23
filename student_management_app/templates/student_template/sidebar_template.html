@@ -1,75 +1,68 @@
 {% load static %}
-<aside class="sidebar glass">
-  <div class="sidebar-brand">
-    <div class="brand-icon">
-      <i class="fas fa-user-graduate"></i>
-    </div>
-    <div class="brand-text">
-      <h1>U-MAS</h1>
-      <span>Student Portal</span>
-    </div>
+<!-- SideNavBar -->
+<aside class="h-screen w-72 fixed left-0 top-0 z-50 bg-slate-50/90 backdrop-blur-2xl flex flex-col border-r border-slate-200/50 py-10 shadow-xl shadow-indigo-900/5 hidden md:flex">
+  <div class="px-8 mb-12">
+    <h1 class="text-2xl font-black bg-gradient-to-br from-indigo-600 to-indigo-400 bg-clip-text text-transparent font-display">U-MAS</h1>
+    <p class="text-xs font-label text-on-surface-variant tracking-wider uppercase mt-1">Student Portal</p>
   </div>
+  <nav class="flex-1 space-y-1 overflow-y-auto">
+    <p class="px-8 text-[10px] font-label text-on-surface-variant uppercase tracking-widest mb-2">Main</p>
+    {% url 'student_home' as student_home %}
+    <a class="{% if request.path == student_home %}relative flex items-center gap-3 px-8 py-3 text-indigo-600 font-bold before:absolute before:left-0 before:h-6 before:w-1 before:bg-gradient-to-b before:from-indigo-600 before:to-indigo-400 before:rounded-r-full{% else %}flex items-center gap-3 px-8 py-3 text-slate-500 hover:bg-white/50 hover:text-indigo-600 transition-all duration-300{% endif %} font-medium" href="{{ student_home }}">
+      <span class="material-symbols-outlined" {% if request.path == student_home %}style="font-variation-settings: 'FILL' 1;"{% endif %}>home</span>
+      <span>Home</span>
+    </a>
 
-  <nav class="sidebar-nav">
-    <div class="nav-section">
-      <span class="section-label">Main</span>
-      {% url 'student_home' as student_home %}
-      <a href="{{ student_home }}" class="nav-link {% if request.path == student_home %}active{% endif %}">
-        <i class="fas fa-home"></i>
-        <span>Home</span>
-      </a>
-    </div>
+    <p class="px-8 text-[10px] font-label text-on-surface-variant uppercase tracking-widest mb-2 mt-6">Academic Life</p>
 
-    <div class="nav-section">
-      <span class="section-label">Academic Life</span>
-      
-      {% url 'student_view_attendance' as student_view_attendance %}
-      <a href="{{ student_view_attendance }}" class="nav-link {% if request.path == student_view_attendance %}active{% endif %}">
-        <i class="fas fa-calendar-check"></i>
-        <span>Attendance Tracker</span>
-      </a>
+    {% url 'student_view_attendance' as student_view_attendance %}
+    <a class="{% if request.path == student_view_attendance %}relative flex items-center gap-3 px-8 py-3 text-indigo-600 font-bold before:absolute before:left-0 before:h-6 before:w-1 before:bg-gradient-to-b before:from-indigo-600 before:to-indigo-400 before:rounded-r-full{% else %}flex items-center gap-3 px-8 py-3 text-slate-500 hover:bg-white/50 hover:text-indigo-600 transition-all duration-300{% endif %} font-medium" href="{{ student_view_attendance }}">
+      <span class="material-symbols-outlined">event_available</span>
+      <span>Attendance Tracker</span>
+    </a>
 
-      {% url 'student_view_result' as student_view_result %}
-      <a href="{{ student_view_result }}" class="nav-link {% if request.path == student_view_result %}active{% endif %}">
-        <i class="fas fa-chart-line"></i>
-        <span>Academic Results</span>
-      </a>
+    {% url 'student_view_result' as student_view_result %}
+    <a class="{% if request.path == student_view_result %}relative flex items-center gap-3 px-8 py-3 text-indigo-600 font-bold before:absolute before:left-0 before:h-6 before:w-1 before:bg-gradient-to-b before:from-indigo-600 before:to-indigo-400 before:rounded-r-full{% else %}flex items-center gap-3 px-8 py-3 text-slate-500 hover:bg-white/50 hover:text-indigo-600 transition-all duration-300{% endif %} font-medium" href="{{ student_view_result }}">
+      <span class="material-symbols-outlined">trending_up</span>
+      <span>Academic Results</span>
+    </a>
 
-      {% url 'student_view_timetable' as student_view_timetable %}
-      <a href="{{ student_view_timetable }}" class="nav-link {% if request.path == student_view_timetable %}active{% endif %}">
-        <i class="fas fa-calendar-alt"></i>
-        <span>Class Timetable</span>
-      </a>
-    </div>
+    {% url 'student_view_timetable' as student_view_timetable %}
+    <a class="{% if request.path == student_view_timetable %}relative flex items-center gap-3 px-8 py-3 text-indigo-600 font-bold before:absolute before:left-0 before:h-6 before:w-1 before:bg-gradient-to-b before:from-indigo-600 before:to-indigo-400 before:rounded-r-full{% else %}flex items-center gap-3 px-8 py-3 text-slate-500 hover:bg-white/50 hover:text-indigo-600 transition-all duration-300{% endif %} font-medium" href="{{ student_view_timetable }}">
+      <span class="material-symbols-outlined">calendar_month</span>
+      <span>Class Timetable</span>
+    </a>
 
-    <div class="nav-section">
-      <span class="section-label">Requests & Info</span>
-      
-      {% url 'student_apply_leave' as student_apply_leave %}
-      <a href="{{ student_apply_leave }}" class="nav-link {% if request.path == student_apply_leave %}active{% endif %}">
-        <i class="fas fa-paper-plane"></i>
-        <span>Leave Application</span>
-      </a>
+    <p class="px-8 text-[10px] font-label text-on-surface-variant uppercase tracking-widest mb-2 mt-6">Requests &amp; Info</p>
 
-      {% url 'student_feedback' as student_feedback %}
-      <a href="{{ student_feedback }}" class="nav-link {% if request.path == student_feedback %}active{% endif %}">
-        <i class="fas fa-comments"></i>
-        <span>Feedback Desk</span>
-      </a>
+    {% url 'student_apply_leave' as student_apply_leave %}
+    <a class="{% if request.path == student_apply_leave %}relative flex items-center gap-3 px-8 py-3 text-indigo-600 font-bold before:absolute before:left-0 before:h-6 before:w-1 before:bg-gradient-to-b before:from-indigo-600 before:to-indigo-400 before:rounded-r-full{% else %}flex items-center gap-3 px-8 py-3 text-slate-500 hover:bg-white/50 hover:text-indigo-600 transition-all duration-300{% endif %} font-medium" href="{{ student_apply_leave }}">
+      <span class="material-symbols-outlined">send</span>
+      <span>Leave Application</span>
+    </a>
 
-      {% url 'student_all_notification' as student_all_notification %}
-      <a href="{{ student_all_notification }}" class="nav-link {% if request.path == student_all_notification %}active{% endif %}">
-        <div style="position: relative; display: inline-flex;">
-          <i class="fas fa-bell"></i>
-          {% if student_unread_notification_count %}
-            <span class="badge badge-error" style="position: absolute; top: -5px; right: -5px; padding: 2px 5px; font-size: 10px;">
-              {% if student_unread_notification_count > 99 %}99+{% else %}{{ student_unread_notification_count }}{% endif %}
-            </span>
-          {% endif %}
-        </div>
-        <span>Notifications</span>
-      </a>
+    {% url 'student_feedback' as student_feedback %}
+    <a class="{% if request.path == student_feedback %}relative flex items-center gap-3 px-8 py-3 text-indigo-600 font-bold before:absolute before:left-0 before:h-6 before:w-1 before:bg-gradient-to-b before:from-indigo-600 before:to-indigo-400 before:rounded-r-full{% else %}flex items-center gap-3 px-8 py-3 text-slate-500 hover:bg-white/50 hover:text-indigo-600 transition-all duration-300{% endif %} font-medium" href="{{ student_feedback }}">
+      <span class="material-symbols-outlined">forum</span>
+      <span>Feedback Desk</span>
+    </a>
 
-    </div>
+    {% url 'student_all_notification' as student_all_notification %}
+    <a class="{% if request.path == student_all_notification %}relative flex items-center gap-3 px-8 py-3 text-indigo-600 font-bold before:absolute before:left-0 before:h-6 before:w-1 before:bg-gradient-to-b before:from-indigo-600 before:to-indigo-400 before:rounded-r-full{% else %}flex items-center gap-3 px-8 py-3 text-slate-500 hover:bg-white/50 hover:text-indigo-600 transition-all duration-300{% endif %} font-medium" href="{{ student_all_notification }}">
+      <span class="material-symbols-outlined">notifications</span>
+      <span>Notifications</span>
+      {% if student_unread_notification_count %}
+        <span class="ml-auto px-2 py-0.5 rounded-full bg-error text-white text-[10px] font-label font-bold">
+          {% if student_unread_notification_count > 99 %}99+{% else %}{{ student_unread_notification_count }}{% endif %}
+        </span>
+      {% endif %}
+    </a>
   </nav>
+
+  <div class="pt-6 border-t border-slate-200/50 px-2 space-y-1">
+    <a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:bg-white/50 hover:text-indigo-600 transition-all duration-300 font-medium" href="{% url 'logout' %}">
+      <span class="material-symbols-outlined">logout</span>
+      <span>Logout</span>
+    </a>
+  </div>
 </aside>

@@ -1,40 +1,31 @@
 {% load static %}
-<aside class="sidebar glass">
-  <div class="sidebar-brand">
-    <div class="brand-icon">
-      <i class="fas fa-microchip"></i>
-    </div>
-    <div class="brand-text">
-      <h1>U-MAS</h1>
-      <span>Dept. HOD Panel</span>
-    </div>
+<!-- SideNavBar -->
+<aside class="h-screen w-72 fixed left-0 top-0 z-50 bg-slate-50/90 backdrop-blur-2xl flex flex-col border-r border-slate-200/50 py-10 shadow-xl shadow-indigo-900/5 hidden md:flex">
+  <div class="px-8 mb-12">
+    <h1 class="text-2xl font-black bg-gradient-to-br from-indigo-600 to-indigo-400 bg-clip-text text-transparent font-display">U-MAS</h1>
+    <p class="text-xs font-label text-on-surface-variant tracking-wider uppercase mt-1">Dept. HOD Panel</p>
   </div>
+  <nav class="flex-1 space-y-1 overflow-y-auto">
+    <p class="px-8 text-[10px] font-label text-on-surface-variant uppercase tracking-widest mb-2">Overview</p>
+    {% url 'department_hod_home' as department_hod_home %}
+    <a class="{% if request.path == department_hod_home %}relative flex items-center gap-3 px-8 py-3 text-indigo-600 font-bold before:absolute before:left-0 before:h-6 before:w-1 before:bg-gradient-to-b before:from-indigo-600 before:to-indigo-400 before:rounded-r-full{% else %}flex items-center gap-3 px-8 py-3 text-slate-500 hover:bg-white/50 hover:text-indigo-600 transition-all duration-300{% endif %} font-medium" href="{{ department_hod_home }}">
+      <span class="material-symbols-outlined" {% if request.path == department_hod_home %}style="font-variation-settings: 'FILL' 1;"{% endif %}>dashboard</span>
+      <span>Department Home</span>
+    </a>
 
-  <nav class="sidebar-nav">
-    <div class="nav-section">
-      <span class="section-label">Overview</span>
-      {% url 'department_hod_home' as department_hod_home %}
-      <a href="{{ department_hod_home }}" class="nav-link {% if request.path == department_hod_home %}active{% endif %}">
-        <i class="fas fa-tachometer-alt"></i>
-        <span>Department Home</span>
-      </a>
-    </div>
+    <p class="px-8 text-[10px] font-label text-on-surface-variant uppercase tracking-widest mb-2 mt-6">Academic Management</p>
 
-    <div class="nav-section">
-      <span class="section-label">Academic Management</span>
-      {% url 'department_hod_upload_timetable' as department_hod_upload_timetable %}
-      <a href="{{ department_hod_upload_timetable }}" class="nav-link {% if request.path == department_hod_upload_timetable %}active{% endif %}">
-        <i class="fas fa-calendar-alt"></i>
-        <span>Upload Timetable</span>
-      </a>
-    </div>
-
-    <div class="nav-section">
-      <span class="section-label">Session Control</span>
-      <a href="{% url 'logout' %}" class="nav-link">
-        <i class="fas fa-sign-out-alt"></i>
-        <span>Sign Out</span>
-      </a>
-    </div>
+    {% url 'department_hod_upload_timetable' as department_hod_upload_timetable %}
+    <a class="{% if request.path == department_hod_upload_timetable %}relative flex items-center gap-3 px-8 py-3 text-indigo-600 font-bold before:absolute before:left-0 before:h-6 before:w-1 before:bg-gradient-to-b before:from-indigo-600 before:to-indigo-400 before:rounded-r-full{% else %}flex items-center gap-3 px-8 py-3 text-slate-500 hover:bg-white/50 hover:text-indigo-600 transition-all duration-300{% endif %} font-medium" href="{{ department_hod_upload_timetable }}">
+      <span class="material-symbols-outlined">calendar_month</span>
+      <span>Upload Timetable</span>
+    </a>
   </nav>
+
+  <div class="pt-6 border-t border-slate-200/50 px-2 space-y-1">
+    <a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:bg-white/50 hover:text-indigo-600 transition-all duration-300 font-medium" href="{% url 'logout' %}">
+      <span class="material-symbols-outlined">logout</span>
+      <span>Sign Out</span>
+    </a>
+  </div>
 </aside>

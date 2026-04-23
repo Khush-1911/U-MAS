@@ -3,93 +3,90 @@
 Staff Feedback
 {% endblock page_title %}
 {% block main_content %}
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-          <div class="row">
-              <div class="col-md-12">
-            <!-- general form elements -->
-            <div class="card ">
-              <div class="card-header">
-                <h3 class="card-title">Staff Feedback</h3>
+    
+            
+            <div class="bg-surface-container-lowest rounded-2xl overflow-hidden border border-outline-variant/10 shadow-xl shadow-indigo-900/5">
+              <div class="px-8 py-6 border-b border-outline-variant/10">
+                <h3 class="font-display font-extrabold text-on-surface text-2xl">Staff Feedback Registry</h3>
+                <p class="text-on-surface-variant text-sm mt-1">Review and respond to feedback submitted by faculty members.</p>
               </div>
-              <!-- /.card-header -->
-              <!-- form start -->
-                <div class="table">
-                    <table class="table">
-                        <tr>
-                            <th>ID</th>
-                            <th>Staff ID</th>
-                            <th>Staff Name</th>
-                            <th>Message</th>
-                            <th>Sended On</th>
-                            <th>Reply</th>
+              
+              <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-surface-container-low/50">
+                            <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">ID</th>
+                            <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">Faculty Name</th>
+                            <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">Submission</th>
+                            <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">Timestamp</th>
+                            <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant text-right">Response Status</th>
                         </tr>
+                    </thead>
+                    <tbody>
                         {% for feedback in feedbacks %}
-                        <tr>
-                            <td>{{ feedback.id }}</td>
-                            <td>{{ feedback.staff_id.admin.id }}</td>
-                            <td>{{ feedback.staff_id.admin.first_name }} {{ feedback.staff_id.admin.last_name }}</td>
-                            <td>{{ feedback.feedback }}</td>
-                            <td>{{ feedback.created_at }}</td>
-                            <td>
+                        <tr class="group hover:bg-primary-fixed/20 transition-colors {% if forloop.counter|divisibleby:2 %}bg-surface-container-low/20{% else %}bg-white{% endif %}">
+                            <td class="px-8 py-6 text-sm font-body">{{ feedback.id }}</td>
+                            <td class="px-8 py-6">
+                                <p class="font-display font-bold text-on-surface leading-tight">{{ feedback.staff_id.admin.first_name }} {{ feedback.staff_id.admin.last_name }}</p>
+                                <p class="text-xs text-on-surface-variant font-body">ID: {{ feedback.staff_id.admin.id }}</p>
+                            </td>
+                            <td class="px-8 py-6 text-sm font-body text-on-surface-variant max-w-xs truncate">{{ feedback.feedback }}</td>
+                            <td class="px-8 py-6 text-sm font-body text-on-surface-variant">{{ feedback.created_at|date:"M d, Y H:i" }}</td>
+                            <td class="px-8 py-6 text-right">
                                 {% if feedback.feedback_reply == "" %}
-                                <button class="btn btn-success reply_open_modal" data-toggle="modal" data-target="#reply_modal">Reply</button>
+                                <button class="reply_open_modal px-4 py-2 rounded-lg bg-secondary/10 text-secondary text-xs font-label font-bold uppercase tracking-wider hover:bg-secondary/20 transition-colors cursor-pointer border-none">Reply</button>
                                 {% else %}
-                                {{ feedback.feedback_reply }}
+                                <span class="px-3 py-1 rounded-full bg-surface-container text-on-surface-variant text-xs font-bold font-label">Replied</span>
                                 {% endif %}
                             </td>
-
                         </tr>
                         {% endfor %}
-                    </table>
-                </div>
-
+                    </tbody>
+                </table>
+              </div>
             </div>
-            <!-- /.card -->
 
-
-
-          </div>
-          </div>
+  <!-- Response Modal -->
+  <div class="fixed inset-0 bg-slate-900/45 hidden items-center justify-center p-6 z-[2000]" id="reply_modal">
+    <div class="w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden">
+      <div class="flex items-center justify-between px-6 py-5 border-b border-outline-variant/20">
+        <h4 class="font-headline font-bold text-on-surface text-lg">Transmit Response</h4>
+        <button type="button" class="modal-close-btn w-9 h-9 rounded-full bg-surface-container hover:bg-surface-container-highest flex items-center justify-center text-on-surface-variant transition-colors text-xl leading-none border-none cursor-pointer">&times;</button>
       </div>
-    </section>
-  <!-- Modal -->
-  <div class="modal fade" id="reply_modal" role="dialog">
-    <div class="modal-dialog">
-
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Reply</h4>
-                      <button type="button" class="close" data-dismiss="modal">&times;</button>
-
+      <div class="p-6 space-y-4">
+        <p class="text-sm font-body text-on-surface-variant">Responding to: <span id="reply_name" class="font-bold text-primary"></span></p>
+        <input type="hidden" id="reply_id" name="reply_id">
+        <div class="space-y-2">
+            <label class="block font-label text-sm font-bold text-on-surface-variant">Message Core</label>
+            <textarea class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body resize-y" rows="5" id="reply_message" placeholder="Type your response here..."></textarea>
         </div>
-        <div class="modal-body">
-          <p>Reply To : <span id="reply_name"></span></p>
-            <input type="hidden" id="reply_id" name="reply_id">
-            <textarea class="form-control" rows="5" id="reply_message"></textarea>
-            <button id="reply_btn" class="btn btn-info btn-block">Reply</button>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
+        <button id="reply_btn" class="w-full py-3 premium-gradient text-white font-label font-bold rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform border-none cursor-pointer">Commit Response</button>
       </div>
-
+      <div class="px-6 py-4 border-t border-outline-variant/20 text-right">
+        <button type="button" class="modal-close-btn px-4 py-2 bg-surface-container text-on-surface-variant font-label font-bold rounded-lg hover:bg-surface-container-highest transition-colors border-none cursor-pointer">Discard</button>
+      </div>
     </div>
   </div>
-    <!-- /.content -->
+    
 {% endblock main_content %}
 {% block custom_js %}
 <script>
     $(document).ready(function(){
         $(".reply_open_modal").click(function(){
             var id=$(this).parents("tr").children("td:eq(0)").text();
-            var name=$(this).parents("tr").children("td:eq(2)").text();
+            var name=$(this).parents("tr").find("p.font-display").text();
             $("#reply_id").val(id);
             $("#reply_name").text(name);
+            $("#reply_modal").removeClass("hidden").addClass("flex");
         });
 
+        $(".modal-close-btn").click(function(){
+            $("#reply_modal").removeClass("flex").addClass("hidden");
+        });
+
+        $("#reply_modal").click(function(e){
+            if(e.target === this) $(this).removeClass("flex").addClass("hidden");
+        });
 
         $(document).on("click","#reply_btn",function(){
 

@@ -1,41 +1,52 @@
 {% extends 'department_hod_template/base_template.html' %}
-{% block page_title %}
-Department Performance Overview
-{% endblock page_title %}
+{% block page_title %}Department Performance Overview{% endblock page_title %}
 
 {% block main_content %}
-    <div class="metrics-grid">
-      <div class="metric-card glass">
-        <div class="metric-icon" style="background: var(--surface-container-low); color: var(--primary);">
-          <i class="fas fa-user-graduate"></i>
-        </div>
-        <div class="metric-info">
-          <span class="metric-label">Enrolled Scholars</span>
-          <h3 class="metric-value">{{ student_count }}</h3>
-          <span class="metric-trend"><i class="fas fa-university"></i> {{ department_name }}</span>
-        </div>
-      </div>
+<!-- Header -->
+<header class="mb-10">
+  <h2 class="text-4xl font-extrabold text-on-surface font-headline tracking-tight">Department Performance</h2>
+  <p class="text-on-surface-variant font-body mt-2 text-lg opacity-80">Strategic oversight for the <strong>{{ department_name }}</strong> academic unit.</p>
+</header>
 
-      <div class="metric-card glass">
-        <div class="metric-icon" style="background: var(--surface-container-low); color: #15803d;">
-          <i class="fas fa-chalkboard-teacher"></i>
-        </div>
-        <div class="metric-info">
-          <span class="metric-label">Faculty Members</span>
-          <h3 class="metric-value">{{ staff_count }}</h3>
-          <span class="metric-trend up"><i class="fas fa-check-circle"></i> Active Academic Staff</span>
-        </div>
-      </div>
+<!-- Bento Grid Metrics -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+    <div class="p-3 rounded-xl bg-primary-container/10 text-primary w-fit">
+      <span class="material-symbols-outlined text-3xl">school</span>
     </div>
+    <div class="mt-8">
+      <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Enrolled Scholars</p>
+      <h3 class="text-4xl font-extrabold font-headline mt-1">{{ student_count }}</h3>
+      <span class="text-xs text-on-surface-variant font-body mt-2 block flex items-center gap-1">
+        <span class="material-symbols-outlined text-sm">domain</span>
+        {{ department_name }}
+      </span>
+    </div>
+  </div>
 
-    <div class="card glass" style="margin-top: 2rem;">
-      <div class="chart-header">
-        <h3>Departmental Analytics</h3>
-        <p>Strategic oversight for the <strong>{{ department_name }}</strong> academic unit.</p>
-      </div>
-      <div style="padding: 2rem; text-align: center; color: var(--on-surface-variant);">
-        <i class="fas fa-chart-line fa-3x" style="margin-bottom: 1rem; opacity: 0.5;"></i>
-        <p>Operational data is being aggregated for your review...</p>
-      </div>
+  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+    <div class="p-3 rounded-xl bg-secondary-container/10 text-secondary w-fit">
+      <span class="material-symbols-outlined text-3xl">badge</span>
     </div>
+    <div class="mt-8">
+      <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Faculty Members</p>
+      <h3 class="text-4xl font-extrabold font-headline mt-1">{{ staff_count }}</h3>
+      <span class="text-xs text-on-surface-variant font-body mt-2 block">Active Academic Staff</span>
+    </div>
+  </div>
+</section>
+
+<!-- Activity Card -->
+<div class="bg-surface-container-lowest rounded-2xl p-8">
+  <div class="flex justify-between items-center mb-8">
+    <div>
+      <h4 class="text-xl font-bold font-headline">Departmental Analytics</h4>
+      <p class="text-sm text-on-surface-variant font-body">Strategic oversight for the <strong>{{ department_name }}</strong> academic unit.</p>
+    </div>
+  </div>
+  <div class="py-12 text-center text-on-surface-variant">
+    <span class="material-symbols-outlined text-6xl opacity-30 mb-4 block">insights</span>
+    <p class="font-body">Operational data is being aggregated for your review...</p>
+  </div>
+</div>
 {% endblock main_content %}

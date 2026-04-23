@@ -33,19 +33,13 @@
 Attendance Data
 {% endblock page_title %}
 {% block main_content %}
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-                    <div class="row">
-              <div class="col-md-12">
-            <!-- general form elements -->
-            <div class="card ">
-              <div class="card-header">
-                <h3 class="card-title">View Attendance</h3>
-              </div>
-              <!-- /.card-header -->
-              <!-- form start -->
-                <div class="card-body">
+    
+            
+            <div class="bg-surface-container-lowest rounded-2xl overflow-hidden">
+              <div class="px-8 py-5 border-b border-outline-variant/10"><h3 class="font-headline font-bold text-on-surface text-lg">View Attendance</h3></div>
+              
+              
+                <div class="p-8 space-y-6">
                     <div class="row">
                     {% if attendance_reports %}
                     {% for attendance_report in attendance_reports %}
@@ -68,13 +62,7 @@ Attendance Data
                      {% endif %}
                     </div>
                 </div>
-            <!-- /.card -->
+            
 
-
-
-          </div>
-          </div>
-      </div>
-    </section>
-    <!-- /.content -->
+          
 {% endblock main_content %}

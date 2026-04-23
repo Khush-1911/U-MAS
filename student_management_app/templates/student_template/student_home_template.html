@@ -1,22 +1,21 @@
 {% extends 'student_template/base_template.html' %}
-{% block page_title %}
-Academic Progress
-{% endblock page_title %}
+{% block page_title %}Academic Progress{% endblock page_title %}
 
 {% block main_content %}
     {% if class_room.count > 0 %}
-      <div class="live-class-alert glass" style="margin-bottom: 2rem; padding: 1.5rem; border-radius: 16px; display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(21, 128, 61, 0.1)); border: 1px solid rgba(34, 197, 94, 0.2);">
-        <div style="display: flex; align-items: center; gap: 1rem;">
-          <div class="pulse-icon" style="width: 12px; height: 12px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 0 rgba(34, 197, 94, 0.4); animation: pulse 2s infinite;"></div>
+      <!-- Live Class Alert -->
+      <div class="mb-8 p-5 rounded-2xl bg-secondary/5 border border-secondary/20 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+          <div class="w-3 h-3 bg-secondary rounded-full animate-pulse shadow-lg shadow-secondary/30"></div>
           <div>
-            <h4 style="margin: 0; color: #15803d; font-weight: 600;">Active Live Sessions</h4>
-            <p style="margin: 0; font-size: 0.9rem; color: #166534;">Your faculty has started a real-time lecture.</p>
+            <h4 class="font-headline font-bold text-secondary">Active Live Sessions</h4>
+            <p class="text-sm text-on-surface-variant font-body">Your faculty has started a real-time lecture.</p>
           </div>
         </div>
-        <div style="display: flex; gap: 0.75rem;">
+        <div class="flex gap-3 flex-wrap">
           {% for class_single in class_room %}
-            <a href="/join_class_room/{{ class_single.subject.id }}/{{ class_single.semester.id }}" class="btn btn-primary" style="background: #15803d; border: none;">
-              <i class="fas fa-play-circle" style="margin-right: 0.5rem;"></i>
+            <a href="/join_class_room/{{ class_single.subject.id }}/{{ class_single.semester.id }}" class="flex items-center gap-2 px-5 py-2.5 bg-secondary text-white font-label font-bold rounded-xl shadow-lg shadow-secondary/20 active:scale-95 transition-transform no-underline text-sm">
+              <span class="material-symbols-outlined text-lg">play_circle</span>
               Join {{ class_single.subject.subject_name }}
             </a>
           {% endfor %}
@@ -24,81 +23,89 @@ Academic Progress
       </div>
     {% endif %}
 
-    <div class="metrics-grid">
-      <div class="metric-card glass">
-        <div class="metric-icon" style="background: var(--surface-container-low); color: var(--primary);">
-          <i class="fas fa-calendar-check"></i>
+    <!-- Header -->
+    <header class="mb-10">
+      <h2 class="text-4xl font-extrabold text-on-surface font-headline tracking-tight">Academic Progress</h2>
+      <p class="text-on-surface-variant font-body mt-2 text-lg opacity-80">Track your attendance, performance, and academic journey.</p>
+    </header>
+
+    <!-- Bento Grid Metrics -->
+    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+        <div class="flex justify-between items-start">
+          <div class="p-3 rounded-xl bg-primary-container/10 text-primary">
+            <span class="material-symbols-outlined text-3xl">event_available</span>
+          </div>
         </div>
-        <div class="metric-info">
-          <span class="metric-label">Total Sessions</span>
-          <h3 class="metric-value">{{ total_attendance }}</h3>
-          <span class="metric-trend"><i class="fas fa-clock"></i> Lifetime Enrollment</span>
+        <div class="mt-8">
+          <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Total Sessions</p>
+          <h3 class="text-4xl font-extrabold font-headline mt-1">{{ total_attendance }}</h3>
+          <span class="text-xs text-on-surface-variant font-body mt-2 block">Lifetime Enrollment</span>
         </div>
       </div>
 
-      <div class="metric-card glass">
-        <div class="metric-icon" style="background: var(--surface-container-low); color: #15803d;">
-          <i class="fas fa-check-double"></i>
+      <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+        <div class="flex justify-between items-start">
+          <div class="p-3 rounded-xl bg-secondary-container/10 text-secondary">
+            <span class="material-symbols-outlined text-3xl">done_all</span>
+          </div>
+          <span class="text-secondary font-label font-bold text-sm bg-secondary-container/20 px-2 py-1 rounded-full">{{ attendance_present_percentage }}%</span>
         </div>
-        <div class="metric-info">
-          <span class="metric-label">Present</span>
-          <h3 class="metric-value">{{ attendance_present }}</h3>
-          <span class="metric-trend up"><i class="fas fa-arrow-up"></i> {{ attendance_present_percentage }}% Rate</span>
-        </div>
-      </div>
-
-      <div class="metric-card glass">
-        <div class="metric-icon" style="background: var(--surface-container-low); color: #be123c;">
-          <i class="fas fa-user-times"></i>
-        </div>
-        <div class="metric-info">
-          <span class="metric-label">Absent</span>
-          <h3 class="metric-value">{{ attendance_absent }}</h3>
-          <span class="metric-trend down"><i class="fas fa-exclamation-circle"></i> Requires Review</span>
+        <div class="mt-8">
+          <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Present</p>
+          <h3 class="text-4xl font-extrabold font-headline mt-1">{{ attendance_present }}</h3>
         </div>
       </div>
 
-      <div class="metric-card glass">
-        <div class="metric-icon" style="background: var(--surface-container-low); color: #854d0e;">
-          <i class="fas fa-book-reader"></i>
+      <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+        <div class="flex justify-between items-start">
+          <div class="p-3 rounded-xl bg-error-container/30 text-error">
+            <span class="material-symbols-outlined text-3xl">person_off</span>
+          </div>
         </div>
-        <div class="metric-info">
-          <span class="metric-label">Curriculum</span>
-          <h3 class="metric-value">{{ subjects }}</h3>
-          <span class="metric-trend"><i class="fas fa-layers"></i> Registered Subjects</span>
+        <div class="mt-8">
+          <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Absent</p>
+          <h3 class="text-4xl font-extrabold font-headline mt-1">{{ attendance_absent }}</h3>
+          <span class="text-xs text-error font-body mt-2 block">Requires Review</span>
         </div>
       </div>
-    </div>
 
-    <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;">
-      <div class="card glass">
-        <div class="chart-header">
-          <h3>Attendance Composition</h3>
-          <p>Distribution of your presence across all sessions.</p>
+      <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+        <div class="flex justify-between items-start">
+          <div class="p-3 rounded-xl bg-tertiary-container/10 text-tertiary">
+            <span class="material-symbols-outlined text-3xl">auto_stories</span>
+          </div>
         </div>
-        <div class="card-body" style="padding: 1.5rem;">
+        <div class="mt-8">
+          <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Curriculum</p>
+          <h3 class="text-4xl font-extrabold font-headline mt-1">{{ subjects }}</h3>
+          <span class="text-xs text-on-surface-variant font-body mt-2 block">Registered Subjects</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Charts -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div class="bg-surface-container-lowest rounded-2xl p-8">
+        <div class="mb-6">
+          <h4 class="text-xl font-bold font-headline">Attendance Composition</h4>
+          <p class="text-sm text-on-surface-variant font-body">Distribution of your presence across all sessions.</p>
+        </div>
+        <div>
           <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
         </div>
       </div>
 
-      <div class="card glass">
-        <div class="chart-header">
-          <h3>Subject Breakdown</h3>
-          <p>Detailed performance metrics per registered subject.</p>
+      <div class="bg-surface-container-lowest rounded-2xl p-8">
+        <div class="mb-6">
+          <h4 class="text-xl font-bold font-headline">Subject Breakdown</h4>
+          <p class="text-sm text-on-surface-variant font-body">Detailed performance metrics per registered subject.</p>
         </div>
-        <div class="card-body" style="padding: 1.5rem;">
+        <div>
           <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
         </div>
       </div>
     </div>
-
-    <style>
-      @keyframes pulse {
-        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
-        70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
-        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
-      }
-    </style>
 {% endblock main_content %}
 
 {% block custom_js %}
@@ -112,7 +119,7 @@ Academic Progress
               labels: ['ABSENT', 'PRESENT', 'TOTAL'],
               datasets: [{
                   data: [{{ attendance_absent }}, {{ attendance_present }}, {{ total_attendance }}],
-                  backgroundColor : ['#be123c', '#15803d', '#4338ca'],
+                  backgroundColor : ['#ba1a1a', '#006a66', '#4343d5'],
                   borderWidth: 0
               }]
             }
@@ -122,15 +129,15 @@ Academic Progress
               datasets: [
                 {
                   label: 'Present',
-                  backgroundColor: '#4338ca',
+                  backgroundColor: '#4343d5',
                   data: data1,
-                  borderRadius: 6
+                  borderRadius: 8
                 },
                 {
                   label: 'Absent',
-                  backgroundColor: 'rgba(67, 56, 202, 0.1)',
+                  backgroundColor: 'rgba(67, 67, 213, 0.1)',
                   data: data2,
-                  borderRadius: 6
+                  borderRadius: 8
                 },
               ]
             }
@@ -143,7 +150,7 @@ Academic Progress
                 maintainAspectRatio: false,
                 responsive: true,
                 cutout: '70%',
-                plugins: { legend: { position: 'bottom' } }
+                plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 16 } } }
               }
             });
 

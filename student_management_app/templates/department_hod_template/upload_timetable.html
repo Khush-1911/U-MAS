@@ -1,58 +1,49 @@
 {% extends 'department_hod_template/base_template.html' %}
-{% block page_title %}
-Academic Logistics
-{% endblock page_title %}
+{% block page_title %}Academic Logistics{% endblock page_title %}
 
 {% block main_content %}
-    <div class="card glass">
-      <div class="chart-header">
-        <h3>Timetable Distribution</h3>
-        <p>Publish academic schedules for specific classes and semesters.</p>
+<div class="max-w-3xl">
+  <header class="mb-10">
+    <h2 class="text-4xl font-extrabold text-on-surface font-headline tracking-tight">Timetable Distribution</h2>
+    <p class="text-on-surface-variant font-body mt-2">Publish academic schedules for specific classes and semesters.</p>
+  </header>
+
+  <div class="bg-surface-container-lowest rounded-2xl p-8">
+    <form action="/department_hod_upload_timetable_save" method="post" enctype="multipart/form-data" class="space-y-8">
+      {% csrf_token %}
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-2">
+          <label class="block font-label text-sm font-bold text-on-surface-variant">Target Academic Class</label>
+          <select name="class_id" required class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body">
+            <option value="">Select Class</option>
+            {% for class in classes %}
+              <option value="{{ class.id }}">{{ class.class_name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="space-y-2">
+          <label class="block font-label text-sm font-bold text-on-surface-variant">Academic Semester</label>
+          <select name="semester_id" required class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body">
+            <option value="">Select Semester</option>
+            {% for semester in semesters %}
+              <option value="{{ semester.id }}">{{ semester.semester_start_date }} TO {{ semester.semester_end_date }}</option>
+            {% endfor %}
+          </select>
+        </div>
       </div>
 
-      <form class="modern-form" action="/department_hod_upload_timetable_save" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="form-content">
-          <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-            <div class="form-group">
-              <label>Target Academic Class</label>
-              <div class="input-wrapper">
-                <select name="class_id" required>
-                  <option value="">Select Class</option>
-                  {% for class in classes %}
-                    <option value="{{ class.id }}">{{ class.class_name }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-            </div>
+      <div class="space-y-2">
+        <label class="block font-label text-sm font-bold text-on-surface-variant">Document Upload (PDF, Word, or Excel)</label>
+        <input type="file" name="timetable_file" accept=".pdf,.doc,.docx,.xls,.xlsx" required class="w-full py-3 px-4 border-2 border-dashed border-outline-variant/30 rounded-xl bg-surface-container-low text-on-surface-variant cursor-pointer hover:border-primary/40 hover:bg-primary-fixed/10 transition-all font-body">
+      </div>
 
-            <div class="form-group">
-              <label>Academic Semester</label>
-              <div class="input-wrapper">
-                <select name="semester_id" required>
-                  <option value="">Select Semester</option>
-                  {% for semester in semesters %}
-                    <option value="{{ semester.id }}">{{ semester.semester_start_date }} TO {{ semester.semester_end_date }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Document Upload (PDF, Word, or Excel)</label>
-            <div class="input-wrapper">
-              <input type="file" name="timetable_file" accept=".pdf,.doc,.docx,.xls,.xlsx" required>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary">
-            <i class="fas fa-upload"></i>
-            Initialize Upload & Distribute
-          </button>
-        </div>
-      </form>
-    </div>
+      <div class="pt-6 border-t border-outline-variant/20">
+        <button type="submit" class="flex items-center gap-2 px-6 py-3 premium-gradient text-white font-label font-bold rounded-xl shadow-lg shadow-primary/20 active:scale-95 transition-transform">
+          <span class="material-symbols-outlined">upload</span>
+          Initialize Upload & Distribute
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock main_content %}

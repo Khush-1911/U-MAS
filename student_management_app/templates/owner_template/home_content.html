@@ -1,70 +1,105 @@
 {% extends 'owner_template/base_template.html' %}
-{% block page_title %}
-Owner Dashboard
-{% endblock page_title %}
+{% block page_title %}Global Overview{% endblock page_title %}
+
 {% block main_content %}
-    <div class="metrics-grid">
-      <div class="metric-card">
-        <div class="metric-icon">
-          <i class="fas fa-university"></i>
-        </div>
-        <div class="metric-info">
-          <span class="metric-value">{{ institution_count }}</span>
-          <span class="metric-label">Total Institutions</span>
-        </div>
-      </div>
+<!-- Header Section -->
+<header class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+  <div>
+    <h2 class="text-4xl font-extrabold text-on-surface font-headline tracking-tight">Global Overview</h2>
+    <p class="text-on-surface-variant font-body mt-2 text-lg opacity-80">Institutional management and ecosystem analytics.</p>
+  </div>
+  <div class="flex gap-3">
+    <a href="{% url 'add_user' %}" class="flex items-center gap-2 px-6 py-3 bg-surface-container-highest text-primary font-label font-bold rounded-xl active:scale-95 transition-transform no-underline">
+      <span class="material-symbols-outlined">person_add</span>
+      Add User
+    </a>
+    <a href="{% url 'add_institution' %}" class="flex items-center gap-2 px-6 py-3 bg-primary text-on-primary font-label font-bold rounded-xl shadow-xl shadow-primary/25 active:scale-95 transition-transform no-underline">
+      <span class="material-symbols-outlined">add_business</span>
+      Add Institution
+    </a>
+  </div>
+</header>
 
-      <div class="metric-card">
-        <div class="metric-icon">
-          <i class="fas fa-user-graduate"></i>
-        </div>
-        <div class="metric-info">
-          <span class="metric-value">{{ student_count }}</span>
-          <span class="metric-label">Global Students</span>
-        </div>
-      </div>
-
-      <div class="metric-card">
-        <div class="metric-icon">
-          <i class="fas fa-user-tie"></i>
-        </div>
-        <div class="metric-info">
-          <span class="metric-value">{{ staff_count }}</span>
-          <span class="metric-label">Global Staff</span>
-        </div>
-      </div>
-
-      <div class="metric-card">
-        <div class="metric-icon">
-          <i class="fas fa-archway"></i>
-        </div>
-        <div class="metric-info">
-          <span class="metric-value">{{ department_count }}</span>
-          <span class="metric-label">Global Departments</span>
-        </div>
+<!-- Bento Grid Metrics -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+  <!-- Metric 1: Institutions -->
+  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+    <div class="flex justify-between items-start">
+      <div class="p-3 rounded-xl bg-primary-container/10 text-primary">
+        <span class="material-symbols-outlined text-3xl">account_balance</span>
       </div>
     </div>
-
-    <div class="charts-grid">
-      <div class="chart-card">
-        <div class="chart-header">
-          <h3>Student Distribution per Institution</h3>
-        </div>
-        <div class="chart-body">
-          <canvas id="pieChart" style="min-height: 250px; height: 250px;"></canvas>
-        </div>
-      </div>
-
-      <div class="chart-card">
-        <div class="chart-header">
-          <h3>Staff Distribution per Institution</h3>
-        </div>
-        <div class="chart-body">
-          <canvas id="barChart" style="min-height: 250px; height: 250px;"></canvas>
-        </div>
+    <div class="mt-8">
+      <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Total Institutions</p>
+      <h3 class="text-4xl font-extrabold font-headline mt-1">{{ institution_count }}</h3>
+    </div>
+  </div>
+  <!-- Metric 2: Students -->
+  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+    <div class="flex justify-between items-start">
+      <div class="p-3 rounded-xl bg-secondary-container/10 text-secondary">
+        <span class="material-symbols-outlined text-3xl">groups</span>
       </div>
     </div>
+    <div class="mt-8">
+      <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Global Students</p>
+      <h3 class="text-4xl font-extrabold font-headline mt-1">{{ student_count }}</h3>
+    </div>
+  </div>
+  <!-- Metric 3: Staff -->
+  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+    <div class="flex justify-between items-start">
+      <div class="p-3 rounded-xl bg-tertiary-container/10 text-tertiary">
+        <span class="material-symbols-outlined text-3xl">badge</span>
+      </div>
+    </div>
+    <div class="mt-8">
+      <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Global Staff</p>
+      <h3 class="text-4xl font-extrabold font-headline mt-1">{{ staff_count }}</h3>
+    </div>
+  </div>
+  <!-- Metric 4: Departments -->
+  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+    <div class="flex justify-between items-start">
+      <div class="p-3 rounded-xl bg-surface-container-highest/50 text-on-surface">
+        <span class="material-symbols-outlined text-3xl">schema</span>
+      </div>
+    </div>
+    <div class="mt-8">
+      <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Global Departments</p>
+      <h3 class="text-4xl font-extrabold font-headline mt-1">{{ department_count }}</h3>
+    </div>
+  </div>
+</section>
+
+<!-- Charts Section -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+  <div class="bg-surface-container-lowest rounded-2xl p-8">
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <h4 class="text-xl font-bold font-headline">Student Distribution</h4>
+        <p class="text-sm text-on-surface-variant font-body">Students per institution</p>
+      </div>
+    </div>
+    <div>
+      <canvas id="pieChart" style="min-height: 250px; height: 250px;"></canvas>
+    </div>
+  </div>
+
+  <div class="bg-surface-container-lowest rounded-2xl p-8">
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <h4 class="text-xl font-bold font-headline">Staff Distribution</h4>
+        <p class="text-sm text-on-surface-variant font-body">Staff per institution</p>
+      </div>
+    </div>
+    <div>
+      <canvas id="barChart" style="min-height: 250px; height: 250px;"></canvas>
+    </div>
+  </div>
+</div>
 {% endblock main_content %}
+
 {% block custom_js %}
 <script>
     $(document).ready(function(){
@@ -73,20 +108,22 @@ Owner Dashboard
               datasets: [
                 {
                   data: {{ student_count_list }},
-                  backgroundColor : ['#f56954', '#00a65a','#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+                  backgroundColor : ['#4343d5', '#006a66','#5d5fef', '#20645b', '#82f2eb', '#e3dffe'],
+                  borderWidth: 0
                 }
               ]
             }
 
             var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
-            var pieOptions     = {
-              maintainAspectRatio : false,
-              responsive : true,
-            }
             var pieChart = new Chart(pieChartCanvas, {
-              type: 'pie',
+              type: 'doughnut',
               data: pieData,
-              options: pieOptions
+              options: {
+                maintainAspectRatio: false,
+                responsive: true,
+                cutout: '65%',
+                plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 16 } } }
+              }
             });
 
             var barChartData = {
@@ -94,28 +131,26 @@ Owner Dashboard
               datasets: [
                 {
                   label               : 'Staff Count',
-                  backgroundColor     : 'rgba(60,141,188,0.9)',
-                  borderColor         : 'rgba(60,141,188,0.8)',
-                  pointRadius          : false,
-                  pointColor          : '#3b8bba',
-                  pointStrokeColor    : 'rgba(60,141,188,1)',
-                  pointHighlightFill  : '#fff',
-                  pointHighlightStroke: 'rgba(60,141,188,1)',
+                  backgroundColor     : '#4343d5',
+                  borderColor         : '#4343d5',
+                  borderRadius        : 8,
                   data                : {{ staff_count_list }}
                 }
               ]
             }
             var barChartCanvas = $('#barChart').get(0).getContext('2d')
-            var barChartOptions = {
-              responsive              : true,
-              maintainAspectRatio     : false,
-              datasetFill             : false
-            }
-
             var barChart = new Chart(barChartCanvas, {
               type: 'bar',
               data: barChartData,
-              options: barChartOptions
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                  y: { beginAtZero: true, grid: { display: false } },
+                  x: { grid: { display: false } }
+                }
+              }
             });
     });
 </script>

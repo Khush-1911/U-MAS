@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>U-MAS | Principal Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Manrope:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-highest": "#e3dffe",
+                    "on-primary-fixed": "#07006c",
+                    "on-tertiary": "#ffffff",
+                    "outline": "#767586",
+                    "error": "#ba1a1a",
+                    "on-error": "#ffffff",
+                    "tertiary": "#20645b",
+                    "surface-variant": "#e3dffe",
+                    "inverse-primary": "#c1c1ff",
+                    "inverse-on-surface": "#f2eeff",
+                    "error-container": "#ffdad6",
+                    "on-primary": "#ffffff",
+                    "surface-tint": "#4849da",
+                    "surface-container-low": "#f6f2ff",
+                    "on-tertiary-container": "#e1fff8",
+                    "on-surface": "#1a1930",
+                    "on-primary-container": "#faf7ff",
+                    "on-tertiary-fixed": "#00201c",
+                    "on-secondary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container": "#efebff",
+                    "on-secondary-fixed": "#00201e",
+                    "on-secondary-fixed-variant": "#00504d",
+                    "on-error-container": "#93000a",
+                    "primary": "#4343d5",
+                    "on-tertiary-fixed-variant": "#005048",
+                    "on-surface-variant": "#464555",
+                    "inverse-surface": "#2f2e46",
+                    "on-background": "#1a1930",
+                    "primary-fixed-dim": "#c1c1ff",
+                    "primary-container": "#5d5fef",
+                    "tertiary-fixed-dim": "#92d3c7",
+                    "primary-fixed": "#e1e0ff",
+                    "secondary-container": "#82f2eb",
+                    "outline-variant": "#c7c4d7",
+                    "on-primary-fixed-variant": "#2e2bc2",
+                    "secondary-fixed-dim": "#67d8d1",
+                    "secondary-fixed": "#85f5ee",
+                    "tertiary-fixed": "#adefe3",
+                    "tertiary-container": "#3d7d73",
+                    "surface-dim": "#dad7f6",
+                    "surface-bright": "#fcf8ff",
+                    "secondary": "#006a66",
+                    "background": "#fcf8ff",
+                    "surface": "#fcf8ff",
+                    "surface-container-high": "#e9e5ff",
+                    "on-secondary-container": "#006f6a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "2xl": "1.5rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Inter"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #e3dffe; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary/20">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-[0_20px_40px_-10px_rgba(26,25,48,0.06)] h-16 flex justify-between items-center w-full px-8">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tight bg-gradient-to-tr from-indigo-600 to-indigo-400 bg-clip-text text-transparent font-headline">U-MAS</span>
+<div class="hidden md:flex items-center gap-6 text-indigo-600 dark:text-indigo-400 font-headline font-medium tracking-tight">
+<a class="text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 pb-1" href="#">Dashboard</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-indigo-500 transition-colors" href="#">Analytics</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-indigo-500 transition-colors" href="#">Reports</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span>
+<input class="bg-surface-container-low border-none rounded-full pl-10 pr-4 py-1.5 text-sm focus:ring-2 ring-primary/20 w-64" placeholder="Search data..." type="text"/>
+</div>
+<button class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors rounded-full text-slate-500 active:scale-95 duration-200 cursor-pointer">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors rounded-full text-slate-500 active:scale-95 duration-200 cursor-pointer">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<img alt="User Profile Avatar" class="w-8 h-8 rounded-full border-2 border-primary-container" data-alt="professional portrait of a university administrator in a modern office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuf8xix5OZd_1fEgSzuQZmVN6ki_LXBd4so6z2HNzgk84ALm8gmqbZM3y6cP7KSaJdXtDLPP6rpcEVQLamWIt3oMSWr4IMKf4rFw_1Xcd8tFGG6DpM8HUENF7MsxPL8GFj2_wUzYz4NPVpnIRv0x6s3pBFCQUget9iq3e-uhWe8Uq9kHc6bS69Fsltq2HgZrWLha-FyYpm42bgjiX0zrvjs7_Bh3JCgndfm8A2rT5XKUeTbC41Hj-xRUbQ5Uw8SGJyUP-nzIpJF7mt"/>
+</div>
+</nav>
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 z-40 bg-slate-50 dark:bg-slate-950/50 backdrop-blur-md border-r border-indigo-50/10 flex flex-col pt-20 pb-8">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined">school</span>
+</div>
+<div>
+<h2 class="text-lg font-bold text-slate-900 dark:text-white font-headline leading-none">University Portal</h2>
+<p class="text-xs text-slate-500 font-medium mt-1">Academic Management</p>
+</div>
+</div>
+<nav class="flex-1 px-2 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-indigo-600 dark:text-indigo-400 border-l-4 border-indigo-600 bg-indigo-50/50 dark:bg-indigo-900/20 font-medium duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">domain</span>
+                Institution
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-indigo-500 hover:bg-indigo-50/30 transition-all font-medium duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">group</span>
+                Users
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-indigo-500 hover:bg-indigo-50/30 transition-all font-medium duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">event_available</span>
+                Attendance
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-indigo-500 hover:bg-indigo-50/30 transition-all font-medium duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+                Academic
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-indigo-500 hover:bg-indigo-50/30 transition-all font-medium duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+                Leave
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-indigo-500 hover:bg-indigo-50/30 transition-all font-medium duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">chat_bubble_outline</span>
+                Feedback
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-indigo-500 hover:bg-indigo-50/30 transition-all font-medium duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">settings</span>
+                Settings
+            </a>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full py-3 px-4 bg-primary text-white rounded-xl font-medium shadow-lg shadow-primary/20 hover:bg-primary-container transition-all active:scale-[0.98]">
+                New Academic Year
+            </button>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-64 pt-24 px-8 pb-12 min-h-screen">
+<!-- Header Section -->
+<header class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+<div>
+<nav class="flex items-center gap-2 text-sm text-on-surface-variant font-label mb-2">
+<span>Institutions</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-primary font-bold">North Campus Branch</span>
+</nav>
+<h1 class="text-4xl font-extrabold font-headline tracking-tight text-on-surface">Institution Overview</h1>
+<p class="text-on-surface-variant mt-1 text-lg">Central Command &amp; Academic Directory</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-5 py-2.5 bg-surface-container-high text-primary rounded-xl font-semibold font-label hover:bg-surface-container-highest transition-all">
+<span class="material-symbols-outlined text-lg">file_download</span>
+                    Export Branch Data
+                </button>
+<button class="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-tr from-primary to-primary-container text-white rounded-xl font-semibold font-label shadow-xl shadow-primary/10 hover:opacity-90 transition-all">
+<span class="material-symbols-outlined text-lg">add_circle</span>
+                    Register New User
+                </button>
+</div>
+</header>
+<!-- Bento Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+<!-- Large Focus Card -->
+<div class="md:col-span-2 bg-gradient-to-br from-primary-container to-primary p-8 rounded-2xl text-white relative overflow-hidden group">
+<div class="relative z-10 h-full flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 opacity-80 font-label text-sm uppercase tracking-widest mb-4">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+                            Academic Health Score
+                        </div>
+<div class="text-6xl font-extrabold font-headline">94.8%</div>
+</div>
+<div class="mt-8 flex gap-4">
+<div class="bg-white/10 backdrop-blur-md rounded-xl p-4 flex-1">
+<div class="text-xs opacity-70 mb-1">Retention Rate</div>
+<div class="text-xl font-bold font-headline">98.2%</div>
+</div>
+<div class="bg-white/10 backdrop-blur-md rounded-xl p-4 flex-1">
+<div class="text-xs opacity-70 mb-1">Active Staff</div>
+<div class="text-xl font-bold font-headline">245</div>
+</div>
+</div>
+</div>
+<div class="absolute -right-12 -bottom-12 w-48 h-48 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
+</div>
+<!-- Total Students -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl shadow-[0_20px_40px_-10px_rgba(26,25,48,0.06)] border border-outline-variant/10">
+<div class="w-12 h-12 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center mb-6">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+</div>
+<div class="text-3xl font-extrabold font-headline text-on-surface">12,408</div>
+<div class="text-on-surface-variant font-medium mt-1">Total Students</div>
+<div class="mt-6 flex items-center gap-2 text-xs font-label text-secondary">
+<span class="material-symbols-outlined text-sm">arrow_upward</span>
+                    +12% from last term
+                </div>
+</div>
+<!-- Faculty -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl shadow-[0_20px_40px_-10px_rgba(26,25,48,0.06)] border border-outline-variant/10">
+<div class="w-12 h-12 rounded-xl bg-tertiary/10 text-tertiary flex items-center justify-center mb-6">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">badge</span>
+</div>
+<div class="text-3xl font-extrabold font-headline text-on-surface">412</div>
+<div class="text-on-surface-variant font-medium mt-1">Faculty Members</div>
+<div class="mt-6 flex items-center gap-2 text-xs font-label text-outline">
+<span class="material-symbols-outlined text-sm">sync</span>
+                    Stable headcount
+                </div>
+</div>
+</div>
+<!-- User Directory Section -->
+<div class="bg-surface-container-lowest rounded-2xl shadow-[0_20px_40px_-10px_rgba(26,25,48,0.06)] overflow-hidden border border-outline-variant/10">
+<div class="p-8 bg-surface-container-low flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div>
+<h2 class="text-2xl font-bold font-headline text-on-surface">User Directory</h2>
+<p class="text-on-surface-variant text-sm font-medium">Manage and view all institutional accounts</p>
+</div>
+<div class="flex items-center gap-3 bg-white p-1.5 rounded-2xl shadow-sm border border-outline-variant/20">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">search</span>
+<input class="border-none bg-surface-container-low/50 rounded-xl pl-10 pr-4 py-2 text-sm focus:ring-2 ring-primary/10 w-72" placeholder="Search by name, ID, or email..." type="text"/>
+</div>
+<select class="border-none bg-white text-sm font-semibold font-label focus:ring-0 cursor-pointer pr-8">
+<option>All Departments</option>
+<option>Computer Science</option>
+<option>Humanities</option>
+<option>Engineering</option>
+</select>
+<button class="bg-primary-container text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md shadow-primary/20 hover:shadow-lg transition-all">
+                        Filter
+                    </button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container border-b border-outline-variant/10">
+<th class="px-8 py-5 text-xs font-bold font-label uppercase tracking-widest text-on-surface-variant">User Profile</th>
+<th class="px-8 py-5 text-xs font-bold font-label uppercase tracking-widest text-on-surface-variant">Role</th>
+<th class="px-8 py-5 text-xs font-bold font-label uppercase tracking-widest text-on-surface-variant">Department</th>
+<th class="px-8 py-5 text-xs font-bold font-label uppercase tracking-widest text-on-surface-variant">Status</th>
+<th class="px-8 py-5 text-xs font-bold font-label uppercase tracking-widest text-on-surface-variant text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-8 py-5">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img alt="Student Profile" class="w-11 h-11 rounded-full object-cover" data-alt="professional headshot of a female professor smiling in an academic hallway" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtJG8BvWBFC_m-Zr4YhgiaEU8n1h-Mw2VKl86aXKJ2kkOKf1pSzNoHmZcCXHGtZSFM-NdPlC4Tc2tUQgVTyNx8n10XcljMEfmXFq5WwIZaA0Ard11LpqZ4v5z7S45omHo92JdUO__UeRfsdA3Loz9f_sqi_0ni3Ee4CrstCBaJpcPHtwimYB7FCTvpMP9FmWFtYaqCvvF1_q3rAJVP2ExcoUNo_vGFKbsl-Hb9w5X9uO-6ZV6yTP2btUAXt3_Mg7GSRAVkOhQPQMuH"/>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-secondary rounded-full border-2 border-white"></div>
+</div>
+<div>
+<div class="text-sm font-bold font-headline text-on-surface">Dr. Sarah Jenkins</div>
+<div class="text-xs text-on-surface-variant font-medium">s.jenkins@university.edu</div>
+</div>
+</div>
+</td>
+<td class="px-8 py-5">
+<span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold font-label">HOD</span>
+</td>
+<td class="px-8 py-5">
+<div class="text-sm font-medium text-on-surface">Computer Science</div>
+<div class="text-[10px] text-outline font-label">Faculty of Tech</div>
+</td>
+<td class="px-8 py-5">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="text-xs font-bold font-label text-secondary">Active</span>
+</div>
+</td>
+<td class="px-8 py-5 text-right">
+<button class="p-2 hover:bg-surface-container-highest rounded-lg transition-colors text-outline">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low transition-colors group">
+<td class="px-8 py-5">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img alt="Student Profile" class="w-11 h-11 rounded-full object-cover" data-alt="close up headshot of a young male student wearing glasses with books in the background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWqAZUVhnIbaUaGRttljlL01FqdBpT3F_UsCCWMijB3rUcHPbK7rd6gmnhABF-0KZ-io3Ib61pZAs9QiFyj1fkRRs5E4mg8t22eYJWHOaqCUG1AQZS30-QA1eFYVTiSEM0aWgKHEJBazL7y-Ziilv7Xz7bygaAFu5W5w-mtYhWOhwPpnctJK9e41zANV9aumi55zohfVNUSSA1AU4D_zQZqe_ja2Z0clW-l0r7rgbMsaux-lVTM6Iv2Y7pfHtNviwI1224NqZSYYC7"/>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-secondary rounded-full border-2 border-white"></div>
+</div>
+<div>
+<div class="text-sm font-bold font-headline text-on-surface">Marcus Thorne</div>
+<div class="text-xs text-on-surface-variant font-medium">m.thorne.22@student.edu</div>
+</div>
+</div>
+</td>
+<td class="px-8 py-5">
+<span class="bg-tertiary/10 text-tertiary px-3 py-1 rounded-full text-xs font-bold font-label">Student</span>
+</td>
+<td class="px-8 py-5">
+<div class="text-sm font-medium text-on-surface">Civil Engineering</div>
+<div class="text-[10px] text-outline font-label">Faculty of Engineering</div>
+</td>
+<td class="px-8 py-5">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="text-xs font-bold font-label text-secondary">Active</span>
+</div>
+</td>
+<td class="px-8 py-5 text-right">
+<button class="p-2 hover:bg-surface-container-highest rounded-lg transition-colors text-outline">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-8 py-5">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img alt="Staff Profile" class="w-11 h-11 rounded-full object-cover" data-alt="middle aged woman with graying hair sitting at a tidy desk with a laptop" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3HYU6y7SfbKJdtJuaHD2BQNK8WgQXmjAZZfpyQCUwlOI-Rl8pPOTB0sn_19Tb4lNWKl0ViLM3XPExnrtyaPsjWia9kkNTqGvc8RooFBdyvv0sGJEEwVnQRNqSEs533l5QqKgQLdqtOAPYJka1QB9poWPZUicTkkjbVOvcxIkHMjyp56ViFbIM5Zs5ekRNIgt6vYcxsOyqBc4oDkdF0FsjVAErZdnveuK22p7ifPtRsojByTN3uURSvcb6lMqJd1oqFlnuP5h4Z1HP"/>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-outline rounded-full border-2 border-white"></div>
+</div>
+<div>
+<div class="text-sm font-bold font-headline text-on-surface">Elena Rodriguez</div>
+<div class="text-xs text-on-surface-variant font-medium">e.rodriguez@university.edu</div>
+</div>
+</div>
+</td>
+<td class="px-8 py-5">
+<span class="bg-outline/10 text-outline px-3 py-1 rounded-full text-xs font-bold font-label">Staff</span>
+</td>
+<td class="px-8 py-5">
+<div class="text-sm font-medium text-on-surface">Administration</div>
+<div class="text-[10px] text-outline font-label">Registrar Office</div>
+</td>
+<td class="px-8 py-5">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-outline-variant"></span>
+<span class="text-xs font-bold font-label text-on-surface-variant">On Leave</span>
+</div>
+</td>
+<td class="px-8 py-5 text-right">
+<button class="p-2 hover:bg-surface-container-highest rounded-lg transition-colors text-outline">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low transition-colors group">
+<td class="px-8 py-5">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img alt="Student Profile" class="w-11 h-11 rounded-full object-cover" data-alt="portrait of a confident male student with headphones around his neck in a library" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBo5RaNWFIXVGVRP9-ErEE9C-PcIDdUzVk3N4fLxm676JKevE3v6za-BSPsLBVEBZzG4cKoLPa-0b0hULdgbBI9ps8MPVmi4jetVieHsNtVAr-GM7bPiGFTtzvCBPRUxUuS7fNTegEmXXXEnBdsQ8mv-gbk1Op3wGQmLUwpMMSoVvvxqYFOSTjqstHBqCwG77Zade5snN1LGlxQmX2vdT_pYksZ3YcOkbeTeo09qAFvZKxn14kMlnn2qiKkFBWlmrifcpEW-4zi8Ion"/>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-error rounded-full border-2 border-white"></div>
+</div>
+<div>
+<div class="text-sm font-bold font-headline text-on-surface">Julian Vance</div>
+<div class="text-xs text-on-surface-variant font-medium">j.vance.21@student.edu</div>
+</div>
+</div>
+</td>
+<td class="px-8 py-5">
+<span class="bg-tertiary/10 text-tertiary px-3 py-1 rounded-full text-xs font-bold font-label">Student</span>
+</td>
+<td class="px-8 py-5">
+<div class="text-sm font-medium text-on-surface">Humanities</div>
+<div class="text-[10px] text-outline font-label">Faculty of Arts</div>
+</td>
+<td class="px-8 py-5">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span class="text-xs font-bold font-label text-error">On Probation</span>
+</div>
+</td>
+<td class="px-8 py-5 text-right">
+<button class="p-2 hover:bg-surface-container-highest rounded-lg transition-colors text-outline">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-8 py-6 bg-surface-container-low border-t border-outline-variant/10 flex items-center justify-between">
+<div class="text-xs font-medium text-on-surface-variant font-label">
+                    Showing <span class="text-on-surface font-bold">1-4</span> of <span class="text-on-surface font-bold">12,820</span> records
+                </div>
+<div class="flex items-center gap-2">
+<button class="p-2 hover:bg-surface-container-highest rounded-lg text-outline-variant cursor-not-allowed">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-primary text-white text-xs font-bold">1</button>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container-highest text-on-surface-variant text-xs font-bold transition-all">2</button>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container-highest text-on-surface-variant text-xs font-bold transition-all">3</button>
+<span class="text-outline-variant mx-1">...</span>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container-highest text-on-surface-variant text-xs font-bold transition-all">320</button>
+<button class="p-2 hover:bg-surface-container-highest rounded-lg text-on-surface transition-all">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Secondary Insights Grid -->
+<div class="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Recent Activity -->
+<div class="lg:col-span-2 bg-surface-container-lowest p-8 rounded-2xl shadow-[0_20px_40px_-10px_rgba(26,25,48,0.06)] border border-outline-variant/10">
+<div class="flex items-center justify-between mb-8">
+<h3 class="text-xl font-bold font-headline text-on-surface">Recent Logs</h3>
+<button class="text-sm font-bold text-primary font-label">View System Logs</button>
+</div>
+<div class="space-y-6">
+<div class="flex gap-4">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-secondary/10 text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+</div>
+<div class="w-0.5 flex-1 bg-surface-container-highest my-2"></div>
+</div>
+<div class="pb-6">
+<div class="text-sm font-bold text-on-surface">New Student Batch Uploaded</div>
+<div class="text-xs text-on-surface-variant mt-1">Admin processed 450 new registrations for Computer Science.</div>
+<div class="text-[10px] text-outline font-label uppercase mt-2">Today, 09:12 AM</div>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">security</span>
+</div>
+<div class="w-0.5 flex-1 bg-surface-container-highest my-2"></div>
+</div>
+<div class="pb-6">
+<div class="text-sm font-bold text-on-surface">Permission Audit Completed</div>
+<div class="text-xs text-on-surface-variant mt-1">Monthly security audit for faculty access levels finalized with zero issues.</div>
+<div class="text-[10px] text-outline font-label uppercase mt-2">Yesterday, 04:30 PM</div>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-error/10 text-error flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">warning</span>
+</div>
+</div>
+<div>
+<div class="text-sm font-bold text-on-surface">Attendance Alert: Department of Arts</div>
+<div class="text-xs text-on-surface-variant mt-1">Average attendance dropped below 80% threshold for the current week.</div>
+<div class="text-[10px] text-outline font-label uppercase mt-2">2 days ago</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Distribution Chart Card -->
+<div class="bg-surface-container-lowest p-8 rounded-2xl shadow-[0_20px_40px_-10px_rgba(26,25,48,0.06)] border border-outline-variant/10">
+<h3 class="text-xl font-bold font-headline text-on-surface mb-6">User Distribution</h3>
+<div class="aspect-square w-full bg-surface-container rounded-full relative flex items-center justify-center group overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-br from-primary via-primary-container to-secondary opacity-10"></div>
+<!-- Mock Donut Chart Segments -->
+<div class="w-48 h-48 rounded-full border-[18px] border-primary border-r-secondary border-b-tertiary-container relative flex items-center justify-center">
+<div class="text-center">
+<div class="text-4xl font-extrabold font-headline text-on-surface">12.8k</div>
+<div class="text-[10px] font-bold font-label uppercase text-outline">Total Users</div>
+</div>
+</div>
+</div>
+<div class="mt-8 space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+<span class="text-sm font-medium text-on-surface">Students</span>
+</div>
+<span class="text-sm font-bold text-on-surface">92%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-secondary"></div>
+<span class="text-sm font-medium text-on-surface">Faculty</span>
+</div>
+<span class="text-sm font-bold text-on-surface">5%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-tertiary-container"></div>
+<span class="text-sm font-medium text-on-surface">Admin Staff</span>
+</div>
+<span class="text-sm font-bold text-on-surface">3%</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

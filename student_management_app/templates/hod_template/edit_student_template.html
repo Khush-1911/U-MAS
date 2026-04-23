@@ -3,28 +3,16 @@
 Edit Student |  Username : {{ username }} | #ID : {{ id }}
 {% endblock page_title %}
 {% block main_content %}
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-          <div class="row">
-              <div class="col-md-12">
-            <!-- general form elements -->
-            <div class="card ">
-              <div class="card-header">
-                <h3 class="card-title">Edit Student</h3>
-              </div>
-              <!-- /.card-header -->
-              <!-- form start -->
+    
+            
+            <div class="bg-surface-container-lowest rounded-2xl overflow-hidden">
+              <div class="px-8 py-5 border-b border-outline-variant/10"><h3 class="font-headline font-bold text-on-surface text-lg">Edit Student</h3></div>
+              
+              
                 {% url 'edit_student_save' as action_path %}
                 {% include 'hod_template/form_template.html' with messages=messages form=form action_path=action_path button_text="Edit Student" %}
-            <!-- /.card -->
+            
 
-
-
-          </div>
-          </div>
-      </div>
-    </section>
-    <!-- /.content -->
+          
 {% endblock main_content %}
 

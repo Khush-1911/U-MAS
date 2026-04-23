@@ -3,49 +3,43 @@
 Edit Subject | Subject ID : {{ subject.id }}
 {% endblock page_title %}
 {% block main_content %}
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-          <div class="row">
-              <div class="col-md-12">
-            <!-- general form elements -->
-            <div class="card ">
-              <div class="card-header">
-                <h3 class="card-title">Edit Subject</h3>
-              </div>
-              <!-- /.card-header -->
-              <!-- form start -->
+    
+            
+            <div class="bg-surface-container-lowest rounded-2xl overflow-hidden">
+              <div class="px-8 py-5 border-b border-outline-variant/10"><h3 class="font-headline font-bold text-on-surface text-lg">Edit Subject</h3></div>
+              
+              
               <form role="form" action="/edit_subject_save" method="post">
-                <div class="form-group">
+                <div class="space-y-2">
                   {% if messages %}
                     {% for message in messages %}
                     {% if message.tags == 'error' %}
-                    <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+                    <div class="px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 bg-error/10 text-error">{{ message }}</div>
                     {% endif %}
                     {% if message.tags == 'success' %}
-                    <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+                    <div class="px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 bg-green-100 text-green-700">{{ message }}</div>
                     {% endif %}
                     {% endfor %}
                   {% endif %}
                 </div>
                   {% csrf_token %}
-                <div class="card-body">
-                  <div class="form-group">
-                    <label>Subject Name </label>
-                    <input class="form-control" name="subject_name" placeholder="Enter Subject" value="{{ subject.subject_name }}">
-                    <input type="hidden" class="form-control" name="subject_id" placeholder="Enter Subject" value="{{ subject.id }}">
+                <div class="p-8 space-y-6">
+                  <div class="space-y-2">
+                    <label class="block font-label text-sm font-bold text-on-surface-variant">Subject Name </label>
+                    <input class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" name="subject_name" placeholder="Enter Subject" value="{{ subject.subject_name }}">
+                    <input type="hidden" class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" name="subject_id" placeholder="Enter Subject" value="{{ subject.id }}">
                   </div>
-                   <div class="form-group">
-                    <label>Class</label>
-                    <select class="form-control" name="class">
+                   <div class="space-y-2">
+                    <label class="block font-label text-sm font-bold text-on-surface-variant">Class</label>
+                    <select class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" name="class">
                         {% for class in classes %}
                             <option value="{{ class.id }}" {% if class.id == subject.class_id.id %} selected {% endif %}>{{ class.class_name }} ({{ class.department.department_name }})</option>
                         {% endfor %}
                     </select>
                   </div>
-                  <div class="form-group">
-                    <label>Staff</label>
-                    <select class="form-control" name="staff">
+                  <div class="space-y-2">
+                    <label class="block font-label text-sm font-bold text-on-surface-variant">Staff</label>
+                    <select class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" name="staff">
                         {% for staff in staffs %}
                           <option value="{{ staff.id }}" {% if staff.id == subject.staff_id.id %} selected {% endif %}>{{ staff.first_name }} {{ staff.last_name }}</option>
                         {% endfor %}
@@ -54,21 +48,15 @@ Edit Subject | Subject ID : {{ subject.id }}
                    
 
                 </div>
-                <!-- /.card-body -->
+                
 
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-primary btn-block">Save Subject</button>
+                <div class="px-8 py-6 border-t border-outline-variant/20">
+                  <button type="submit" class="w-full py-4 premium-gradient text-white font-display font-bold rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform">Save Subject</button>
                 </div>
               </form>
             </div>
-            <!-- /.card -->
+            
 
-
-
-          </div>
-          </div>
-      </div>
-    </section>
-    <!-- /.content -->
+          
 {% endblock main_content %}
 

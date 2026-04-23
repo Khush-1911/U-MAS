@@ -1,90 +1,68 @@
 {% extends 'hod_template/base_template.html' %}
-{% block page_title %}
-Manage Staff
-{% endblock page_title %}
+{% block page_title %}Staff Notifications{% endblock page_title %}
+
 {% block main_content %}
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
+<header class="mb-10">
+  <h2 class="text-4xl font-display font-extrabold text-on-surface tracking-tight">Staff Notification Center</h2>
+  <p class="text-on-surface-variant max-w-lg">Send direct notifications to faculty members.</p>
+</header>
 
+<div class="bg-surface-container-lowest rounded-xl shadow-xl shadow-indigo-900/5 overflow-hidden border border-outline-variant/10">
+  <div class="overflow-x-auto">
+    <table class="w-full text-left border-collapse">
+      <thead>
+        <tr class="bg-surface-container-low/50">
+          <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">ID</th>
+          <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">First Name</th>
+          <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">Last Name</th>
+          <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">Username</th>
+          <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">Email</th>
+          <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant text-right">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for staff in staffs %}
+        <tr class="group hover:bg-primary-fixed/20 transition-colors {% if forloop.counter|divisibleby:2 %}bg-surface-container-low/20{% else %}bg-white{% endif %}">
+          <td class="px-8 py-5 text-sm font-body">{{ staff.admin.id }}</td>
+          <td class="px-8 py-5 text-sm font-body font-medium">{{ staff.admin.first_name }}</td>
+          <td class="px-8 py-5 text-sm font-body font-medium">{{ staff.admin.last_name }}</td>
+          <td class="px-8 py-5 text-sm font-body text-on-surface-variant">{{ staff.admin.username }}</td>
+          <td class="px-8 py-5 text-sm font-body text-on-surface-variant">{{ staff.admin.email }}</td>
+          <td class="px-8 py-5 text-right">
+            <button type="button" class="show_notification px-4 py-2 rounded-lg bg-secondary/10 text-secondary text-xs font-label font-bold uppercase tracking-wider hover:bg-secondary/20 transition-colors cursor-pointer border-none">
+              <span class="material-symbols-outlined text-sm align-middle mr-1">send</span>
+              Notify
+            </button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 
-           <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Staff Details</h3>
-
-                <div class="card-tools">
-                  <div class="input-group input-group-sm" style="width: 150px;">
-                    <input name="table_search" class="form-control float-right" placeholder="Search">
-
-                    <div class="input-group-append">
-                      <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>First Name</th>
-                      <th>Last Name</th>
-                      <th>User Name</th>
-                      <th>Email</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  {% for staff in staffs %}
-                    <tr>
-                      <td>{{ staff.admin.id }}</td>
-                      <td>{{ staff.admin.first_name }}</td>
-                      <td>{{ staff.admin.last_name }}</td>
-                      <td>{{ staff.admin.username }}</td>
-                      <td>{{ staff.admin.email }}</td>
-                      <td><a href="#" class="btn btn-success show_notification" data-toggle="modal" data-target="#myModal">Send Notification</a></td>
-                    </tr>
-                  {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-          </div>
-        </div>
+<!-- Notification Modal -->
+<div class="fixed inset-0 bg-slate-900/45 hidden items-center justify-center p-6 z-[2000]" id="myModal">
+  <div class="w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden">
+    <div class="flex items-center justify-between px-6 py-5 border-b border-outline-variant/20">
+      <h4 class="font-headline font-bold text-on-surface text-lg">Send Notification to <span id="name_span" class="text-primary"></span></h4>
+      <button type="button" class="modal-close-btn w-9 h-9 rounded-full bg-surface-container hover:bg-surface-container-highest flex items-center justify-center text-on-surface-variant transition-colors text-xl leading-none border-none cursor-pointer">&times;</button>
+    </div>
+    <div class="p-6 space-y-4">
+      <div class="space-y-2">
+        <label class="block font-label text-sm font-bold text-on-surface-variant">Message</label>
+        <input name="message" id="message_not" class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" placeholder="Enter your notification message">
+        <input type="hidden" name="student_id" id="student_id">
       </div>
-    </section>
-    <!-- /.content -->
-<div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Send Notification to <span id="name_span"></span></h4>
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <input name="message" class="form-control" id="message_not">
-             <input type="hidden" name="student_id" class="form-control" id="student_id">
-          </div>
-          <div class="form-group">
-            <button class="btn btn-info btn-block send_notification_btn"  type="button">Send Notification</button>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-
+      <button class="send_notification_btn w-full py-3 premium-gradient text-white font-label font-bold rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform border-none cursor-pointer" type="button">Send Notification</button>
+    </div>
+    <div class="px-6 py-4 border-t border-outline-variant/20 text-right">
+      <button type="button" class="modal-close-btn px-4 py-2 bg-surface-container text-on-surface-variant font-label font-bold rounded-lg hover:bg-surface-container-highest transition-colors border-none cursor-pointer">Close</button>
     </div>
   </div>
+</div>
 {% endblock main_content %}
+
 {% block custom_js %}
 <script>
   $(".show_notification").click(function(){
@@ -93,7 +71,15 @@ Manage Staff
       console.log(student_id);
       $("#student_id").val(student_id);
       $("#name_span").text(student_name);
+      $("#myModal").removeClass("hidden").addClass("flex");
+  });
 
+  $(".modal-close-btn").click(function(){
+      $("#myModal").removeClass("flex").addClass("hidden");
+  });
+
+  $("#myModal").click(function(e){
+      if(e.target === this) $(this).removeClass("flex").addClass("hidden");
   });
 
   $(".send_notification_btn").click(function(){
@@ -111,6 +97,8 @@ Manage Staff
         .done(function(response){
             if(response=="True"){
                 alert("Message Sent");
+                $("#myModal").removeClass("flex").addClass("hidden");
+                $("#message_not").val("");
             }
             else{
                 alert("Failed to Send Message");

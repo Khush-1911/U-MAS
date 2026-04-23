@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Attendance Management | U-MAS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "surface-container-highest": "#e3dffe",
+                "on-primary-fixed": "#07006c",
+                "on-tertiary": "#ffffff",
+                "outline": "#767586",
+                "error": "#ba1a1a",
+                "on-error": "#ffffff",
+                "tertiary": "#20645b",
+                "surface-variant": "#e3dffe",
+                "inverse-primary": "#c1c1ff",
+                "inverse-on-surface": "#f2eeff",
+                "error-container": "#ffdad6",
+                "on-primary": "#ffffff",
+                "surface-tint": "#4849da",
+                "surface-container-low": "#f6f2ff",
+                "on-tertiary-container": "#e1fff8",
+                "on-surface": "#1a1930",
+                "on-primary-container": "#faf7ff",
+                "on-tertiary-fixed": "#00201c",
+                "on-secondary": "#ffffff",
+                "surface-container-lowest": "#ffffff",
+                "surface-container": "#efebff",
+                "on-secondary-fixed": "#00201e",
+                "on-secondary-fixed-variant": "#00504d",
+                "on-error-container": "#93000a",
+                "primary": "#4343d5",
+                "on-tertiary-fixed-variant": "#005048",
+                "on-surface-variant": "#464555",
+                "inverse-surface": "#2f2e46",
+                "on-background": "#1a1930",
+                "primary-fixed-dim": "#c1c1ff",
+                "primary-container": "#5d5fef",
+                "tertiary-fixed-dim": "#92d3c7",
+                "primary-fixed": "#e1e0ff",
+                "secondary-container": "#82f2eb",
+                "outline-variant": "#c7c4d7",
+                "on-primary-fixed-variant": "#2e2bc2",
+                "secondary-fixed-dim": "#67d8d1",
+                "secondary-fixed": "#85f5ee",
+                "tertiary-fixed": "#adefe3",
+                "tertiary-container": "#3d7d73",
+                "surface-dim": "#dad7f6",
+                "surface-bright": "#fcf8ff",
+                "secondary": "#006a66",
+                "background": "#fcf8ff",
+                "surface": "#fcf8ff",
+                "surface-container-high": "#e9e5ff",
+                "on-secondary-container": "#006f6a"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "2xl": "1.5rem",
+                "full": "9999px"
+            },
+            "fontFamily": {
+                "headline": ["Plus Jakarta Sans"],
+                "body": ["Inter"],
+                "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-pill {
+            background: linear-gradient(135deg, #4343d5 0%, #5d5fef 100%);
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .label-text { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-[0_20px_40px_-10px_rgba(26,25,48,0.06)] flex justify-between items-center px-8 h-16">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tight bg-gradient-to-tr from-indigo-600 to-indigo-400 bg-clip-text text-transparent">U-MAS</span>
+<div class="hidden md:flex gap-6 font-['Plus_Jakarta_Sans'] font-medium tracking-tight">
+<a class="text-slate-500 hover:text-indigo-500 transition-colors duration-200 cursor-pointer active:scale-95" href="#">Dashboard</a>
+<a class="text-slate-500 hover:text-indigo-500 transition-colors duration-200 cursor-pointer active:scale-95" href="#">Analytics</a>
+<a class="text-slate-500 hover:text-indigo-500 transition-colors duration-200 cursor-pointer active:scale-95" href="#">Reports</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="p-2 hover:bg-slate-50 rounded-full cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-slate-600">notifications</span>
+</div>
+<div class="p-2 hover:bg-slate-50 rounded-full cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-slate-600">help_outline</span>
+</div>
+<img alt="User Profile Avatar" class="w-8 h-8 rounded-full object-cover ring-2 ring-indigo-100" data-alt="Close up portrait of a professional academic staff member with a friendly expression in a brightly lit office" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-X3W_9hwMDbYJS0haTqzsqnlaxWIFYZqYchTeCEr--tUH5wrzSGJhN6GaGnqS7aoFUhsY90HFO_7B094Z_i1I7Q7u_5ShredFqBcMFWlgcIVf4by6rSlQ6Lh-henEZ9EhPZ8JblH31_-VwivjVXQs8vF0vmsmPcphTSnZb9ukvTT4_ckhV3k9SAdfKlKq4O9grlx_WJobAPiYHaAEDJvZQ2mMYZ12fWiWubHBXP4kBohFWdiE0Y6EAVn852QaSj2VkvLh4WBzSPb2"/>
+</div>
+</nav>
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 z-40 bg-slate-50 dark:bg-slate-950/50 backdrop-blur-md border-r border-indigo-50/10 flex flex-col pt-20 pb-8">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3 mb-1">
+<span class="material-symbols-outlined text-primary">school</span>
+<span class="text-lg font-bold text-slate-900 dark:text-white">University Portal</span>
+</div>
+<p class="text-xs text-slate-500 font-medium tracking-wide">Academic Management</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:text-indigo-500 hover:bg-indigo-50/30 transition-all duration-200 font-['Inter'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined">domain</span> Institution
+            </a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:text-indigo-500 hover:bg-indigo-50/30 transition-all duration-200 font-['Inter'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined">group</span> Users
+            </a>
+<a class="flex items-center gap-3 px-6 py-3 text-indigo-600 dark:text-indigo-400 border-l-4 border-indigo-600 bg-indigo-50/50 dark:bg-indigo-900/20 transition-all duration-200 font-['Inter'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined">event_available</span> Attendance
+            </a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:text-indigo-500 hover:bg-indigo-50/30 transition-all duration-200 font-['Inter'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined">menu_book</span> Academic
+            </a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:text-indigo-500 hover:bg-indigo-50/30 transition-all duration-200 font-['Inter'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined">calendar_today</span> Leave
+            </a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:text-indigo-500 hover:bg-indigo-50/30 transition-all duration-200 font-['Inter'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined">chat_bubble_outline</span> Feedback
+            </a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:text-indigo-500 hover:bg-indigo-50/30 transition-all duration-200 font-['Inter'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined">settings</span> Settings
+            </a>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full py-3 px-4 bg-indigo-600 text-white rounded-xl font-semibold text-sm shadow-lg shadow-indigo-200 active:scale-95 transition-all">
+                New Academic Year
+            </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="pl-64 pt-16 min-h-screen">
+<div class="p-8 max-w-7xl mx-auto space-y-8">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div class="space-y-1">
+<h1 class="text-4xl font-extrabold text-on-surface tracking-tight">Attendance Tracking</h1>
+<p class="text-on-surface-variant font-medium">Manage daily student presence and review historical records.</p>
+</div>
+<div class="flex gap-4">
+<div class="bg-surface-container-low px-4 py-3 rounded-2xl flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">calendar_month</span>
+<div class="text-left">
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Current Session</p>
+<p class="text-sm font-bold text-on-surface">Oct 24, 2023</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Selection Bento Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Primary Selection Card -->
+<div class="lg:col-span-8 bg-surface-container-lowest rounded-2xl p-6 shadow-[0_20px_40px_-10px_rgba(26,25,48,0.06)] relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16"></div>
+<div class="flex flex-col md:flex-row gap-6 relative z-10">
+<div class="flex-1 space-y-2">
+<label class="label-text text-xs font-bold text-on-surface-variant uppercase tracking-wider">Select Subject</label>
+<select class="w-full bg-surface-container border-none rounded-xl px-4 py-3 text-on-surface font-medium focus:ring-2 focus:ring-primary appearance-none">
+<option>Advanced Quantum Mechanics (PH-402)</option>
+<option>Statistical Thermodynamics (PH-405)</option>
+<option>Nuclear Physics &amp; Applications (PH-408)</option>
+</select>
+</div>
+<div class="w-full md:w-48 space-y-2">
+<label class="label-text text-xs font-bold text-on-surface-variant uppercase tracking-wider">Session Date</label>
+<input class="w-full bg-surface-container border-none rounded-xl px-4 py-3 text-on-surface font-medium focus:ring-2 focus:ring-primary" type="date" value="2023-10-24"/>
+</div>
+<div class="flex items-end">
+<button class="bg-primary text-white h-[48px] px-8 rounded-xl font-bold hover:shadow-xl transition-shadow active:scale-95">
+                                Fetch List
+                            </button>
+</div>
+</div>
+</div>
+<!-- Update Attendance / History Selection -->
+<div class="lg:col-span-4 bg-surface-container-low rounded-2xl p-6 flex flex-col justify-between">
+<div class="space-y-2">
+<h3 class="font-bold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">history</span>
+                            Review Records
+                        </h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">Select a past date to view or update attendance history.</p>
+</div>
+<div class="mt-4 relative">
+<select class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl px-4 py-3 text-on-surface text-sm font-medium focus:ring-2 focus:ring-secondary appearance-none">
+<option>Oct 23, 2023 - 2:00 PM</option>
+<option>Oct 21, 2023 - 10:30 AM</option>
+<option>Oct 20, 2023 - 2:00 PM</option>
+<option>Oct 18, 2023 - 9:00 AM</option>
+</select>
+<div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Attendance Table Container -->
+<div class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-[0_20px_40px_-10px_rgba(26,25,48,0.06)] border border-outline-variant/10">
+<div class="px-8 py-6 flex justify-between items-center bg-surface-container-lowest">
+<div>
+<h2 class="text-xl font-bold text-on-surface">Student Roll Call</h2>
+<p class="text-sm text-on-surface-variant">Class: Semester VII • Strength: 42 Students</p>
+</div>
+<div class="flex gap-2">
+<button class="px-4 py-2 text-xs font-bold text-primary bg-primary/10 rounded-full hover:bg-primary/20 transition-colors uppercase tracking-widest">Mark All Present</button>
+<button class="px-4 py-2 text-xs font-bold text-on-surface-variant bg-surface-container rounded-full hover:bg-surface-container-high transition-colors uppercase tracking-widest">Reset Form</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-left">
+<th class="px-8 py-4 label-text text-xs font-extrabold text-on-surface-variant uppercase tracking-wider">Student Profile</th>
+<th class="px-6 py-4 label-text text-xs font-extrabold text-on-surface-variant uppercase tracking-wider">Student ID</th>
+<th class="px-6 py-4 label-text text-xs font-extrabold text-on-surface-variant uppercase tracking-wider">Mentorship Status</th>
+<th class="px-8 py-4 label-text text-xs font-extrabold text-on-surface-variant uppercase tracking-wider text-right">Attendance Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container/30 transition-colors group">
+<td class="px-8 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary">AA</div>
+<div>
+<p class="font-semibold text-on-surface group-hover:text-primary transition-colors">Adrian Aristhone</p>
+<p class="text-xs text-on-surface-variant">Quantum Physics Major</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm font-medium text-on-surface-variant">UM2023-4021</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-secondary/10 text-secondary text-[10px] font-bold uppercase tracking-wider">Direct Mentee</span>
+</td>
+<td class="px-8 py-4">
+<div class="flex justify-end items-center gap-4">
+<label class="cursor-pointer group/radio">
+<input class="hidden peer" name="att_1" type="radio"/>
+<div class="flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-container group-hover/radio:bg-surface-container-high peer-checked:bg-secondary/10 peer-checked:text-secondary peer-checked:ring-2 peer-checked:ring-secondary transition-all">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+<span class="text-xs font-bold uppercase tracking-widest">Present</span>
+</div>
+</label>
+<label class="cursor-pointer group/radio">
+<input class="hidden peer" name="att_1" type="radio"/>
+<div class="flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-container group-hover/radio:bg-surface-container-high peer-checked:bg-error/10 peer-checked:text-error peer-checked:ring-2 peer-checked:ring-error transition-all">
+<span class="material-symbols-outlined text-sm">cancel</span>
+<span class="text-xs font-bold uppercase tracking-widest">Absent</span>
+</div>
+</label>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="bg-surface-container-low/20 hover:bg-surface-container/30 transition-colors group">
+<td class="px-8 py-4">
+<div class="flex items-center gap-3">
+<img alt="Student Avatar" class="w-10 h-10 rounded-full object-cover" data-alt="Modern high key portrait of a female university student with a bright smile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzUH3dMLL_8uRYankSUANXjwgFPKLglmAQz2gjzjSjSx6MWP28EFg2sZauduCO-Dkb-M1eknNZ1Y01n9OgWY-j_frVKmurLBzWPsrykwMO-kwYsh8GmLaTukX4bzq34QJnFaBam_nbirRiXkidGn2rmcVBvtCpFeOZimZUCtvxcX011c4-7EmV9bLOSWKQyTQ6BtIalegO_nAg1wr2jYtRO0zJoVm9cVUdwpocZvcBlasuq12-ctWMymTYXQkLsd_O6S2poKg0WjlR"/>
+<div>
+<p class="font-semibold text-on-surface group-hover:text-primary transition-colors">Beatrice Thorne</p>
+<p class="text-xs text-on-surface-variant">Nuclear Engineering</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm font-medium text-on-surface-variant">UM2023-4055</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-secondary/10 text-secondary text-[10px] font-bold uppercase tracking-wider">Direct Mentee</span>
+</td>
+<td class="px-8 py-4">
+<div class="flex justify-end items-center gap-4">
+<label class="cursor-pointer group/radio">
+<input class="hidden peer" name="att_2" type="radio"/>
+<div class="flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-container group-hover/radio:bg-surface-container-high peer-checked:bg-secondary/10 peer-checked:text-secondary peer-checked:ring-2 peer-checked:ring-secondary transition-all">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+<span class="text-xs font-bold uppercase tracking-widest">Present</span>
+</div>
+</label>
+<label class="cursor-pointer group/radio">
+<input class="hidden peer" name="att_2" type="radio"/>
+<div class="flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-container group-hover/radio:bg-surface-container-high peer-checked:bg-error/10 peer-checked:text-error peer-checked:ring-2 peer-checked:ring-error transition-all">
+<span class="material-symbols-outlined text-sm">cancel</span>
+<span class="text-xs font-bold uppercase tracking-widest">Absent</span>
+</div>
+</label>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container/30 transition-colors group">
+<td class="px-8 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-tertiary/10 flex items-center justify-center font-bold text-tertiary">CW</div>
+<div>
+<p class="font-semibold text-on-surface group-hover:text-primary transition-colors">Caleb Wright</p>
+<p class="text-xs text-on-surface-variant">Applied Mathematics</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm font-medium text-on-surface-variant">UM2023-4102</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider">Visiting Scholar</span>
+</td>
+<td class="px-8 py-4">
+<div class="flex justify-end items-center gap-4">
+<label class="cursor-pointer group/radio">
+<input class="hidden peer" name="att_3" type="radio"/>
+<div class="flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-container group-hover/radio:bg-surface-container-high peer-checked:bg-secondary/10 peer-checked:text-secondary peer-checked:ring-2 peer-checked:ring-secondary transition-all">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+<span class="text-xs font-bold uppercase tracking-widest">Present</span>
+</div>
+</label>
+<label class="cursor-pointer group/radio">
+<input class="hidden peer" name="att_3" type="radio"/>
+<div class="flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-container group-hover/radio:bg-surface-container-high peer-checked:bg-error/10 peer-checked:text-error peer-checked:ring-2 peer-checked:ring-error transition-all">
+<span class="material-symbols-outlined text-sm">cancel</span>
+<span class="text-xs font-bold uppercase tracking-widest">Absent</span>
+</div>
+</label>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="bg-surface-container-low/20 hover:bg-surface-container/30 transition-colors group">
+<td class="px-8 py-4">
+<div class="flex items-center gap-3">
+<img alt="Student Avatar" class="w-10 h-10 rounded-full object-cover" data-alt="Editorial close up of a diverse university student with sharp features in soft natural window light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJzR7sVQ93ENV4F8nc_xfIaHTTIaQFJ_xNHxb1LtqSDiLUi0qYC5yWdUFR2GjRcMWvSbSWEgv13ggGgN64SK9QH0xk2-rwUENKjqlVi5wfWCMnZIMFRwQjqyZgA8V41njBwTaHFGNW_nIx3xByCLaowUohpNKL89Ry2wV335uoJ19aZ3J2EWiwDMY04Ri5oCfvLXDUybjB21IBcQHPzI8_tBUj_LvrwoT_BGwOONXPlu-ip8G5St4qwXUboqaqZyel-hUDb3P2gwxs"/>
+<div>
+<p class="font-semibold text-on-surface group-hover:text-primary transition-colors">Diana Prince</p>
+<p class="text-xs text-on-surface-variant">Astrophysics</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm font-medium text-on-surface-variant">UM2023-3982</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-secondary/10 text-secondary text-[10px] font-bold uppercase tracking-wider">Direct Mentee</span>
+</td>
+<td class="px-8 py-4">
+<div class="flex justify-end items-center gap-4">
+<label class="cursor-pointer group/radio">
+<input class="hidden peer" name="att_4" type="radio"/>
+<div class="flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-container group-hover/radio:bg-surface-container-high peer-checked:bg-secondary/10 peer-checked:text-secondary peer-checked:ring-2 peer-checked:ring-secondary transition-all">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+<span class="text-xs font-bold uppercase tracking-widest">Present</span>
+</div>
+</label>
+<label class="cursor-pointer group/radio">
+<input class="hidden peer" name="att_4" type="radio"/>
+<div class="flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-container group-hover/radio:bg-surface-container-high peer-checked:bg-error/10 peer-checked:text-error peer-checked:ring-2 peer-checked:ring-error transition-all">
+<span class="material-symbols-outlined text-sm">cancel</span>
+<span class="text-xs font-bold uppercase tracking-widest">Absent</span>
+</div>
+</label>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Footer Action -->
+<div class="px-8 py-8 bg-surface-container-low/50 flex justify-end border-t border-outline-variant/10">
+<div class="flex items-center gap-8">
+<div class="text-right">
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Summary</p>
+<p class="text-sm font-medium text-on-surface">32 Present • 10 Absent</p>
+</div>
+<button class="flex items-center gap-2 bg-gradient-to-tr from-primary to-primary-container text-white px-10 py-4 rounded-xl font-bold text-lg shadow-lg shadow-primary/20 hover:shadow-primary/40 active:scale-95 transition-all">
+                            Save Attendance
+                            <span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-primary-container p-6 rounded-2xl text-white">
+<p class="text-xs font-bold opacity-80 uppercase tracking-widest mb-1">Monthly Average</p>
+<h4 class="text-3xl font-bold">94.2%</h4>
+<div class="mt-4 h-1.5 w-full bg-white/20 rounded-full overflow-hidden">
+<div class="h-full bg-white w-[94%]"></div>
+</div>
+</div>
+<div class="bg-secondary p-6 rounded-2xl text-white">
+<p class="text-xs font-bold opacity-80 uppercase tracking-widest mb-1">Pending Sync</p>
+<h4 class="text-3xl font-bold">0 Records</h4>
+<p class="mt-4 text-sm opacity-80 font-medium">All data is currently synchronized with the main portal.</p>
+</div>
+<div class="bg-surface-container-highest p-6 rounded-2xl flex flex-col justify-center">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-primary shadow-sm">
+<span class="material-symbols-outlined font-variation-settings: 'FILL' 1">stars</span>
+</div>
+<div>
+<h4 class="font-bold text-on-primary-fixed">Perfect Streak</h4>
+<p class="text-xs text-on-primary-fixed-variant">12 students with 100% attendance</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB for quick notes or alerts - suppressed on Details/Management screens as per guidelines -->
+</body></html>

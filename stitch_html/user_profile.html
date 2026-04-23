@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>U-MAS | Profile Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Manrope:wght@500;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-container": "#3d7d73",
+                      "secondary": "#006a66",
+                      "tertiary-fixed": "#adefe3",
+                      "tertiary": "#20645b",
+                      "outline-variant": "#c7c4d7",
+                      "on-secondary-container": "#006f6a",
+                      "error-container": "#ffdad6",
+                      "inverse-primary": "#c1c1ff",
+                      "on-error-container": "#93000a",
+                      "surface-dim": "#dad7f6",
+                      "secondary-fixed": "#85f5ee",
+                      "on-tertiary-fixed": "#00201c",
+                      "on-tertiary-container": "#e1fff8",
+                      "tertiary-fixed-dim": "#92d3c7",
+                      "surface-container": "#efebff",
+                      "on-surface-variant": "#464555",
+                      "on-tertiary": "#ffffff",
+                      "on-surface": "#1a1930",
+                      "surface-variant": "#e3dffe",
+                      "secondary-fixed-dim": "#67d8d1",
+                      "on-secondary-fixed-variant": "#00504d",
+                      "on-primary": "#ffffff",
+                      "surface-container-highest": "#e3dffe",
+                      "surface": "#fcf8ff",
+                      "on-secondary-fixed": "#00201e",
+                      "inverse-on-surface": "#f2eeff",
+                      "surface-tint": "#4849da",
+                      "primary-container": "#5d5fef",
+                      "on-tertiary-fixed-variant": "#005048",
+                      "surface-container-lowest": "#ffffff",
+                      "on-primary-container": "#faf7ff",
+                      "background": "#fcf8ff",
+                      "surface-container-high": "#e9e5ff",
+                      "primary-fixed": "#e1e0ff",
+                      "on-secondary": "#ffffff",
+                      "on-primary-fixed-variant": "#2e2bc2",
+                      "outline": "#767586",
+                      "on-error": "#ffffff",
+                      "primary-fixed-dim": "#c1c1ff",
+                      "error": "#ba1a1a",
+                      "secondary-container": "#82f2eb",
+                      "primary": "#4343d5",
+                      "surface-bright": "#fcf8ff",
+                      "on-background": "#1a1930",
+                      "on-primary-fixed": "#07006c",
+                      "surface-container-low": "#f6f2ff",
+                      "inverse-surface": "#2f2e46"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "fontFamily": {
+                      "headline": ["Plus Jakarta Sans"],
+                      "display": ["Plus Jakarta Sans"],
+                      "body": ["Inter"],
+                      "label": ["Manrope"]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fcf8ff;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="text-on-surface overflow-x-hidden">
+<!-- SideNavBar (Predicted Shell) -->
+<aside class="h-screen w-72 fixed left-0 top-0 z-50 bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur-2xl flex flex-col border-r border-slate-200/50 dark:border-slate-800/50 py-10 shadow-xl shadow-indigo-900/5">
+<div class="px-8 mb-12">
+<div class="text-2xl font-black bg-gradient-to-br from-indigo-600 to-indigo-400 bg-clip-text text-transparent font-['Plus_Jakarta_Sans']">U-MAS</div>
+<div class="text-slate-500 text-xs font-semibold tracking-widest uppercase mt-1">Academic Portal</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="text-slate-500 dark:text-slate-400 flex items-center gap-3 px-6 py-3 hover:bg-white/50 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-['Inter'] text-sm font-medium">Dashboard</span>
+</a>
+<a class="text-slate-500 dark:text-slate-400 flex items-center gap-3 px-6 py-3 hover:bg-white/50 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance">account_balance</span>
+<span class="font-['Inter'] text-sm font-medium">Institutional</span>
+</a>
+<a class="text-slate-500 dark:text-slate-400 flex items-center gap-3 px-6 py-3 hover:bg-white/50 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+<span class="font-['Inter'] text-sm font-medium">Academic</span>
+</a>
+<a class="text-slate-500 dark:text-slate-400 flex items-center gap-3 px-6 py-3 hover:bg-white/50 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="notifications_active">notifications_active</span>
+<span class="font-['Inter'] text-sm font-medium">Notifications</span>
+</a>
+<a class="relative text-indigo-600 dark:text-indigo-400 font-bold before:absolute before:left-0 before:h-6 before:w-1 before:bg-gradient-to-b before:from-indigo-600 before:to-indigo-400 before:rounded-r-full flex items-center gap-3 px-6 py-3" href="#">
+<span class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-['Inter'] text-sm font-medium">Profile</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-slate-200/50 pt-6 px-6 space-y-1">
+<a class="text-slate-500 dark:text-slate-400 flex items-center gap-3 px-6 py-3 hover:bg-white/50 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-['Inter'] text-sm font-medium">Settings</span>
+</a>
+<a class="text-slate-500 dark:text-slate-400 flex items-center gap-3 px-6 py-3 hover:bg-white/50 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-['Inter'] text-sm font-medium">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-72 min-h-screen">
+<!-- TopAppBar -->
+<header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl docked full-width top-0 sticky z-40 shadow-[0_20px_40px_-10px_rgba(26,25,48,0.06)]">
+<div class="flex justify-between items-center w-full px-8 py-4">
+<div class="flex items-center gap-8">
+<h1 class="font-['Plus_Jakarta_Sans'] font-extrabold tracking-tight text-xl text-indigo-600">Profile Settings</h1>
+<div class="hidden md:flex items-center bg-slate-100 dark:bg-slate-800 rounded-full px-4 py-2 gap-2">
+<span class="material-symbols-outlined text-slate-400 text-lg" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-64 text-on-surface" placeholder="Search profile settings..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:text-indigo-600 transition-colors active:scale-95">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:text-indigo-600 transition-colors active:scale-95">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden bg-slate-200">
+<img class="w-full h-full object-cover" data-alt="Close up portrait of a university administrator with a professional and friendly expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvhpbz7ZUKT4t5PG7qy6Mmr3H-k4v4w6PogKgdNbgT-uh-jWID44c8UVOnoJMWfrJEm7WxcqqcS81tJ-KE4dQOQAManH1SAEfze6W2i22NTygIq3GmASsr1aNPjTSG2vGpmqBogXJ6KQhpu8Y6P-5ZqX77mOLkLCR-Z4GawFlUNkZWC1L1kGLEU7i15hB7P3xDgwsPsXo_Mdv3XEmA509503z5b0Ze1oRyDpyW4nxNMl9sqJU1RynmS3WK0pctx91WBuMKnsd54zMK"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Profile Content -->
+<div class="p-12 max-w-6xl mx-auto space-y-12">
+<!-- Bento Hero Section -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Profile Identity Card -->
+<section class="col-span-12 lg:col-span-8 glass-card rounded-[2rem] p-8 shadow-sm border border-outline-variant/10 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -mr-20 -mt-20 blur-3xl"></div>
+<div class="flex flex-col md:flex-row gap-10 items-center relative z-10">
+<!-- Upload Area -->
+<div class="relative group cursor-pointer">
+<div class="w-40 h-40 rounded-3xl overflow-hidden ring-4 ring-white shadow-xl">
+<img class="w-full h-full object-cover transition-transform group-hover:scale-110" data-alt="High quality studio headshot of a male educator in business casual attire with soft professional lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6pkuKfG5xIEZ6-cuKsjczZlCTgJQetChNog8XGK_1Y4zLzFWuOwEJk2vCwuAoJL2sKLo6VZB19nQznHyZIHs_uxOyAKdglgPf3ju8g70WuTnIJ-wkgR12_U3Fw88x4sXHECpW9bWvO4pWJ3nBSWiUBM2ZABtgeMDYo9SkqYHKUCYBjotffVO0fegYE9epYz24jn-sDMHGRIfdkn5cjM3RC0FdS3J76TIfyyU_sQhZR28YOixWCI8vIUId8yBRehoVG40is4zdVGSe"/>
+</div>
+<div class="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-3xl" data-icon="photo_camera">photo_camera</span>
+</div>
+<button class="absolute -bottom-2 -right-2 bg-primary text-white p-2 rounded-xl shadow-lg hover:bg-primary-container transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="edit">edit</span>
+</button>
+</div>
+<div class="flex-1 space-y-4">
+<div class="space-y-1">
+<span class="text-xs font-bold font-['Manrope'] tracking-[0.2em] text-primary uppercase">User Identity</span>
+<h2 class="text-4xl font-['Plus_Jakarta_Sans'] font-extrabold text-on-surface">Dr. Alexander Sterling</h2>
+<p class="text-on-surface-variant font-['Inter']">Senior Fellow &amp; Academic Lead</p>
+</div>
+<div class="flex flex-wrap gap-3">
+<span class="bg-secondary/10 text-secondary px-4 py-1.5 rounded-full text-xs font-['Manrope'] font-bold flex items-center gap-2">
+<span class="w-2 h-2 bg-secondary rounded-full"></span> Active Portal
+                                </span>
+<span class="bg-primary/10 text-primary px-4 py-1.5 rounded-full text-xs font-['Manrope'] font-bold">Faculty Member</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Stats Quick View -->
+<section class="col-span-12 lg:col-span-4 grid grid-rows-2 gap-8">
+<div class="bg-primary-container rounded-[2rem] p-6 text-on-primary-container flex flex-col justify-between">
+<span class="material-symbols-outlined text-3xl" data-icon="shield_person">shield_person</span>
+<div>
+<div class="text-xs font-['Manrope'] font-bold opacity-80 uppercase tracking-widest">Profile ID</div>
+<div class="text-2xl font-['Plus_Jakarta_Sans'] font-bold">UM-99210-AS</div>
+</div>
+</div>
+<div class="bg-secondary-container rounded-[2rem] p-6 text-on-secondary-container flex flex-col justify-between">
+<span class="material-symbols-outlined text-3xl" data-icon="history">history</span>
+<div>
+<div class="text-xs font-['Manrope'] font-bold opacity-80 uppercase tracking-widest">Last Access</div>
+<div class="text-2xl font-['Plus_Jakarta_Sans'] font-bold">2 hours ago</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Detailed Management Sections -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+<!-- Personal Info -->
+<div class="space-y-6">
+<div class="flex items-center gap-4 px-2">
+<div class="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-600">
+<span class="material-symbols-outlined" data-icon="person_outline">person_outline</span>
+</div>
+<h3 class="text-xl font-['Plus_Jakarta_Sans'] font-bold">Personal Information</h3>
+</div>
+<div class="bg-surface-container-low rounded-[2rem] p-8 space-y-6 border border-white">
+<div class="space-y-2">
+<label class="text-xs font-bold font-['Manrope'] text-on-surface-variant uppercase ml-1">Full Legal Name</label>
+<input class="w-full bg-surface-container-lowest border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-primary/20 text-on-surface font-medium transition-all" type="text" value="Alexander Sterling"/>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold font-['Manrope'] text-on-surface-variant uppercase ml-1">Email Address</label>
+<input class="w-full bg-surface-container-lowest border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-primary/20 text-on-surface font-medium transition-all" type="email" value="a.sterling@u-mas.edu"/>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold font-['Manrope'] text-on-surface-variant uppercase ml-1">Contact Phone</label>
+<input class="w-full bg-surface-container-lowest border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-primary/20 text-on-surface font-medium transition-all" type="text" value="+1 (555) 012-3456"/>
+</div>
+</div>
+</div>
+<!-- Academic Info -->
+<div class="space-y-6">
+<div class="flex items-center gap-4 px-2">
+<div class="w-10 h-10 bg-teal-100 rounded-xl flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+</div>
+<h3 class="text-xl font-['Plus_Jakarta_Sans'] font-bold">Academic Institution</h3>
+</div>
+<div class="bg-surface-container-low rounded-[2rem] p-8 space-y-6 border border-white">
+<div class="space-y-2">
+<label class="text-xs font-bold font-['Manrope'] text-on-surface-variant uppercase ml-1">Primary Role</label>
+<div class="w-full bg-surface-container-lowest rounded-2xl px-6 py-4 text-on-surface font-semibold flex items-center justify-between">
+<span>Senior Academic Lead</span>
+<span class="material-symbols-outlined text-slate-400" data-icon="lock">lock</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold font-['Manrope'] text-on-surface-variant uppercase ml-1">Organization</label>
+<div class="w-full bg-surface-container-lowest rounded-2xl px-6 py-4 text-on-surface font-semibold flex items-center justify-between">
+<span>Global Institute of Excellence</span>
+<span class="material-symbols-outlined text-slate-400" data-icon="corporate_fare">corporate_fare</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold font-['Manrope'] text-on-surface-variant uppercase ml-1">Department</label>
+<div class="w-full bg-surface-container-lowest rounded-2xl px-6 py-4 text-on-surface font-semibold">
+                                Theoretical Applied Sciences
+                            </div>
+</div>
+</div>
+</div>
+<!-- Security Management -->
+<div class="col-span-1 md:col-span-2 space-y-6">
+<div class="flex items-center gap-4 px-2">
+<div class="w-10 h-10 bg-rose-100 rounded-xl flex items-center justify-center text-error">
+<span class="material-symbols-outlined" data-icon="vaping_rooms">security</span>
+</div>
+<h3 class="text-xl font-['Plus_Jakarta_Sans'] font-bold">Security &amp; Authentication</h3>
+</div>
+<div class="bg-surface-container-low rounded-[2rem] p-10 border border-white grid md:grid-cols-3 gap-10">
+<div class="md:col-span-1 space-y-4">
+<h4 class="text-lg font-bold font-['Plus_Jakarta_Sans']">Credentials</h4>
+<p class="text-sm text-on-surface-variant">Manage your password and active sessions. We recommend updating your password every 90 days for maximum security.</p>
+<button class="bg-primary text-white font-['Manrope'] font-bold px-6 py-3 rounded-2xl shadow-lg hover:shadow-indigo-500/20 active:scale-95 transition-all">
+                                Change Password
+                            </button>
+</div>
+<div class="md:col-span-2 space-y-6">
+<div class="bg-white/60 p-6 rounded-2xl flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-primary" data-icon="devices">devices</span>
+</div>
+<div>
+<div class="font-bold">Two-Factor Authentication</div>
+<div class="text-xs text-on-surface-variant">Enabled via Authenticator App</div>
+</div>
+</div>
+<div class="w-12 h-6 bg-secondary rounded-full relative p-1 cursor-pointer">
+<div class="w-4 h-4 bg-white rounded-full ml-auto"></div>
+</div>
+</div>
+<div class="bg-white/60 p-6 rounded-2xl flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-primary" data-icon="fingerprint">fingerprint</span>
+</div>
+<div>
+<div class="font-bold">Biometric Login</div>
+<div class="text-xs text-on-surface-variant">Register Touch ID or Face ID</div>
+</div>
+</div>
+<button class="text-primary font-bold text-sm hover:underline">Setup</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="flex flex-col sm:flex-row justify-between items-center bg-white rounded-[2rem] p-8 shadow-sm border border-outline-variant/10 mt-12 gap-6">
+<div class="text-center sm:text-left">
+<p class="font-['Manrope'] font-bold text-on-surface">Unsaved Changes</p>
+<p class="text-xs text-on-surface-variant">Your changes will be automatically saved to the cloud.</p>
+</div>
+<div class="flex gap-4 w-full sm:w-auto">
+<button class="flex-1 sm:flex-none border border-outline-variant text-on-surface-variant font-['Manrope'] font-bold px-8 py-3 rounded-2xl hover:bg-slate-50 transition-colors">Discard</button>
+<button class="flex-1 sm:flex-none bg-primary text-white font-['Manrope'] font-bold px-12 py-3 rounded-2xl shadow-xl shadow-indigo-500/20 active:scale-95 transition-all">Save Changes</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Background Atmospheric Texture -->
+<div class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none overflow-hidden">
+<div class="absolute top-[10%] right-[5%] w-[40rem] h-[40rem] bg-indigo-200/20 rounded-full blur-[120px]"></div>
+<div class="absolute bottom-[5%] left-[25%] w-[35rem] h-[35rem] bg-teal-100/30 rounded-full blur-[100px]"></div>
+</div>
+</body></html>

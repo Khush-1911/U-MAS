@@ -3,91 +3,88 @@
 Leave Report and Apply for Leave
 {% endblock page_title %}
 {% block main_content %}
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-                    <div class="row">
-              <div class="col-md-12">
-            <!-- general form elements -->
-            <div class="card ">
-              <div class="card-header">
-                <h3 class="card-title">Apply for Leave</h3>
-              </div>
-              <!-- /.card-header -->
-              <!-- form start -->
+    
+            
+            <div class="bg-surface-container-lowest rounded-2xl overflow-hidden">
+              <div class="px-8 py-5 border-b border-outline-variant/10"><h3 class="font-headline font-bold text-on-surface text-lg">Apply for Leave</h3></div>
+              
+              
                <form action="{% url 'student_apply_leave_save' %}" method="post">
-                <div class="card-body">
+                <div class="p-8 space-y-6">
 
-                   <div class="form-group">
-                    <label>Leave Date </label>
+                   <div class="space-y-2">
+                    <label class="block font-label text-sm font-bold text-on-surface-variant">Leave Date </label>
                        {% csrf_token %}
-                    <input type="date" name="leave_date" class="form-control" placeholder="Leave Date">
+                    <input type="date" name="leave_date" class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" placeholder="Leave Date">
                   </div>
-                  <div class="form-group">
-                    <label>Leave Reason</label>
-                    <textarea class="form-control" rows="6" name="leave_msg"></textarea>
+                  <div class="space-y-2">
+                    <label class="block font-label text-sm font-bold text-on-surface-variant">Leave Reason</label>
+                    <textarea class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body resize-y" rows="6" name="leave_msg"></textarea>
                   </div>
-                   <div class="form-group">
+                   <div class="space-y-2">
                       {% if messages %}
                         {% for message in messages %}
                         {% if message.tags == 'error' %}
-                        <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+                        <div class="px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 bg-error/10 text-error">{{ message }}</div>
                         {% endif %}
                         {% if message.tags == 'success' %}
-                        <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+                        <div class="px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 bg-green-100 text-green-700">{{ message }}</div>
                         {% endif %}
                         {% endfor %}
                       {% endif %}
                     </div>
 
                 </div>
-                <!-- /.card-body -->
+                
 
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-primary btn-block" id="fetch_student">Apply for Leave</button>
+                <div class="px-8 py-6 border-t border-outline-variant/20">
+                  <button type="submit" class="w-full py-4 premium-gradient text-white font-display font-bold rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform" id="fetch_student">Submit Absence Petition</button>
                 </div>
                </form>
             </div>
 
-            <!-- /.card -->
-           <div class="card ">
-              <div class="card-header">
-                <h3 class="card-title">Leave Apply History</h3>
+            
+           <div class="bg-surface-container-lowest rounded-2xl overflow-hidden border border-outline-variant/10 shadow-xl shadow-indigo-900/5">
+              <div class="px-8 py-6 border-b border-outline-variant/10">
+                <h3 class="font-display font-extrabold text-on-surface text-2xl">Petition History</h3>
+                <p class="text-on-surface-variant text-sm mt-1">Review the status of your previously submitted leave requests.</p>
               </div>
 
-               <div class="table">
-               <table class="table">
-                   <tr>
-                       <th>ID</th>
-                       <th>Leave Date</th>
-                       <th>Leave Message</th>
-                       <th>Leave Status</th>
-                   </tr>
-                   {% for row in leave_data %}
-                        <tr>
-                            <td>{{ row.id }}</td>
-                            <td>{{ row.leave_date }}</td>
-                            <td>{{ row.leave_message }}</td>
-                            <td>
+               <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-surface-container-low/50">
+                            <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">ID</th>
+                            <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">Effective Date</th>
+                            <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">Justification</th>
+                            <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant text-right">Current Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in leave_data %}
+                        <tr class="group hover:bg-primary-fixed/20 transition-colors {% if forloop.counter|divisibleby:2 %}bg-surface-container-low/20{% else %}bg-white{% endif %}">
+                            <td class="px-8 py-6 text-sm font-body">{{ row.id }}</td>
+                            <td class="px-8 py-6 text-sm font-body text-on-surface font-bold">{{ row.leave_date }}</td>
+                            <td class="px-8 py-6 text-sm font-body text-on-surface-variant max-w-xs truncate">{{ row.leave_message }}</td>
+                            <td class="px-8 py-6 text-right">
                                 {% if row.leave_status == 1 %}
-                                    <span class="alert alert-success">Approved</span>
+                                    <span class="px-3 py-1 rounded-full bg-secondary/10 text-secondary text-xs font-bold font-label">Approved</span>
                                 {% elif row.leave_status == 2 %}
-                                    <span class="alert alert-danger">Rejected</span>
+                                    <span class="px-3 py-1 rounded-full bg-error/10 text-error text-xs font-bold font-label">Rejected</span>
                                 {% else %}
-                                    <span class="alert alert-info">Pending</span>
+                                    <span class="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold font-label">Pending Review</span>
                                 {% endif %}
                             </td>
                         </tr>
-                   {% endfor %}
-               </table>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="px-8 py-12 text-center text-on-surface-variant font-body">No leave applications found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
                </div>
             </div>
 
-
-
-          </div>
-          </div>
-      </div>
-    </section>
-    <!-- /.content -->
+          
 {% endblock main_content %}

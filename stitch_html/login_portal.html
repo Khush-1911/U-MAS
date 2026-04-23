@@ -1,0 +1,226 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>U-MAS | Login Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Manrope:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-container": "#3d7d73",
+                    "secondary": "#006a66",
+                    "tertiary-fixed": "#adefe3",
+                    "tertiary": "#20645b",
+                    "outline-variant": "#c7c4d7",
+                    "on-secondary-container": "#006f6a",
+                    "error-container": "#ffdad6",
+                    "inverse-primary": "#c1c1ff",
+                    "on-error-container": "#93000a",
+                    "surface-dim": "#dad7f6",
+                    "secondary-fixed": "#85f5ee",
+                    "on-tertiary-fixed": "#00201c",
+                    "on-tertiary-container": "#e1fff8",
+                    "tertiary-fixed-dim": "#92d3c7",
+                    "surface-container": "#efebff",
+                    "on-surface-variant": "#464555",
+                    "on-tertiary": "#ffffff",
+                    "on-surface": "#1a1930",
+                    "surface-variant": "#e3dffe",
+                    "secondary-fixed-dim": "#67d8d1",
+                    "on-secondary-fixed-variant": "#00504d",
+                    "on-primary": "#ffffff",
+                    "surface-container-highest": "#e3dffe",
+                    "surface": "#fcf8ff",
+                    "on-secondary-fixed": "#00201e",
+                    "inverse-on-surface": "#f2eeff",
+                    "surface-tint": "#4849da",
+                    "primary-container": "#5d5fef",
+                    "on-tertiary-fixed-variant": "#005048",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-container": "#faf7ff",
+                    "background": "#fcf8ff",
+                    "surface-container-high": "#e9e5ff",
+                    "primary-fixed": "#e1e0ff",
+                    "on-secondary": "#ffffff",
+                    "on-primary-fixed-variant": "#2e2bc2",
+                    "outline": "#767586",
+                    "on-error": "#ffffff",
+                    "primary-fixed-dim": "#c1c1ff",
+                    "error": "#ba1a1a",
+                    "secondary-container": "#82f2eb",
+                    "primary": "#4343d5",
+                    "surface-bright": "#fcf8ff",
+                    "on-background": "#1a1930",
+                    "on-primary-fixed": "#07006c",
+                    "surface-container-low": "#f6f2ff",
+                    "inverse-surface": "#2f2e46"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "2xl": "1rem",
+                    "3xl": "1.5rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "display": ["Plus Jakarta Sans"],
+                    "body": ["Inter"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+        .intellectual-ether-bg {
+            background: radial-gradient(circle at 0% 0%, #f6f2ff 0%, #fcf8ff 100%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body intellectual-ether-bg min-h-screen flex items-center justify-center p-4 md:p-8">
+<main class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-0 overflow-hidden bg-surface-container-lowest rounded-3xl shadow-[0_20px_40px_-10px_rgba(26,25,48,0.06)]">
+<!-- Left Side: Visual Illustration (Intellectual Ether) -->
+<div class="hidden lg:flex lg:col-span-6 relative bg-primary-container overflow-hidden min-h-[700px]">
+<div class="absolute inset-0 z-0">
+<img alt="University Architecture" class="w-full h-full object-cover mix-blend-overlay opacity-40" data-alt="Modern minimalist university building with large glass windows reflecting a soft lavender sky at dawn, creating a serene intellectual atmosphere" src="https://content.jdmagicbox.com/comp/gandhinagar-gujarat/e8/9999pxx79.xx79.110610112812.e8e8/catalogue/ldrp-institute-of-technology-and-research-gandhinagar-sector-15-gandhinagar-gujarat-mba-institutes-o8hvqnk0om.jpg" style="">
+</div>
+<div class="absolute inset-0 bg-gradient-to-br from-primary/80 to-primary-container/40 z-10"></div>
+<!-- Abstract Shapes for Texture -->
+<div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-secondary/20 rounded-full blur-3xl"></div>
+<div class="absolute bottom-[-5%] right-[-5%] w-80 h-80 bg-tertiary/20 rounded-full blur-3xl"></div>
+<div class="relative z-20 flex flex-col justify-between p-16 w-full">
+<div>
+<div class="flex items-center gap-3 mb-12">
+<div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: &quot;FILL&quot; 1;">account_balance</span>
+</div>
+<h1 class="font-display font-extrabold text-3xl text-white tracking-tight" style="">U-MAS</h1>
+</div>
+<h2 class="font-display text-5xl font-extrabold text-white leading-tight mb-6" style="">
+                        The Future of <br><span class="text-secondary-fixed" style="">Academic Management</span>
+</h2>
+<p class="text-primary-fixed font-body text-lg max-w-md leading-relaxed opacity-90" style="">
+                        Enter a sophisticated workspace designed for the modern scholar. Secure, integrated, and intuitively built for the academic ecosystem.
+                    </p>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex -space-x-3">
+<img class="w-10 h-10 rounded-full border-2 border-white object-cover" data-alt="portrait of a male university professor in a library" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLOfuiiI0vP1FdBIuwPNE_v6ZZfQuvjHJ0LMh0yeZ53ZusD99d1MIdxpIyh9-F5BN8FC32MhG5uYP0chnwskL_2RKdlja9jQVMxazsImCM8seE6LCVJ22JfZlFqksrO_EQBvG5MYpXYhyaEoyRA4n1qGNWcjTjYlVe1QEUrUf6Ad6KQXaEQw_GbFPD_AbT4m5FD9E9v-Gif2k2N8HT_8VlZVPhQTqGe7HlfffqKXYR9fU4uVgUA0w954Hb71VaMLrrUXR3Sj-a6pye" style="">
+<img class="w-10 h-10 rounded-full border-2 border-white object-cover" data-alt="portrait of a female graduate student" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-EfwFuub0JuV1iywEvyY3BWFhzkl0VO7XW0yAJn2m1ezS3ah68RReUuFvJKMlqDJH0lUGfbbChFcdvL4A3JXVp0fi-KeHYUhV58pxfKgKgcmEa1dZ0AVv04FBtOoMeMIUtjuq_RNt-4_DzCp3GN2gBjW9Lqk9ncp9IDSgBC0u4X2hpve9W1iQ-j4L_i3l6Pl7iBFD8eBKrnPmXiRVFlugkUTAzPmOlAA-RheRRWC9VgCWwDyEnQ2Ie_dmV4Vv9qySmwk1_UsLOAVn" style="">
+<img class="w-10 h-10 rounded-full border-2 border-white object-cover" data-alt="portrait of a young male student smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBWi10MeLKEOe6dxh3jStH5bmCqauuaVz-oQ_22VJAunXfeu6oTSjB5bgTgKyckJkN6ozJOa1rIqpJh1I1P30EV4lUL-Gyn82aH-r6kJcuZ33eubTtB9LeW-V-5SeTDFMczPfkip-aYF9msvHEqDZt9KZAWo9LxkPU3teZ_iOpm8cFa6Pcj7xT0pS0VBtkC4wntXSRJUIye08XrvW3eGTNL1PZJzwq1Gb7NeUuF-plauU4eNglvOw_xRs0mVnErZIz8KcN8doLMnxZ" style="">
+</div>
+<span class="text-white/80 font-label text-sm tracking-wide" style="">Joined by 12,000+ Students &amp; Faculty</span>
+</div>
+</div>
+</div>
+<!-- Right Side: Login Form -->
+<div class="lg:col-span-6 flex flex-col justify-center p-8 md:p-16 xl:p-24 bg-surface-container-lowest">
+<div class="max-w-md w-full mx-auto">
+<header class="mb-10 lg:hidden">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: &quot;FILL&quot; 1;">account_balance</span>
+<span class="font-display font-extrabold text-xl text-primary" style="">U-MAS</span>
+</div>
+</header>
+<div class="mb-10">
+<h3 class="font-display text-3xl font-extrabold text-on-surface mb-2" style="">Welcome Back</h3>
+<p class="text-on-surface-variant font-body" style="">Please select your role and enter your credentials.</p>
+</div>
+<form class="space-y-6">
+<!-- Role Selection -->
+<div class="grid grid-cols-3 gap-3 mb-8">
+<label class="cursor-pointer group" style="">
+<input checked="" class="peer sr-only" name="role" type="radio" value="student">
+<div class="flex flex-col items-center p-4 rounded-2xl border border-transparent bg-surface-container-low transition-all duration-300 peer-checked:bg-primary-container peer-checked:text-white group-hover:bg-surface-container">
+<span class="material-symbols-outlined mb-2" style="">school</span>
+<span class="font-label text-xs font-bold tracking-tight" style="">Student</span>
+</div>
+</label>
+<label class="cursor-pointer group" style="">
+<input class="peer sr-only" name="role" type="radio" value="staff">
+<div class="flex flex-col items-center p-4 rounded-2xl border border-transparent bg-surface-container-low transition-all duration-300 peer-checked:bg-primary-container peer-checked:text-white group-hover:bg-surface-container">
+<span class="material-symbols-outlined mb-2" style="">badge</span>
+<span class="font-label text-xs font-bold tracking-tight" style="">Staff</span>
+</div>
+</label>
+<label class="cursor-pointer group" style="">
+<input class="peer sr-only" name="role" type="radio" value="administrator">
+<div class="flex flex-col items-center p-4 rounded-2xl border border-transparent bg-surface-container-low transition-all duration-300 peer-checked:bg-primary-container peer-checked:text-white group-hover:bg-surface-container">
+<span class="material-symbols-outlined mb-2" style="">admin_panel_settings</span>
+<span class="font-label text-xs font-bold tracking-tight" style="">Admin</span>
+</div>
+</label>
+</div>
+<!-- Email Field -->
+<div class="space-y-2">
+<label class="block font-label text-sm font-bold text-on-surface-variant px-1" for="email" style="">Institutional Email</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-outline group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl" style="">alternate_email</span>
+</div>
+<input class="w-full pl-12 pr-4 py-4 bg-surface-container-low border-none rounded-2xl focus:ring-2 focus:ring-primary/20 text-on-surface placeholder:text-outline transition-all" id="email" placeholder="name@university.edu" type="email">
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<div class="flex justify-between items-center px-1">
+<label class="block font-label text-sm font-bold text-on-surface-variant" for="password" style="">Password</label>
+<a class="text-primary font-label text-xs font-bold hover:underline" href="#" style="">Forgot Password?</a>
+</div>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-outline group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl" style="">lock</span>
+</div>
+<input class="w-full pl-12 pr-12 py-4 bg-surface-container-low border-none rounded-2xl focus:ring-2 focus:ring-primary/20 text-on-surface placeholder:text-outline transition-all" id="password" placeholder="••••••••" type="password">
+<button class="absolute inset-y-0 right-0 pr-4 flex items-center text-outline hover:text-on-surface transition-colors" type="button" style="">
+<span class="material-symbols-outlined text-xl" style="">visibility</span>
+</button>
+</div>
+</div>
+<!-- Remember Me -->
+<div class="flex items-center gap-3 px-1">
+<div class="relative flex items-center">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20 cursor-pointer" id="remember" type="checkbox">
+</div>
+<label class="font-body text-sm text-on-surface-variant cursor-pointer select-none" for="remember" style="">Remember this device for 30 days</label>
+</div>
+<!-- Submit Button -->
+<button class="w-full py-4 bg-gradient-to-r from-primary to-primary-container text-white font-display font-bold rounded-2xl shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-4" type="submit" style="">
+<span class="" style="">Sign into Portal</span>
+<span class="material-symbols-outlined text-xl" style="">login</span>
+</button>
+</form>
+<footer class="mt-12 text-center">
+<p class="text-sm text-on-surface-variant font-body" style="">
+                        Need technical assistance? 
+                        <a class="text-primary font-bold hover:underline" href="#" style="">Contact IT Support</a>
+</p>
+<div class="mt-8 flex items-center justify-center gap-6">
+<img class="w-8 h-8 rounded-lg grayscale opacity-40" data-alt="abstract circular gradient of blue and purple" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8l9QcbMCgzoafurBxdWEYO9behBWRXYxk9deG9SkT-xGGpoxpWpXqgMNqG1d5pMugSbNRpDw-tOEKLB3w-brili6Qz1pHhOVlEnVcEYkWUnaw2FKDTY7U-XhSPUIb-_xiKK0HwS2pNByHf8obLtFvALCL9XKOgqT0X8bHj8oH90gHwfzCXgo07Q8XcX1Ef2lsaV2mFdkoz8Fcttd05qMQylrm0BAUPR8_qxWM2xb9uGr6iCmF5Huq7twAZAyrL30gaacXKVBN-I9D" style="">
+<img class="w-12 h-6 rounded grayscale opacity-30" data-alt="abstract wave pattern in soft gray" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-NTJ1MK4NWZvY7Jh2nCaMI6EI-X4qCcd3Oy_GvKdz72RuGcA2B60LNNuCNEgrMtHGtWcUCB6TYCLFbQh5e5MRSe2rqTm4hrtFV4k9C9F887aCSzrjXxL-7g0r-Hf3NdwcUaWwlwyuEwcnRJP4cyAi9W9wK9PKiRUfqSAEZ9poLY2P-WiWC0vwo6ka7Yne5-YaBEAVIelf5nX-5W1UXTKSIYC-pwnQv1mHUZt8ha4s3sSp0jv6G2qr4wgnCAn7QlftB1fpVc11Og-x" style="">
+</div>
+</footer>
+</div>
+</div>
+</main>
+<!-- Decorative Elements -->
+<div class="fixed top-0 left-0 w-full h-full pointer-events-none -z-10">
+<div class="absolute top-[10%] right-[10%] w-64 h-64 bg-primary/5 rounded-full blur-[100px]"></div>
+<div class="absolute bottom-[20%] left-[5%] w-96 h-96 bg-secondary/5 rounded-full blur-[120px]"></div>
+</div>
+</body></html>

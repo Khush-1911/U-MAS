@@ -1,81 +1,66 @@
 {% extends 'owner_template/base_template.html' %}
-{% block page_title %}
-User Orchestration
-{% endblock page_title %}
+{% block page_title %}User Orchestration{% endblock page_title %}
 
 {% block main_content %}
-    <div class="card glass">
-      <div class="chart-header">
-        <h3>Account Creation</h3>
-        <p>Provision new administrative, academic, or student credentials within the global ecosystem.</p>
+<div class="max-w-3xl">
+  <header class="mb-10">
+    <h2 class="text-4xl font-extrabold text-on-surface font-headline tracking-tight">Account Creation</h2>
+    <p class="text-on-surface-variant font-body mt-2">Provision new administrative, academic, or student credentials within the global ecosystem.</p>
+  </header>
+
+  <div class="bg-surface-container-lowest rounded-2xl p-8">
+    <form action="{% url 'add_user_save' %}" method="post" class="space-y-8">
+      {% csrf_token %}
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-2">
+          <label class="block font-label text-sm font-bold text-on-surface-variant">Target Institution</label>
+          <select name="institution" required class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body">
+            <option value="">Select Institution</option>
+            {% for institution in institutions %}
+              <option value="{{ institution.id }}">{{ institution.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="space-y-2">
+          <label class="block font-label text-sm font-bold text-on-surface-variant">System Privilege Level</label>
+          <select name="role" required class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body">
+            <option value="">Select Role</option>
+            {% for role in roles %}
+              <option value="{{ role.id }}">{{ role.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
       </div>
 
-      <form class="modern-form" action="{% url 'add_user_save' %}" method="post">
-        {% csrf_token %}
-        <div class="form-content">
-          <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-            <div class="form-group">
-              <label>Target Institution</label>
-              <div class="input-wrapper">
-                <select name="institution" required>
-                  <option value="">Select Institution</option>
-                  {% for institution in institutions %}
-                    <option value="{{ institution.id }}">{{ institution.name }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>System Privilege Level</label>
-              <div class="input-wrapper">
-                <select name="role" required>
-                  <option value="">Select Role</option>
-                  {% for role in roles %}
-                    <option value="{{ role.id }}">{{ role.name }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-            <div class="form-group">
-              <label>Given Name</label>
-              <div class="input-wrapper">
-                <input type="text" name="first_name" placeholder="Enter first name" required>
-              </div>
-            </div>
-            <div class="form-group">
-              <label>Family Name</label>
-              <div class="input-wrapper">
-                <input type="text" name="last_name" placeholder="Enter last name" required>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Master Identity (Email)</label>
-            <div class="input-wrapper">
-              <input type="email" name="email" placeholder="primary@example.com" required>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Security Credential (Password)</label>
-            <div class="input-wrapper">
-              <input type="password" name="password" placeholder="Minimum 8 characters recommended" required>
-            </div>
-          </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-2">
+          <label class="block font-label text-sm font-bold text-on-surface-variant">Given Name</label>
+          <input type="text" name="first_name" placeholder="Enter first name" required class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body">
         </div>
-
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary">
-            <i class="fas fa-user-plus"></i>
-            Finalize Account Creation
-          </button>
-          <a href="{% url 'manage_users' %}" class="btn btn-secondary" style="margin-left: 1rem;">Cancel</a>
+        <div class="space-y-2">
+          <label class="block font-label text-sm font-bold text-on-surface-variant">Family Name</label>
+          <input type="text" name="last_name" placeholder="Enter last name" required class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body">
         </div>
-      </form>
-    </div>
+      </div>
+
+      <div class="space-y-2">
+        <label class="block font-label text-sm font-bold text-on-surface-variant">Master Identity (Email)</label>
+        <input type="email" name="email" placeholder="primary@example.com" required class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body">
+      </div>
+
+      <div class="space-y-2">
+        <label class="block font-label text-sm font-bold text-on-surface-variant">Security Credential (Password)</label>
+        <input type="password" name="password" placeholder="Minimum 8 characters recommended" required class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body">
+      </div>
+
+      <div class="pt-6 border-t border-outline-variant/20 flex items-center gap-4">
+        <button type="submit" class="flex items-center gap-2 px-6 py-3 premium-gradient text-white font-label font-bold rounded-xl shadow-lg shadow-primary/20 active:scale-95 transition-transform">
+          <span class="material-symbols-outlined">person_add</span>
+          Finalize Account Creation
+        </button>
+        <a href="{% url 'manage_users' %}" class="px-6 py-3 bg-surface-container text-on-surface-variant font-label font-bold rounded-xl hover:bg-surface-container-highest transition-colors no-underline">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock main_content %}

@@ -19,25 +19,25 @@
 
     <form action="/do_staff_signup" method="post" id="demo-form">
       {% csrf_token %}
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" class="form-control" placeholder="you@example.com" name="email" required>
+      <div class="space-y-2">
+        <label class="block font-label text-sm font-bold text-on-surface-variant">Email</label>
+        <input type="email" class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" placeholder="you@example.com" name="email" required>
       </div>
       <div class="form-group" style="margin-top:12px;">
-        <label>Username</label>
-        <input class="form-control" placeholder="username" name="username" required>
+        <label class="block font-label text-sm font-bold text-on-surface-variant">Username</label>
+        <input class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" placeholder="username" name="username" required>
       </div>
       <div class="form-group" style="margin-top:12px;">
-        <label>Password</label>
-        <input type="password" class="form-control" placeholder="••••••••" name="password" required>
+        <label class="block font-label text-sm font-bold text-on-surface-variant">Password</label>
+        <input type="password" class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" placeholder="••••••••" name="password" required>
       </div>
       <div class="form-group" style="margin-top:16px;">
-        <button type="submit" class="btn btn-primary btn-block">Signup Staff</button>
+        <button type="submit" class="w-full py-4 premium-gradient text-white font-display font-bold rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform">Signup Staff</button>
       </div>
       {% if messages %}
         {% for message in messages %}
           {% if message.tags == 'error' %}
-            <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+            <div class="px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 bg-error/10 text-error">{{ message }}</div>
           {% endif %}
         {% endfor %}
       {% endif %}

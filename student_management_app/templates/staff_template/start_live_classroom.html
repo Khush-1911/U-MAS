@@ -3,65 +3,53 @@
 Live Class Room
 {% endblock page_title %}
 {% block main_content %}
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-          <div class="row">
-              <div class="col-md-12">
-            <!-- general form elements -->
-            <div class="card ">
-              <div class="card-header">
-                <h3 class="card-title">Start Live Class Room</h3>
-              </div>
-              <!-- /.card-header -->
-              <!-- form start -->
+    
+            
+            <div class="bg-surface-container-lowest rounded-2xl overflow-hidden">
+              <div class="px-8 py-5 border-b border-outline-variant/10"><h3 class="font-headline font-bold text-on-surface text-lg">Start Live Class Room</h3></div>
+              
+              
               <form role="form" action="{% url 'start_live_classroom_process' %}" method="post">
                   {% csrf_token %}
-                <div class="card-body">
-                   <div class="form-group">
-                    <label>Subject </label>
-                    <select class="form-control" name="subject" id="subject">
+                <div class="p-8 space-y-6">
+                   <div class="space-y-2">
+                    <label class="block font-label text-sm font-bold text-on-surface-variant">Subject </label>
+                    <select class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" name="subject" id="subject">
                         {% for subject in subjects %}
                           <option value="{{ subject.id }}">{{ subject.subject_name }}</option>
                         {% endfor %}
                     </select>
                   </div>
-                  <div class="form-group">
-                    <label>Semester</label>
-                    <select class="form-control" name="semester_id" id="semester_id">
+                  <div class="space-y-2">
+                    <label class="block font-label text-sm font-bold text-on-surface-variant">Semester</label>
+                    <select class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" name="semester_id" id="semester_id">
                         {% for semester in semesters %}
                           <option value="{{ semester.id }}">{{ semester.semester_start_date }} TO {{ semester.semester_end_date }}</option>
                         {% endfor %}
                     </select>
                   </div>
-                   <div class="form-group">
+                   <div class="space-y-2">
                       {% if messages %}
                         {% for message in messages %}
                         {% if message.tags == 'error' %}
-                        <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+                        <div class="px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 bg-error/10 text-error">{{ message }}</div>
                         {% endif %}
                         {% if message.tags == 'success' %}
-                        <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+                        <div class="px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 bg-green-100 text-green-700">{{ message }}</div>
                         {% endif %}
                         {% endfor %}
                       {% endif %}
                     </div>
 
                 </div>
-                <!-- /.card-body -->
+                
 
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-primary btn-block">Start Class</button>
+                <div class="px-8 py-6 border-t border-outline-variant/20">
+                  <button type="submit" class="w-full py-4 premium-gradient text-white font-display font-bold rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform">Start Class</button>
                 </div>
               </form>
             </div>
-            <!-- /.card -->
+            
 
-
-
-          </div>
-          </div>
-      </div>
-    </section>
-    <!-- /.content -->
+          
 {% endblock main_content %}

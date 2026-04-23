@@ -1,352 +1,76 @@
 {% extends 'student_template/base_template.html' %}
-{% block page_title %}
-Notifications
-{% endblock page_title %}
-{% block custom_css %}
-<style>
-  .notification-board {
-    background:
-      radial-gradient(circle at top right, rgba(75, 92, 255, 0.12), transparent 34%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(244, 247, 255, 0.96));
-    border-radius: 24px;
-    padding: 24px;
-    box-shadow: 0 22px 48px rgba(34, 48, 94, 0.12);
-  }
+{% block page_title %}Notifications{% endblock page_title %}
 
-  .notification-board-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    margin-bottom: 22px;
-  }
-
-  .notification-board-copy h3 {
-    font-size: 1.35rem;
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
-
-  .notification-board-copy p {
-    margin: 0;
-    color: #64748b;
-    font-size: 0.96rem;
-  }
-
-  .notification-list {
-    display: grid;
-    gap: 14px;
-  }
-
-  .notification-card {
-    width: 100%;
-    border: 1px solid rgba(148, 163, 184, 0.2);
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.92);
-    box-shadow: 0 14px 28px rgba(34, 48, 94, 0.08);
-    padding: 18px 20px;
-    text-align: left;
-    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-  }
-
-  .notification-card.is-unread {
-    border-color: rgba(75, 92, 255, 0.32);
-    background: linear-gradient(180deg, rgba(238, 242, 255, 0.94), rgba(255, 255, 255, 0.98));
-    box-shadow: 0 18px 34px rgba(75, 92, 255, 0.12);
-  }
-
-  .notification-card.is-read {
-    background: rgba(255, 255, 255, 0.78);
-    box-shadow: 0 10px 22px rgba(34, 48, 94, 0.06);
-  }
-
-  .notification-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 20px 34px rgba(34, 48, 94, 0.14);
-    border-color: rgba(75, 92, 255, 0.28);
-  }
-
-  .notification-card-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 16px;
-    margin-bottom: 12px;
-  }
-
-  .notification-card-source {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    min-width: 0;
-  }
-
-  .notification-card-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 16px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #4b5cff, #7a8cff);
-    color: #ffffff;
-    box-shadow: 0 12px 22px rgba(75, 92, 255, 0.24);
-    flex-shrink: 0;
-  }
-
-  .notification-card.is-read .notification-card-icon {
-    background: linear-gradient(135deg, #94a3b8, #cbd5e1);
-    box-shadow: none;
-  }
-
-  .notification-card-title {
-    font-size: 1rem;
-    font-weight: 700;
-    margin: 0 0 4px;
-  }
-
-  .notification-card-subtitle {
-    margin: 0;
-    color: #64748b;
-    font-size: 0.86rem;
-  }
-
-  .notification-card-date {
-    padding: 8px 12px;
-    border-radius: 999px;
-    background: #f8fafc;
-    color: #475569;
-    font-size: 0.8rem;
-    font-weight: 700;
-    border: 1px solid #e2e8f0;
-    white-space: nowrap;
-  }
-
-  .notification-card-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 7px 11px;
-    border-radius: 999px;
-    font-size: 0.78rem;
-    font-weight: 800;
-    white-space: nowrap;
-  }
-
-  .notification-card-status.is-unread {
-    background: #ffefe9;
-    color: #d9482f;
-  }
-
-  .notification-card-status.is-read {
-    background: #eef2f7;
-    color: #64748b;
-  }
-
-  .notification-card-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-  }
-
-  .notification-card-hint {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: #4b5cff;
-    font-size: 0.85rem;
-    font-weight: 700;
-  }
-
-  .notification-card-arrow {
-    width: 36px;
-    height: 36px;
-    border-radius: 999px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: #eef2ff;
-    color: #4b5cff;
-    flex-shrink: 0;
-  }
-
-  .notification-empty {
-    border-radius: 22px;
-    padding: 32px 24px;
-    text-align: center;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(244, 247, 255, 0.96));
-    border: 1px dashed #cbd5e1;
-    color: #64748b;
-  }
-
-  .notification-popup-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.45);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    z-index: 2000;
-  }
-
-  .notification-popup-overlay.is-open {
-    display: flex;
-  }
-
-  .notification-popup {
-    width: min(680px, 100%);
-    background: #ffffff;
-    border-radius: 18px;
-    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.24);
-    overflow: hidden;
-  }
-
-  .notification-popup-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 18px 22px;
-    border-bottom: 1px solid #e5e7eb;
-  }
-
-  .notification-popup-title {
-    margin: 0;
-    font-size: 1.1rem;
-    font-weight: 700;
-  }
-
-  .notification-popup-close {
-    border: 0;
-    background: transparent;
-    color: #475569;
-    font-size: 1.4rem;
-    line-height: 1;
-    cursor: pointer;
-  }
-
-  .notification-popup-body {
-    padding: 22px;
-  }
-
-  .notification-popup-message {
-    margin-top: 14px;
-    padding: 16px;
-    border-radius: 12px;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    white-space: pre-wrap;
-  }
-
-  @media (max-width: 768px) {
-    .notification-board {
-      padding: 18px;
-    }
-
-    .notification-board-head,
-    .notification-card-top,
-    .notification-card-footer {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .notification-card-date {
-      white-space: normal;
-    }
-  }
-</style>
-{% endblock custom_css %}
 {% block main_content %}
-<section class="content">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-12">
-        <div class="card ">
-          <div class="card-header">
-            <h3 class="card-title">All Notifications</h3>
-          </div>
-          <div class="card-body">
-            <div class="notification-board">
-              <div class="notification-board-head">
-                <div class="notification-board-copy">
-                  <h3>Inbox From HOD</h3>
-                  <p>Open any update to read the full announcement inside the page.</p>
-                </div>
-              </div>
+<header class="mb-10">
+  <h2 class="text-4xl font-extrabold text-on-surface font-headline tracking-tight">Notification Center</h2>
+  <p class="text-on-surface-variant font-body mt-2">Open any update to read the full announcement.</p>
+</header>
 
-              {% if notifications %}
-                <div class="notification-list">
-                  {% for notification in notifications %}
-                    <button
-                      type="button"
-                      class="notification-card {% if notification.is_read %}is-read{% else %}is-unread{% endif %}"
-                      data-notification-id="{{ notification.id }}"
-                      data-title="{{ notification.title|default:'Notification'|escape }}"
-                      data-message="{{ notification.message|escape }}"
-                      data-date="{{ notification.created_at|date:'d M Y, h:i A' }}"
-                      data-is-read="{% if notification.is_read %}true{% else %}false{% endif %}"
-                    >
-                      <div class="notification-card-top">
-                        <div class="notification-card-source">
-                          <div class="notification-card-icon">
-                            <i class="fas fa-bell"></i>
-                          </div>
-                          <div>
-                            <h5 class="notification-card-title">{{ notification.title|default:"Notification" }}</h5>
-                            <p class="notification-card-subtitle">By {{ notification.sender_name|default:"HOD" }}</p>
-                          </div>
-                        </div>
-                        <div class="d-flex align-items-center" style="gap: 10px; flex-wrap: wrap;">
-                          <div class="notification-card-status {% if notification.is_read %}is-read{% else %}is-unread{% endif %}">
-                            {% if notification.is_read %}Read{% else %}Unread{% endif %}
-                          </div>
-                          <div class="notification-card-date">{{ notification.created_at|date:"d M Y" }}</div>
-                        </div>
-                      </div>
-
-                      <div class="notification-card-footer">
-                        <div class="notification-card-hint">
-                          <i class="fas fa-expand-alt"></i>
-                          <span>Open full notification</span>
-                        </div>
-                        <div class="notification-card-arrow">
-                          <i class="fas fa-arrow-right"></i>
-                        </div>
-                      </div>
-                    </button>
-                  {% endfor %}
-                </div>
-              {% else %}
-                <div class="notification-empty">
-                  <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 12px; color: #94a3b8;"></i>
-                  <div>No notifications yet.</div>
-                </div>
-              {% endif %}
+{% if notifications %}
+  <div class="space-y-4">
+    {% for notification in notifications %}
+      <button
+        type="button"
+        class="w-full text-left bg-surface-container-lowest rounded-2xl p-5 border transition-all duration-300 cursor-pointer group {% if notification.is_read %}border-outline-variant/10 opacity-80{% else %}border-primary/20 shadow-lg shadow-primary/5{% endif %} hover:shadow-xl hover:-translate-y-0.5 hover:border-primary/30"
+        data-notification-id="{{ notification.id }}"
+        data-title="{{ notification.title|default:'Notification'|escape }}"
+        data-message="{{ notification.message|escape }}"
+        data-date="{{ notification.created_at|date:'d M Y, h:i A' }}"
+        data-is-read="{% if notification.is_read %}true{% else %}false{% endif %}"
+      >
+        <div class="flex items-start justify-between gap-4 mb-3">
+          <div class="flex items-center gap-4 min-w-0">
+            <div class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 {% if notification.is_read %}bg-surface-container-high text-on-surface-variant{% else %}premium-gradient text-white shadow-lg shadow-primary/30{% endif %}">
+              <span class="material-symbols-outlined">{% if notification.is_read %}mark_email_read{% else %}notifications_active{% endif %}</span>
+            </div>
+            <div class="min-w-0">
+              <h5 class="font-headline font-bold text-on-surface text-base truncate">{{ notification.title|default:"Notification" }}</h5>
+              <p class="text-sm text-on-surface-variant font-body">By {{ notification.sender_name|default:"HOD" }}</p>
             </div>
           </div>
+          <div class="flex items-center gap-3 flex-shrink-0 flex-wrap justify-end">
+            <span class="notification-card-status px-3 py-1.5 rounded-full text-[11px] font-label font-bold uppercase tracking-wider {% if notification.is_read %}bg-surface-container-high text-on-surface-variant{% else %}bg-error/10 text-error{% endif %}">
+              {% if notification.is_read %}Read{% else %}Unread{% endif %}
+            </span>
+            <span class="px-3 py-1.5 rounded-full bg-surface-container text-on-surface-variant text-xs font-label font-bold border border-outline-variant/20">{{ notification.created_at|date:"d M Y" }}</span>
+          </div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="notification-popup-overlay" id="notificationPopupOverlay" aria-hidden="true">
-  <div class="notification-popup" role="dialog" aria-modal="true" aria-labelledby="notificationPopupTitle">
-    <div class="notification-popup-header">
-      <h5 class="notification-popup-title" id="notificationPopupTitle">Notification</h5>
-      <button type="button" class="notification-popup-close" id="notificationPopupClose" aria-label="Close notification">
-        &times;
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2 text-primary font-label font-bold text-sm">
+            <span class="material-symbols-outlined text-base">open_in_full</span>
+            <span>Open full notification</span>
+          </div>
+          <div class="w-9 h-9 rounded-full bg-primary-fixed flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+            <span class="material-symbols-outlined text-lg">arrow_forward</span>
+          </div>
+        </div>
       </button>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="bg-surface-container-lowest rounded-2xl p-16 text-center border border-dashed border-outline-variant/30">
+    <span class="material-symbols-outlined text-6xl text-outline-variant/50 mb-4 block">inbox</span>
+    <p class="text-on-surface-variant font-body">No notifications yet.</p>
+  </div>
+{% endif %}
+
+<!-- Notification Modal -->
+<div class="fixed inset-0 bg-slate-900/45 hidden items-center justify-center p-6 z-[2000]" id="notificationPopupOverlay" aria-hidden="true">
+  <div class="w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden" role="dialog" aria-modal="true" aria-labelledby="notificationPopupTitle">
+    <div class="flex items-center justify-between px-6 py-5 border-b border-outline-variant/20">
+      <h5 class="font-headline font-bold text-on-surface text-lg" id="notificationPopupTitle">Notification</h5>
+      <button type="button" class="w-9 h-9 rounded-full bg-surface-container hover:bg-surface-container-highest flex items-center justify-center text-on-surface-variant transition-colors text-xl leading-none" id="notificationPopupClose" aria-label="Close notification">&times;</button>
     </div>
-    <div class="notification-popup-body">
-      <p class="mb-1"><strong>From:</strong> HOD</p>
-      <p class="mb-3"><strong>Date:</strong> <span id="notificationDate"></span></p>
-      <div class="notification-popup-message" id="notificationMessage"></div>
+    <div class="p-6 space-y-4">
+      <p class="text-sm"><strong class="font-label text-on-surface-variant">From:</strong> <span class="text-on-surface font-body">HOD</span></p>
+      <p class="text-sm"><strong class="font-label text-on-surface-variant">Date:</strong> <span id="notificationDate" class="text-on-surface font-body"></span></p>
+      <div class="mt-4 p-5 rounded-xl bg-surface-container-low border border-outline-variant/10 whitespace-pre-wrap font-body text-on-surface" id="notificationMessage"></div>
     </div>
   </div>
 </div>
 {% endblock main_content %}
+
 {% block custom_js %}
 <script>
   $(document).ready(function() {
@@ -399,14 +123,14 @@ Notifications
         }
 
         notificationCard
-          .removeClass("is-unread")
-          .addClass("is-read")
+          .removeClass("border-primary/20 shadow-lg shadow-primary/5")
+          .addClass("border-outline-variant/10 opacity-80")
           .attr("data-is-read", "true")
           .data("is-read", true);
 
         notificationCard.find(".notification-card-status")
-          .removeClass("is-unread")
-          .addClass("is-read")
+          .removeClass("bg-error/10 text-error")
+          .addClass("bg-surface-container-high text-on-surface-variant")
           .text("Read");
 
         updateUnreadBadge(response.unread_count);
@@ -414,15 +138,15 @@ Notifications
     }
 
     function closeNotificationPopup() {
-      popupOverlay.removeClass("is-open").attr("aria-hidden", "true");
+      popupOverlay.removeClass("flex").addClass("hidden").attr("aria-hidden", "true");
     }
 
-    $(".notification-card").on("click", function() {
+    $("button[data-notification-id]").on("click", function() {
       var notificationCard = $(this);
       $("#notificationPopupTitle").text(notificationCard.data("title"));
       $("#notificationDate").text(notificationCard.data("date"));
       $("#notificationMessage").text(notificationCard.data("message"));
-      popupOverlay.addClass("is-open").attr("aria-hidden", "false");
+      popupOverlay.removeClass("hidden").addClass("flex").attr("aria-hidden", "false");
       markNotificationAsRead(notificationCard);
     });
 

@@ -1,75 +1,63 @@
-{% block page_title %}
-Account Modification
-{% endblock page_title %}
+{% extends 'principal_template/base_template.html' %}
+{% block page_title %}Account Modification{% endblock page_title %}
 
 {% block main_content %}
-    <div class="card glass">
-      <div class="chart-header">
-        <h3>Edit Professional Profile</h3>
-        <p>Update institutional credentials and personal metadata for <strong>{{ user_obj.email }}</strong></p>
+<div class="max-w-3xl">
+  <header class="mb-10">
+    <h2 class="text-4xl font-extrabold text-on-surface font-headline tracking-tight">Edit Professional Profile</h2>
+    <p class="text-on-surface-variant font-body mt-2">Update institutional credentials and personal metadata for <strong>{{ user_obj.email }}</strong></p>
+  </header>
+
+  <div class="bg-surface-container-lowest rounded-2xl p-8">
+    <form action="{% url 'principal_edit_user_save' %}" method="post" class="space-y-8">
+      {% csrf_token %}
+      <input type="hidden" name="user_id" value="{{ user_obj.id }}">
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-2">
+          <label class="block font-label text-sm font-bold text-on-surface-variant">Institutional Assignment</label>
+          <select name="institution" required class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body">
+            <option value="">Select Institution</option>
+            {% for institution in institutions %}
+              <option value="{{ institution.id }}" {% if user_obj.institution.id == institution.id %}selected{% endif %}>{{ institution.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="space-y-2">
+          <label class="block font-label text-sm font-bold text-on-surface-variant">Administrative Role</label>
+          <select name="role" required class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body">
+            <option value="">Select Role</option>
+            {% for role in roles %}
+              <option value="{{ role.id }}" {% if user_obj.user_type == role.id %}selected{% endif %}>{{ role.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
       </div>
 
-      <form class="modern-form" action="{% url 'principal_edit_user_save' %}" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="user_id" value="{{ user_obj.id }}">
-
-        <div class="form-content">
-          <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-            <div class="form-group">
-              <label>Institutional Assignment</label>
-              <div class="input-wrapper">
-                <select name="institution" required>
-                    <option value="">Select Institution</option>
-                    {% for institution in institutions %}
-                        <option value="{{ institution.id }}" {% if user_obj.institution.id == institution.id %}selected{% endif %}>{{ institution.name }}</option>
-                    {% endfor %}
-                </select>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Administrative Role</label>
-              <div class="input-wrapper">
-                <select name="role" required>
-                    <option value="">Select Role</option>
-                    {% for role in roles %}
-                        <option value="{{ role.id }}" {% if user_obj.user_type == role.id %}selected{% endif %}>{{ role.name }}</option>
-                    {% endfor %}
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-            <div class="form-group">
-              <label>First Name</label>
-              <div class="input-wrapper">
-                <input type="text" name="first_name" value="{{ user_obj.first_name }}" required>
-              </div>
-            </div>
-            <div class="form-group">
-              <label>Last Name</label>
-              <div class="input-wrapper">
-                <input type="text" name="last_name" value="{{ user_obj.last_name }}" required>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Communication Email</label>
-            <div class="input-wrapper">
-              <input type="email" name="email" value="{{ user_obj.email }}" required>
-            </div>
-          </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-2">
+          <label class="block font-label text-sm font-bold text-on-surface-variant">First Name</label>
+          <input type="text" name="first_name" value="{{ user_obj.first_name }}" required class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body">
         </div>
-
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary">
-            <i class="fas fa-save"></i>
-            Finalize Updates
-          </button>
-          <a href="{% url 'principal_manage_users' %}" class="btn btn-secondary" style="margin-left: 1rem;">Back to Directory</a>
+        <div class="space-y-2">
+          <label class="block font-label text-sm font-bold text-on-surface-variant">Last Name</label>
+          <input type="text" name="last_name" value="{{ user_obj.last_name }}" required class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body">
         </div>
-      </form>
-    </div>
+      </div>
+
+      <div class="space-y-2">
+        <label class="block font-label text-sm font-bold text-on-surface-variant">Communication Email</label>
+        <input type="email" name="email" value="{{ user_obj.email }}" required class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body">
+      </div>
+
+      <div class="pt-6 border-t border-outline-variant/20 flex items-center gap-4">
+        <button type="submit" class="flex items-center gap-2 px-6 py-3 premium-gradient text-white font-label font-bold rounded-xl shadow-lg shadow-primary/20 active:scale-95 transition-transform">
+          <span class="material-symbols-outlined">save</span>
+          Finalize Updates
+        </button>
+        <a href="{% url 'principal_manage_users' %}" class="px-6 py-3 bg-surface-container text-on-surface-variant font-label font-bold rounded-xl hover:bg-surface-container-highest transition-colors no-underline">Back to Directory</a>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock main_content %}

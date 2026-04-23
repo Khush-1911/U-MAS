@@ -1,63 +1,81 @@
 {% extends 'staff_template/base_template.html' %}
-{% block page_title %}
-Faculty Overview
-{% endblock page_title %}
+{% block page_title %}Faculty Overview{% endblock page_title %}
 
 {% block main_content %}
-    <div class="metrics-grid">
-      <div class="metric-card glass">
-        <div class="metric-icon" style="background: var(--surface-container-low); color: var(--primary);">
-          <i class="fas fa-users"></i>
-        </div>
-        <div class="metric-info">
-          <span class="metric-label">Mentees</span>
-          <h3 class="metric-value">{{ students_count }}</h3>
-          <span class="metric-trend"><i class="fas fa-user-check"></i> Assigned Students</span>
-        </div>
-      </div>
+<!-- Header Section -->
+<header class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+  <div>
+    <h2 class="text-4xl font-extrabold text-on-surface font-headline tracking-tight">Faculty Overview</h2>
+    <p class="text-on-surface-variant font-body mt-2 text-lg opacity-80">Your academic dashboard with key performance metrics.</p>
+  </div>
+</header>
 
-      <div class="metric-card glass">
-        <div class="metric-icon" style="background: var(--surface-container-low); color: #15803d;">
-          <i class="fas fa-calendar-check"></i>
-        </div>
-        <div class="metric-info">
-          <span class="metric-label">Attendance Logs</span>
-          <h3 class="metric-value">{{ attendance_count }}</h3>
-          <span class="metric-trend"><i class="fas fa-history"></i> Lifetime Records</span>
-        </div>
-      </div>
-
-      <div class="metric-card glass">
-        <div class="metric-icon" style="background: var(--surface-container-low); color: #854d0e;">
-          <i class="fas fa-plane-departure"></i>
-        </div>
-        <div class="metric-info">
-          <span class="metric-label">Leave Status</span>
-          <h3 class="metric-value">{{ leave_count }}</h3>
-          <span class="metric-trend"><i class="fas fa-info-circle"></i> Approved Requests</span>
-        </div>
-      </div>
-
-      <div class="metric-card glass">
-        <div class="metric-icon" style="background: var(--surface-container-low); color: #be123c;">
-          <i class="fas fa-book"></i>
-        </div>
-        <div class="metric-info">
-          <span class="metric-label">Active Subjects</span>
-          <h3 class="metric-value">{{ subject_count }}</h3>
-          <span class="metric-trend"><i class="fas fa-graduation-cap"></i> Curated Courses</span>
-        </div>
+<!-- Bento Grid Metrics -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+    <div class="flex justify-between items-start">
+      <div class="p-3 rounded-xl bg-primary-container/10 text-primary">
+        <span class="material-symbols-outlined text-3xl">groups</span>
       </div>
     </div>
+    <div class="mt-8">
+      <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Mentees</p>
+      <h3 class="text-4xl font-extrabold font-headline mt-1">{{ students_count }}</h3>
+      <span class="text-xs text-on-surface-variant font-body mt-2 block">Assigned Students</span>
+    </div>
+  </div>
 
-    <div class="card glass" style="margin-top: 2rem;">
-      <div class="chart-header">
-        <h3>Recent Academic Activity</h3>
-        <p>Monitor your departmental contributions and student progress.</p>
-      </div>
-      <div style="padding: 2rem; text-align: center; color: var(--on-surface-variant);">
-        <i class="fas fa-project-diagram fa-3x" style="margin-bottom: 1rem; opacity: 0.5;"></i>
-        <p>Advanced faculty analytics are being calculated...</p>
+  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+    <div class="flex justify-between items-start">
+      <div class="p-3 rounded-xl bg-secondary-container/10 text-secondary">
+        <span class="material-symbols-outlined text-3xl">event_available</span>
       </div>
     </div>
+    <div class="mt-8">
+      <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Attendance Logs</p>
+      <h3 class="text-4xl font-extrabold font-headline mt-1">{{ attendance_count }}</h3>
+      <span class="text-xs text-on-surface-variant font-body mt-2 block">Lifetime Records</span>
+    </div>
+  </div>
+
+  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+    <div class="flex justify-between items-start">
+      <div class="p-3 rounded-xl bg-tertiary-container/10 text-tertiary">
+        <span class="material-symbols-outlined text-3xl">flight_takeoff</span>
+      </div>
+    </div>
+    <div class="mt-8">
+      <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Leave Status</p>
+      <h3 class="text-4xl font-extrabold font-headline mt-1">{{ leave_count }}</h3>
+      <span class="text-xs text-on-surface-variant font-body mt-2 block">Approved Requests</span>
+    </div>
+  </div>
+
+  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+    <div class="flex justify-between items-start">
+      <div class="p-3 rounded-xl bg-error-container/30 text-error">
+        <span class="material-symbols-outlined text-3xl">menu_book</span>
+      </div>
+    </div>
+    <div class="mt-8">
+      <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Active Subjects</p>
+      <h3 class="text-4xl font-extrabold font-headline mt-1">{{ subject_count }}</h3>
+      <span class="text-xs text-on-surface-variant font-body mt-2 block">Curated Courses</span>
+    </div>
+  </div>
+</section>
+
+<!-- Activity Section -->
+<div class="bg-surface-container-lowest rounded-2xl p-8">
+  <div class="flex justify-between items-center mb-8">
+    <div>
+      <h4 class="text-xl font-bold font-headline">Recent Academic Activity</h4>
+      <p class="text-sm text-on-surface-variant font-body">Monitor your departmental contributions and student progress.</p>
+    </div>
+  </div>
+  <div class="py-12 text-center text-on-surface-variant">
+    <span class="material-symbols-outlined text-6xl opacity-30 mb-4 block">analytics</span>
+    <p class="font-body">Advanced faculty analytics are being calculated...</p>
+  </div>
+</div>
 {% endblock main_content %}

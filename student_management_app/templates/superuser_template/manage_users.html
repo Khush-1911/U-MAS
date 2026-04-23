@@ -1,73 +1,64 @@
 {% extends 'hod_template/base_template.html' %}
-{% block page_title %}
-System User Directory
-{% endblock page_title %}
+{% block page_title %}System User Directory{% endblock page_title %}
 
 {% block main_content %}
-    <div class="card glass">
-      <div class="chart-header">
-        <h3>Institutional Users</h3>
-        <p>Manage all accounts within <strong>{{ user.institution.name }}</strong></p>
-      </div>
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+  <div class="space-y-1">
+    <h2 class="text-4xl font-display font-extrabold text-on-surface tracking-tight">Institutional Users</h2>
+    <p class="text-on-surface-variant max-w-lg">Manage all accounts within <strong>{{ user.institution.name }}</strong></p>
+  </div>
+</div>
 
-      <div class="table-container">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>User ID</th>
-              <th>Full Name</th>
-              <th>Email Address</th>
-              <th>System Role</th>
-              <th>Operations</th>
-            </tr>
-          </thead>
-          <tbody>
-          {% for u in users %}
-            <tr>
-              <td><span class="badge glass">#{{ u.id }}</span></td>
-              <td><strong>{{ u.first_name }} {{ u.last_name }}</strong></td>
-              <td>{{ u.email }}</td>
-              <td>
-                {% if u.user_type == '1' %}<span class="role-pill owner">Owner</span>{% endif %}
-                {% if u.user_type == '2' %}<span class="role-pill staff">Staff</span>{% endif %}
-                {% if u.user_type == '3' %}<span class="role-pill student">Student</span>{% endif %}
-                {% if u.user_type == '4' %}<span class="role-pill superuser">Superuser</span>{% endif %}
-                {% if u.user_type == '5' %}<span class="role-pill principal">Principal</span>{% endif %}
-                {% if u.user_type == '6' %}<span class="role-pill admin">College Admin</span>{% endif %}
-                {% if u.user_type == '7' %}<span class="role-pill hod">HOD</span>{% endif %}
-              </td>
-              <td>
-                <div class="action-buttons">
-                  <a href="{% url 'superuser_edit_user' u.id %}" class="btn-icon" title="Edit Profile">
-                    <i class="fas fa-user-edit"></i>
-                  </a>
-                  <a href="#" class="btn-icon delete" title="Suspend Account">
-                    <i class="fas fa-user-slash"></i>
-                  </a>
-                </div>
-              </td>
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <style>
-      .role-pill {
-        padding: 0.25rem 0.75rem;
-        border-radius: 20px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-      }
-      .owner { background: #e0f2fe; color: #0369a1; }
-      .staff { background: #f0fdf4; color: #15803d; }
-      .student { background: #fefce8; color: #854d0e; }
-      .superuser { background: #fae8ff; color: #a21caf; }
-      .principal { background: #fff1f2; color: #be123c; }
-      .admin { background: #f5f3ff; color: #6d28d9; }
-      .hod { background: #ecfeff; color: #0e7490; }
-    </style>
+<div class="bg-surface-container-lowest rounded-xl shadow-xl shadow-indigo-900/5 overflow-hidden border border-outline-variant/10">
+  <div class="overflow-x-auto">
+    <table class="w-full text-left border-collapse">
+      <thead>
+        <tr class="bg-surface-container-low/50">
+          <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">ID</th>
+          <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">Full Name</th>
+          <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">Email</th>
+          <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">Role</th>
+          <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr class="group hover:bg-primary-fixed/20 transition-colors {% if forloop.counter|divisibleby:2 %}bg-surface-container-low/20{% else %}bg-white{% endif %}">
+          <td class="px-8 py-6">
+            <span class="px-2 py-1 rounded-lg bg-surface-container text-on-surface-variant text-xs font-label font-bold">#{{ u.id }}</span>
+          </td>
+          <td class="px-8 py-6">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold text-sm">
+                {{ u.first_name|slice:":1"|upper }}
+              </div>
+              <p class="font-display font-bold text-on-surface">{{ u.first_name }} {{ u.last_name }}</p>
+            </div>
+          </td>
+          <td class="px-8 py-6 font-body text-sm text-on-surface-variant">{{ u.email }}</td>
+          <td class="px-8 py-6">
+            {% if u.user_type == '1' %}<span class="px-3 py-1 rounded-full text-[11px] font-label font-bold uppercase tracking-wider bg-sky-100 text-sky-700">Owner</span>{% endif %}
+            {% if u.user_type == '2' %}<span class="px-3 py-1 rounded-full text-[11px] font-label font-bold uppercase tracking-wider bg-green-100 text-green-700">Staff</span>{% endif %}
+            {% if u.user_type == '3' %}<span class="px-3 py-1 rounded-full text-[11px] font-label font-bold uppercase tracking-wider bg-yellow-100 text-yellow-700">Student</span>{% endif %}
+            {% if u.user_type == '4' %}<span class="px-3 py-1 rounded-full text-[11px] font-label font-bold uppercase tracking-wider bg-purple-100 text-purple-700">Superuser</span>{% endif %}
+            {% if u.user_type == '5' %}<span class="px-3 py-1 rounded-full text-[11px] font-label font-bold uppercase tracking-wider bg-rose-100 text-rose-700">Principal</span>{% endif %}
+            {% if u.user_type == '6' %}<span class="px-3 py-1 rounded-full text-[11px] font-label font-bold uppercase tracking-wider bg-violet-100 text-violet-700">College Admin</span>{% endif %}
+            {% if u.user_type == '7' %}<span class="px-3 py-1 rounded-full text-[11px] font-label font-bold uppercase tracking-wider bg-cyan-100 text-cyan-700">HOD</span>{% endif %}
+          </td>
+          <td class="px-8 py-6 text-right">
+            <div class="flex items-center justify-end gap-2">
+              <a href="{% url 'superuser_edit_user' u.id %}" class="p-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors no-underline" title="Edit Profile">
+                <span class="material-symbols-outlined text-lg">edit</span>
+              </a>
+              <a href="#" class="p-2 rounded-lg bg-error/10 text-error hover:bg-error/20 transition-colors no-underline" title="Suspend Account">
+                <span class="material-symbols-outlined text-lg">person_off</span>
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock main_content %}

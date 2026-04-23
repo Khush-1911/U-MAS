@@ -1,47 +1,40 @@
-{% block page_title %}
-Attendance Registry
-{% endblock page_title %}
+{% extends 'staff_template/base_template.html' %}
+{% block page_title %}Attendance Registry{% endblock page_title %}
 
 {% block main_content %}
-    <div class="card">
-      <div class="chart-header">
-        <h3>Class Attendance</h3>
-        <p>Select a subject and date to register student attendance.</p>
-      </div>
-      
-      <div class="modern-form">
-        <div class="form-content">
-          <div class="form-group">
-            <label>Academic Subject</label>
-            <div class="input-wrapper">
-              <select name="subject" id="subject">
-                {% for subject in subjects %}
-                  <option value="{{ subject.id }}">{{ subject.subject_name }}</option>
-                {% endfor %}
-              </select>
-            </div>
-          </div>
+<header class="mb-10">
+  <h2 class="text-4xl font-extrabold text-on-surface font-headline tracking-tight">Attendance Registry</h2>
+  <p class="text-on-surface-variant font-body mt-2">Select a subject and date to register student attendance.</p>
+</header>
 
-          <div class="form-group">
-            <label>Registration Date</label>
-            <div class="input-wrapper">
-              <input type="date" name="attendance_date" id="attendance_date" value="{{ today_date }}">
-            </div>
-          </div>
-        </div>
-
-        <div class="form-actions">
-          <button type="button" class="btn btn-primary" id="fetch_student">
-            <i class="fas fa-search"></i>
-            Fetch Enrolled Students
-          </button>
-        </div>
-      </div>
-
-      <div id="student_data" style="margin-top: 2rem;">
-        <!-- AJAX content will load here -->
-      </div>
+<div class="bg-surface-container-lowest rounded-2xl p-8 mb-8">
+  <div class="space-y-6">
+    <div class="space-y-2">
+      <label class="block font-label text-sm font-bold text-on-surface-variant">Academic Subject</label>
+      <select name="subject" id="subject" class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body">
+        {% for subject in subjects %}
+          <option value="{{ subject.id }}">{{ subject.subject_name }}</option>
+        {% endfor %}
+      </select>
     </div>
+
+    <div class="space-y-2">
+      <label class="block font-label text-sm font-bold text-on-surface-variant">Registration Date</label>
+      <input type="date" name="attendance_date" id="attendance_date" value="{{ today_date }}" class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body">
+    </div>
+
+    <div class="pt-4">
+      <button type="button" class="flex items-center gap-2 px-6 py-3 premium-gradient text-white font-label font-bold rounded-xl shadow-lg shadow-primary/20 active:scale-95 transition-transform" id="fetch_student">
+        <span class="material-symbols-outlined">search</span>
+        Fetch Enrolled Students
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="student_data">
+  <!-- AJAX content will load here -->
+</div>
 {% endblock main_content %}
 
 {% block custom_js %}
@@ -56,7 +49,7 @@ Attendance Registry
                 return;
             }
 
-            $("#student_data").html("<div class='loading-state'><i class='fas fa-spinner fa-spin'></i> Synchronizing roster...</div>");
+            $("#student_data").html("<div class='flex items-center justify-center gap-3 py-12 text-on-surface-variant'><span class='material-symbols-outlined animate-spin'>sync</span> Synchronizing roster...</div>");
 
             $.ajax({
                 url:'{% url 'get_students' %}',
@@ -66,22 +59,22 @@ Attendance Registry
             .done(function(response){
                 var json_data=JSON.parse(response);
                 if(json_data.length===0){
-                    $("#student_data").html("<div class='alert alert-warning glass'>No students enrolled for the selected criteria.</div>");
+                    $("#student_data").html("<div class='px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 bg-yellow-50 text-yellow-700'><span class='material-symbols-outlined'>warning</span>No students enrolled for the selected criteria.</div>");
                     return;
                 }
 
-                var div_data = "<div class='attendance-grid' style='display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;'>";
+                var div_data = "<div class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8'>";
                 for(key in json_data) {
-                    div_data += "<div class='student-attendance-card glass' style='padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--surface-container-highest); transition: all 0.2s;'>";
-                    div_data += "  <div class='custom-control' style='display: flex; align-items: center; gap: 0.75rem; cursor: pointer;'>";
-                    div_data += "    <input type='checkbox' checked='checked' name='student_data[]' value='"+json_data[key]['id']+"' id='st_"+json_data[key]['id']+"' style='width: 1.25rem; height: 1.25rem; accent-color: var(--primary);'>";
-                    div_data += "    <label for='st_"+json_data[key]['id']+"' style='margin-bottom: 0; font-weight: 600; font-size: 0.9rem; cursor: pointer;'>"+json_data[key]['name']+"</label>";
-                    div_data += "  </div>";
+                    div_data += "<div class='bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/10 hover:border-primary/20 transition-all'>";
+                    div_data += "  <label class='flex items-center gap-3 cursor-pointer' for='st_"+json_data[key]['id']+"'>";
+                    div_data += "    <input type='checkbox' checked='checked' name='student_data[]' value='"+json_data[key]['id']+"' id='st_"+json_data[key]['id']+"' class='w-5 h-5 accent-indigo-600 rounded'>";
+                    div_data += "    <span class='font-display font-bold text-on-surface text-sm'>"+json_data[key]['name']+"</span>";
+                    div_data += "  </label>";
                     div_data += "</div>";
                 }
                 div_data += "</div>";
-                div_data += "<div class='form-actions'>";
-                div_data += "  <button id='save_attendance' class='btn btn-primary btn-block' type='button'>Finalize Attendance Registry</button>";
+                div_data += "<div class='pt-4'>";
+                div_data += "  <button id='save_attendance' class='w-full py-4 premium-gradient text-white font-display font-bold rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform border-none cursor-pointer' type='button'>Finalize Attendance Registry</button>";
                 div_data += "</div>";
 
                 $("#student_data").html(div_data);
@@ -93,7 +86,7 @@ Attendance Registry
 
         $(document).on("click","#save_attendance",function(){
             $(this).attr("disabled","disabled")
-            $(this).html("<i class='fas fa-spinner fa-spin'></i> Committing Data...")
+            $(this).html("<span class='material-symbols-outlined animate-spin inline-block align-middle mr-2'>sync</span> Committing Data...")
             
             var student_data=$("input[name='student_data[]']").map(function(){
                 return {"id":$(this).val(),"status":($(this).is(":checked") ? 1 : 0)};

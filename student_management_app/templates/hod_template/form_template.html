@@ -1,31 +1,34 @@
-<form role="form" action="{{ action_path }}" method="post" enctype="multipart/form-data" class="modern-form">
+<form role="form" action="{{ action_path }}" method="post" enctype="multipart/form-data" class="space-y-8">
   {% csrf_token %}
   
-  <div class="form-content">
+  <div class="space-y-6">
     {% for field in form %}
-      <div class="form-group">
-        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-        <div class="input-wrapper">
+      <div class="space-y-2">
+        <label class="block font-label text-sm font-bold text-on-surface-variant" for="{{ field.id_for_label }}">{{ field.label }}</label>
+        <div>
           {{ field }}
         </div>
         {% if field.errors %}
-          <div class="field-errors">
+          <div class="space-y-1 mt-1">
             {% for error in field.errors %}
-              <span class="error-text"><i class="fas fa-exclamation-circle"></i> {{ error }}</span>
+              <span class="text-xs text-error font-medium flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">error</span>
+                {{ error }}
+              </span>
             {% endfor %}
           </div>
         {% endif %}
         {% if field.help_text %}
-          <small class="help-text">{{ field.help_text }}</small>
+          <p class="text-xs text-on-surface-variant mt-1">{{ field.help_text }}</p>
         {% endif %}
       </div>
     {% endfor %}
 
     {% if messages %}
-      <div class="form-messages">
+      <div class="space-y-3 mt-4">
         {% for message in messages %}
-          <div class="alert alert-{{ message.tags }} glass">
-            <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-triangle{% endif %}"></i>
+          <div class="px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 alert-{{ message.tags }}">
+            <span class="material-symbols-outlined text-lg">{% if message.tags == 'success' %}check_circle{% else %}warning{% endif %}</span>
             {{ message }}
           </div>
         {% endfor %}
@@ -33,8 +36,8 @@
     {% endif %}
   </div>
 
-  <div class="form-actions">
-    <button type="submit" class="btn btn-primary btn-block">
+  <div class="pt-6 border-t border-outline-variant/20">
+    <button type="submit" class="w-full py-4 premium-gradient text-white font-display font-bold rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform">
       {{ button_text }}
     </button>
   </div>

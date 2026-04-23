@@ -3,62 +3,78 @@
 Notifications
 {% endblock page_title %}
 {% block main_content %}
-<section class="content">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-12">
-        <div class="card ">
-          <div class="card-header">
-            <h3 class="card-title">All Notifications</h3>
+
+        <div class="bg-surface-container-lowest rounded-2xl overflow-hidden border border-outline-variant/10 shadow-xl shadow-indigo-900/5">
+          <div class="px-8 py-6 border-b border-outline-variant/10">
+            <h3 class="font-display font-extrabold text-on-surface text-2xl">Notification Center</h3>
+            <p class="text-on-surface-variant text-sm mt-1">Updates and announcements from the departmental administration.</p>
           </div>
-          <div class="card-body">
+          <div class="p-8 space-y-4">
             {% if notifications %}
-              <div class="list-group">
+              <div class="space-y-4">
                 {% for notification in notifications %}
-                  <button
-                    type="button"
-                    class="list-group-item list-group-item-action notification-card"
-                    data-toggle="modal"
-                    data-target="#notificationModal"
+                  <div
+                    class="notification-card group p-6 bg-surface-container-low rounded-2xl border border-outline-variant/10 hover:border-primary/30 transition-all cursor-pointer relative overflow-hidden"
                     data-message="{{ notification.message|escape }}"
                     data-date="{{ notification.created_at|date:'d M Y, h:i A' }}"
                   >
-                    <div class="d-flex w-100 justify-content-between">
-                      <h5 class="mb-1">From HOD</h5>
-                      <small>{{ notification.created_at|date:"d M Y" }}</small>
+                    <div class="absolute top-0 left-0 w-1 h-full bg-primary/20 group-hover:bg-primary transition-colors"></div>
+                    <div class="flex justify-between items-start mb-3">
+                      <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                          <span class="material-symbols-outlined text-xl">account_circle</span>
+                        </div>
+                        <div>
+                          <h5 class="font-display font-bold text-on-surface leading-none">Administration</h5>
+                          <span class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">HOD Office</span>
+                        </div>
+                      </div>
+                      <span class="text-[10px] font-label font-bold text-on-surface-variant bg-surface-container-highest px-3 py-1 rounded-full uppercase tracking-wider">{{ notification.created_at|date:"d M Y" }}</span>
                     </div>
-                    <p class="mb-1">{{ notification.message|truncatechars:80 }}</p>
-                    <small>Click to open notification</small>
-                  </button>
+                    <p class="font-body text-sm text-on-surface-variant leading-relaxed line-clamp-2">{{ notification.message }}</p>
+                    <div class="mt-4 flex items-center text-[10px] font-label font-bold text-primary uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span>View Message Details</span>
+                      <span class="material-symbols-outlined text-xs ml-1">arrow_forward</span>
+                    </div>
+                  </div>
                 {% endfor %}
               </div>
             {% else %}
-              <div class="alert alert-info mb-0">No notification</div>
+              <div class="px-8 py-16 text-center">
+                  <span class="material-symbols-outlined text-6xl text-outline-variant/50 mb-4 block">notifications_off</span>
+                  <p class="text-on-surface-variant font-body font-medium">No recent notifications available.</p>
+              </div>
             {% endif %}
           </div>
         </div>
+
+<!-- Custom Tailwind Modal -->
+<div class="fixed inset-0 bg-slate-900/45 hidden items-center justify-center p-6 z-[2000]" id="notificationModal">
+  <div class="w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+    <div class="flex items-center justify-between px-6 py-5 border-b border-outline-variant/20">
+      <h4 class="font-headline font-bold text-on-surface text-lg flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">campaign</span>
+        Official Update
+      </h4>
+      <button type="button" class="modal-close-btn w-9 h-9 rounded-full bg-surface-container hover:bg-surface-container-highest flex items-center justify-center text-on-surface-variant transition-colors text-xl leading-none border-none cursor-pointer">&times;</button>
+    </div>
+    <div class="p-8 space-y-6">
+      <div class="flex items-center justify-between py-3 border-y border-outline-variant/10">
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-label font-bold text-on-surface-variant uppercase tracking-widest">Sent At:</span>
+          <span class="text-xs font-body font-bold text-primary" id="notificationDate"></span>
+        </div>
+        <div class="flex items-center gap-2">
+            <span class="text-xs font-label font-bold text-on-surface-variant uppercase tracking-widest">Origin:</span>
+            <span class="text-xs font-body font-bold text-on-surface">HOD Office</span>
+        </div>
+      </div>
+      <div class="p-6 bg-surface-container-low rounded-xl border border-outline-variant/10">
+        <p class="font-body text-on-surface leading-relaxed whitespace-pre-wrap" id="notificationMessage"></p>
       </div>
     </div>
-  </div>
-</section>
-
-<div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Notification</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p class="mb-1"><strong>From:</strong> HOD</p>
-        <p class="mb-3"><strong>Date:</strong> <span id="notificationDate"></span></p>
-        <div class="border rounded p-3 bg-light" id="notificationMessage"></div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
+    <div class="px-8 py-5 border-t border-outline-variant/20 text-right bg-surface-container-lowest">
+      <button type="button" class="modal-close-btn px-6 py-2.5 bg-surface-container text-on-surface-variant font-label font-bold rounded-xl hover:bg-surface-container-highest transition-colors border-none cursor-pointer">Acknowledge</button>
     </div>
   </div>
 </div>
@@ -69,6 +85,15 @@ Notifications
     $(".notification-card").on("click", function() {
       $("#notificationDate").text($(this).data("date"));
       $("#notificationMessage").text($(this).data("message"));
+      $("#notificationModal").removeClass("hidden").addClass("flex");
+    });
+
+    $(".modal-close-btn").click(function(){
+        $("#notificationModal").removeClass("flex").addClass("hidden");
+    });
+
+    $("#notificationModal").click(function(e){
+        if(e.target === this) $(this).removeClass("flex").addClass("hidden");
     });
   });
 </script>

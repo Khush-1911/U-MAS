@@ -1,56 +1,70 @@
 {% extends 'hod_template/base_template.html' %}
-{% block page_title %}
-Faculty Directory
-{% endblock page_title %}
+{% block page_title %}Faculty Directory{% endblock page_title %}
 
 {% block main_content %}
-    <div class="card glass">
-      <div class="chart-header">
-        <div>
-          <h3>Active Faculty Members</h3>
-          <p>Global oversight of institutional teaching staff and administrative personnel.</p>
-        </div>
-        <a href="{% url 'add_staff' %}" class="btn btn-primary">
-          <i class="fas fa-plus"></i>
-          Register New Faculty
-        </a>
-      </div>
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+  <div class="space-y-1">
+    <h2 class="text-4xl font-display font-extrabold text-on-surface tracking-tight">Faculty Directory</h2>
+    <p class="text-on-surface-variant max-w-lg">Global oversight of institutional teaching staff and administrative personnel.</p>
+  </div>
+  <a href="{% url 'add_staff' %}" class="premium-gradient text-white px-8 py-3.5 rounded-xl font-bold shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all flex items-center gap-2 group no-underline">
+    <span class="material-symbols-outlined group-hover:rotate-90 transition-transform duration-300">add</span>
+    <span>Register New Faculty</span>
+  </a>
+</div>
 
-      <div class="table-container">
-        <table class="modern-table">
-          <thead>
-            <tr>
-              <th>Internal ID</th>
-              <th>Full Name</th>
-              <th>Institutional Email</th>
-              <th>Date Joined</th>
-              <th style="text-align: right;">Operations</th>
-            </tr>
-          </thead>
-          <tbody>
-          {% for staff in staffs %}
-            <tr>
-              <td><span class="badge badge-success">{{ staff.profile_id|default:staff.id }}</span></td>
-              <td>
-                <div style="font-weight: 600;">{{ staff.admin.get_full_name }}</div>
-                <div style="font-size: 0.75rem; color: var(--on-surface-variant);">@{{ staff.admin.username }}</div>
-              </td>
-              <td>{{ staff.admin.email }}</td>
-              <td>{{ staff.admin.date_joined|date:"M d, Y" }}</td>
-              <td style="text-align: right;">
-                <div style="display: inline-flex; gap: 0.5rem;">
-                  <a href="/edit_staff/{{ staff.admin.id }}" class="btn btn-primary" style="padding: 0.5rem; background: rgba(67, 67, 213, 0.1); color: var(--primary);">
-                    <i class="fas fa-edit"></i>
-                  </a>
-                  <a href="{% url 'delete_staff' staff_id=staff.admin.id %}" class="btn btn-primary" style="padding: 0.5rem; background: rgba(186, 26, 26, 0.1); color: var(--error);" onclick="return confirm('Permanently remove this faculty member?');">
-                    <i class="fas fa-trash-alt"></i>
-                  </a>
-                </div>
-              </td>
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
+<div class="bg-surface-container-lowest rounded-xl shadow-xl shadow-indigo-900/5 overflow-hidden border border-outline-variant/10">
+  <div class="overflow-x-auto">
+    <table class="w-full text-left border-collapse">
+      <thead>
+        <tr class="bg-surface-container-low/50">
+          <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">ID</th>
+          <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">Full Name</th>
+          <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">Email</th>
+          <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant">Date Joined</th>
+          <th class="px-8 py-5 text-xs font-label uppercase tracking-widest text-on-surface-variant text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for staff in staffs %}
+        <tr class="group hover:bg-primary-fixed/20 transition-colors {% if forloop.counter|divisibleby:2 %}bg-surface-container-low/20{% else %}bg-white{% endif %}">
+          <td class="px-8 py-6">
+            <span class="px-2 py-1 rounded-lg bg-secondary/10 text-secondary text-xs font-label font-bold">{{ staff.profile_id|default:staff.id }}</span>
+          </td>
+          <td class="px-8 py-6">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold text-sm">
+                {{ staff.admin.get_full_name|slice:":1"|upper }}
+              </div>
+              <div>
+                <p class="font-display font-bold text-on-surface leading-tight">{{ staff.admin.get_full_name }}</p>
+                <p class="text-xs text-on-surface-variant font-body">@{{ staff.admin.username }}</p>
+              </div>
+            </div>
+          </td>
+          <td class="px-8 py-6 font-body text-sm text-on-surface-variant">{{ staff.admin.email }}</td>
+          <td class="px-8 py-6 font-body text-sm text-on-surface-variant">{{ staff.admin.date_joined|date:"M d, Y" }}</td>
+          <td class="px-8 py-6 text-right">
+            <div class="flex items-center justify-end gap-2">
+              <a href="/edit_staff/{{ staff.admin.id }}" class="p-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors no-underline">
+                <span class="material-symbols-outlined text-lg">edit</span>
+              </a>
+              <a href="{% url 'delete_staff' staff_id=staff.admin.id %}" class="p-2 rounded-lg bg-error/10 text-error hover:bg-error/20 transition-colors no-underline" onclick="return confirm('Permanently remove this faculty member?');">
+                <span class="material-symbols-outlined text-lg">delete</span>
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" class="px-8 py-16 text-center">
+            <span class="material-symbols-outlined text-6xl text-outline-variant/50 mb-4 block">person_off</span>
+            <p class="text-on-surface-variant font-body">No faculty members found.</p>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock main_content %}
