@@ -280,7 +280,7 @@ def add_student_save(request):
             try:
                 with transaction.atomic():
                     class_obj=ClassModel.objects.get(id=class_id)
-                    semester=SemesterModel.object.get(id=semester_id)
+                    semester=SemesterModel.objects.get(id=semester_id)
                     mentor=Staffs.objects.get(id=mentor_id)
 
                     user=CustomUser.objects.create_user(
@@ -540,7 +540,7 @@ def edit_student_save(request):
 
                     student=Students.objects.get(admin=student_id)
                     student.address=address
-                    semester = SemesterModel.object.get(id=semester_id)
+                    semester = SemesterModel.objects.get(id=semester_id)
                     student.semester_id = semester
                     student.gender=sex
                     class_obj=ClassModel.objects.get(id=class_id)
@@ -624,13 +624,13 @@ def edit_department_save(request):
 
 
 def manage_semester(request):
-    semesters=SemesterModel.object.all()
+    semesters=SemesterModel.objects.all()
     return render(request,"hod_template/manage_semester_template.html",{"semesters":semesters})
 
 
 def delete_semester(request,semester_id):
     try:
-        semester=SemesterModel.object.get(id=semester_id)
+        semester=SemesterModel.objects.get(id=semester_id)
         semester.delete()
         messages.success(request,"Successfully Deleted Semester")
     except:
@@ -737,7 +737,7 @@ def staff_disapprove_leave(request,leave_id):
 
 def admin_view_attendance(request):
     subjects=Subjects.objects.all()
-    semesters=SemesterModel.object.all()
+    semesters=SemesterModel.objects.all()
     return render(request,"hod_template/admin_view_attendance.html",{"subjects":subjects,"semesters":semesters})
 
 @csrf_exempt
@@ -745,7 +745,7 @@ def admin_get_attendance_dates(request):
     subject=request.POST.get("subject")
     semester_id=request.POST.get("semester_id")
     subject_obj=Subjects.objects.get(id=subject)
-    semester_obj=SemesterModel.object.get(id=semester_id)
+    semester_obj=SemesterModel.objects.get(id=semester_id)
     attendance=Attendance.objects.filter(subject_id=subject_obj,semester_id=semester_obj)
     attendance_obj=[]
     for attendance_single in attendance:

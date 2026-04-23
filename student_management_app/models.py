@@ -22,7 +22,7 @@ class SemesterModel(models.Model):
     id=models.AutoField(primary_key=True)
     semester_start_date=models.DateField()
     semester_end_date=models.DateField()
-    object=models.Manager()
+    objects=models.Manager()
 
 class CustomUser(AbstractUser):
     user_type_data=(("1","Owner"),("2","Staff"),("3","Student"),("4","Superuser"),("5","Principal"),("6","College Admin"),("7","HOD"))

@@ -97,7 +97,7 @@ def _student_queryset_for_staff_list():
 
 
 def _resolve_semester_for_date(target_date):
-    return SemesterModel.object.filter(
+    return SemesterModel.objects.filter(
         semester_start_date__lte=target_date,
         semester_end_date__gte=target_date,
     ).order_by("id").first()
@@ -111,7 +111,7 @@ def _resolve_semester_from_students(subject, staff_obj):
         ).values_list("semester_id", flat=True).distinct()
     )
     if len(semester_ids) == 1:
-        return SemesterModel.object.filter(id=semester_ids[0]).first()
+        return SemesterModel.objects.filter(id=semester_ids[0]).first()
     return None
 
 
@@ -129,14 +129,14 @@ def _resolve_fallback_semester(attendance_date_obj, subject_model, staff_obj, se
 
     semester_id = students_qs.values_list("semester_id", flat=True).order_by("semester_id").first()
     if semester_id:
-        return SemesterModel.object.filter(id=semester_id).first()
+        return SemesterModel.objects.filter(id=semester_id).first()
 
-    semester_model = SemesterModel.object.order_by("id").first()
+    semester_model = SemesterModel.objects.order_by("id").first()
     if semester_model:
         return semester_model
 
     year = attendance_date_obj.year
-    return SemesterModel.object.create(
+    return SemesterModel.objects.create(
         semester_start_date=f"{year}-01-01",
         semester_end_date=f"{year}-12-31",
     )
@@ -167,7 +167,7 @@ def _semester_for_dates(start_value, end_value):
         except ValueError:
             return None
 
-    return SemesterModel.object.filter(
+    return SemesterModel.objects.filter(
         semester_start_date=start_date,
         semester_end_date=end_date,
     ).first()
@@ -427,7 +427,7 @@ def staff_add_student_save(request):
     try:
         with transaction.atomic():
             class_obj = ClassModel.objects.get(id=class_id)
-            semester = SemesterModel.object.get(id=semester_id)
+            semester = SemesterModel.objects.get(id=semester_id)
             _create_student_user(
                 first_name=first_name,
                 last_name=last_name,
@@ -531,7 +531,7 @@ def staff_edit_student_save(request):
 
             student = Students.objects.get(admin=student_id, mentor=staff_obj)
             student.address = address
-            student.semester_id = SemesterModel.object.get(id=semester_id)
+            student.semester_id = SemesterModel.objects.get(id=semester_id)
             student.gender = sex
             student.class_id = ClassModel.objects.get(id=class_id)
             student.save()
@@ -741,7 +741,7 @@ def get_students(request):
             mentor=staff_obj,
         )
     elif semester_id:
-        semester_model = SemesterModel.object.filter(id=semester_id).first()
+        semester_model = SemesterModel.objects.filter(id=semester_id).first()
         if not semester_model:
             semester_model = _resolve_semester_from_students(subject, staff_obj)
         if not semester_model:
@@ -1039,7 +1039,7 @@ def staff_all_notification(request):
 
 def staff_add_result(request):
     subjects=Subjects.objects.filter(staff_id=request.user.id)
-    semesters=SemesterModel.object.all()
+    semesters=SemesterModel.objects.all()
     return render(request,"staff_template/staff_add_result.html",{"subjects":subjects,"semesters":semesters})
 
 def save_student_result(request):
@@ -1095,7 +1095,7 @@ def fetch_result_student(request):
 
 def start_live_classroom(request):
     subjects=Subjects.objects.filter(staff_id=request.user.id)
-    semesters=SemesterModel.object.all()
+    semesters=SemesterModel.objects.all()
     return render(request,"staff_template/start_live_classroom.html",{"subjects":subjects,"semesters":semesters})
 
 def start_live_classroom_process(request):

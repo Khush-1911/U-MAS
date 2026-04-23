@@ -22,7 +22,16 @@ from student_management_app.services.live_class_service import (
 
 
 def student_home(request):
-    student_obj=Students.objects.get(admin=request.user.id)
+    student_obj = Students.objects.get(admin=request.user.id)
+    
+    # Handle missing class or semester assignments gracefully
+    if not student_obj.class_id or not student_obj.semester_id:
+        return render(request, "student_template/student_home_template.html", {
+            "error": "You have not been assigned to a class or semester yet. Please contact the administration.",
+            "total_attendance": 0, "attendance_absent": 0, "attendance_present": 0, "subjects": 0, 
+            "data_name": [], "data1": [], "data2": [], "class_room": []
+        })
+
     attendance_total=AttendanceReport.objects.filter(student_id=student_obj).count()
     attendance_present=AttendanceReport.objects.filter(student_id=student_obj,status=True).count()
     attendance_absent=AttendanceReport.objects.filter(student_id=student_obj,status=False).count()
@@ -31,7 +40,7 @@ def student_home(request):
     subjects_data=Subjects.objects.filter(class_id=class_obj)
     if student_obj.mentor_id:
         subjects_data = subjects_data.filter(staff_id=student_obj.mentor.admin_id)
-    semester_obj=SemesterModel.object.get(id=student_obj.semester_id.id)
+    semester_obj=SemesterModel.objects.get(id=student_obj.semester_id.id)
     class_room=OnlineClassRoom.objects.filter(subject__in=subjects_data,is_active=True,semester=semester_obj)
 
     subject_name=[]
@@ -49,10 +58,10 @@ def student_home(request):
     return render(request,"student_template/student_home_template.html",{"total_attendance":attendance_total,"attendance_absent":attendance_absent,"attendance_present":attendance_present,"subjects":subjects,"data_name":subject_name,"data1":data_present,"data2":data_absent,"class_room":class_room})
 
 def join_class_room(request,subject_id,semester_id):
-    semester_obj=SemesterModel.object.get(id=semester_id)
+    semester_obj=SemesterModel.objects.get(id=semester_id)
     subjects=Subjects.objects.filter(id=subject_id)
     if subjects.exists():
-        semester=SemesterModel.object.filter(id=semester_obj.id)
+        semester=SemesterModel.objects.filter(id=semester_obj.id)
         if semester.exists():
             subject_obj=Subjects.objects.get(id=subject_id)
             class_obj=ClassModel.objects.get(id=subject_obj.class_id.id)
