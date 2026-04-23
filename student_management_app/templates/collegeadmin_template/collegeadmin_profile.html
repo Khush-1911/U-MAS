@@ -1,16 +1,16 @@
-{% extends 'staff_template/base_template.html' %}
+{% extends 'collegeadmin_template/base_template.html' %}
 {% block page_title %}
-Faculty Profile
+College Admin Profile
 {% endblock page_title %}
 
 {% block main_content %}
     <div class="card glass">
       <div class="chart-header">
-        <h3>Academic Identity</h3>
-        <p>Manage your faculty credentials and institutional settings.</p>
+        <h3>Administrative Identity</h3>
+        <p>Manage your college management credentials.</p>
       </div>
 
-      <form class="modern-form" action="{% url 'staff_profile_save' %}" method="post">
+      <form class="modern-form" action="{% url 'collegeadmin_profile_save' %}" method="post">
         {% csrf_token %}
         <div class="form-content">
           <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
@@ -35,20 +35,6 @@ Faculty Profile
             </div>
           </div>
 
-          <div class="form-group">
-            <label>Communication Email (Notifications)</label>
-            <div class="input-wrapper">
-              <input type="email" name="notification_email" value="{{ user.notification_email }}" placeholder="Optional: defaults to account email">
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Residential Address</label>
-            <div class="input-wrapper">
-              <textarea name="address" rows="3" class="form-control" style="width: 100%; padding: 0.75rem; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container-low); color: var(--on-surface);">{{ staff.address }}</textarea>
-            </div>
-          </div>
-
           <div class="form-group" style="margin-top: 1rem;">
             <label>Update Security Credential (Password)</label>
             <div class="input-wrapper">
@@ -60,7 +46,7 @@ Faculty Profile
         <div class="form-actions">
           <button type="submit" class="btn btn-primary">
             <i class="fas fa-save"></i>
-            Update Faculty Profile
+            Commit Changes
           </button>
         </div>
       </form>

@@ -57,12 +57,6 @@
         <i class="fas fa-comment-dots"></i>
         <span>Feedback Hub</span>
       </a>
-
-      {% url 'staff_profile' as staff_profile %}
-      <a href="{{ staff_profile }}" class="nav-link {% if request.path == staff_profile %}active{% endif %}">
-        <i class="fas fa-id-card"></i>
-        <span>My Profile</span>
-      </a>
     </div>
   </nav>
 </aside>

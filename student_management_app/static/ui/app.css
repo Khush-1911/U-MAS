@@ -279,6 +279,48 @@ h1, h2, h3, h4, h5, h6 {
   padding: 0 1rem 0.75rem 1rem;
 }
 
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.user-profile-link {
+  text-decoration: none;
+  color: inherit;
+  transition: opacity 0.2s ease;
+}
+
+.user-profile-link:hover {
+  opacity: 0.8;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  padding-left: 1rem;
+  border-left: 1px solid var(--outline-variant);
+}
+
+.logout-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--surface-container-high);
+  color: var(--error);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.logout-link:hover {
+  background: var(--error-container);
+  color: var(--on-error-container);
+  transform: translateY(-2px);
+}
+
 .nav-link {
   display: flex;
   align-items: center;
@@ -722,3 +764,20 @@ tr:nth-child(odd) {
   padding-top: 1rem;
   border-top: 1px solid var(--surface-container);
 }
+
+.role-pill {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-block;
+}
+.role-pill.owner { background: #e0f2fe; color: #0369a1; }
+.role-pill.staff { background: #f0fdf4; color: #15803d; }
+.role-pill.student { background: #fefce8; color: #854d0e; }
+.role-pill.superuser { background: #fae8ff; color: #a21caf; }
+.role-pill.principal { background: #fff1f2; color: #be123c; }
+.role-pill.admin { background: #f5f3ff; color: #6d28d9; }
+.role-pill.hod { background: #ecfeff; color: #0e7490; }

@@ -70,11 +70,6 @@
         <span>Notifications</span>
       </a>
 
-      {% url 'student_profile' as student_profile %}
-      <a href="{{ student_profile }}" class="nav-link {% if request.path == student_profile %}active{% endif %}">
-        <i class="fas fa-user-circle"></i>
-        <span>My Profile</span>
-      </a>
     </div>
   </nav>
 </aside>

@@ -97,3 +97,26 @@ def collegeadmin_manage_grades_save(request):
     except Exception as e:
         messages.error(request, f"Failed to upload grades: {str(e)}")
         return HttpResponseRedirect(reverse("collegeadmin_manage_grades"))
+def collegeadmin_profile(request):
+    user = CustomUser.objects.get(id=request.user.id)
+    return render(request, "collegeadmin_template/collegeadmin_profile.html", {"user": user})
+
+def collegeadmin_profile_save(request):
+    if request.method != "POST":
+        return HttpResponseRedirect(reverse("collegeadmin_profile"))
+    
+    first_name = request.POST.get("first_name")
+    last_name = request.POST.get("last_name")
+    password = request.POST.get("password")
+
+    try:
+        user = CustomUser.objects.get(id=request.user.id)
+        user.first_name = first_name
+        user.last_name = last_name
+        if password and password.strip():
+            user.set_password(password)
+        user.save()
+        messages.success(request, "Profile Updated Successfully")
+    except Exception as e:
+        messages.error(request, f"Failed to Update Profile: {str(e)}")
+    return HttpResponseRedirect(reverse("collegeadmin_profile"))

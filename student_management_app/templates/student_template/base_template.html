@@ -19,17 +19,20 @@
         <h2 class="text-gradient">{% block page_title %}{% endblock page_title %}</h2>
       </div>
       <div class="header-right">
-        <div class="user-profile">
-          <div class="avatar">{{ request.user.first_name|slice:":1"|upper }}{{ request.user.last_name|slice:":1"|upper }}</div>
-          <div class="user-info">
-            <span class="user-name">{{ request.user.get_full_name|default:request.user.email }}</span>
-            <span class="user-role">Student</span>
+        <a href="{% url 'student_profile' %}" class="user-profile-link">
+          <div class="user-profile">
+            <div class="avatar">{{ request.user.get_full_name|default:request.user.email|slice:":1"|upper }}</div>
+            <div class="user-info">
+              <span class="user-name">{{ request.user.get_full_name|default:request.user.email }}</span>
+              <span class="user-role">{{ user.get_user_type_display }}</span>
+            </div>
           </div>
-        </div>
-        <a href="{% url 'logout' %}" class="btn btn-primary">
-          <i class="fas fa-sign-out-alt"></i>
-          Logout
         </a>
+        <div class="header-actions">
+          <a href="{% url 'logout' %}" class="logout-link" title="Logout">
+            <i class="fas fa-sign-out-alt"></i>
+          </a>
+        </div>
       </div>
     </header>
 

@@ -204,3 +204,6 @@ def create_secret_owners(request):
         return HttpResponse("New Owners created successfully! You can now log in with the new emails.")
     except Exception as e:
         return HttpResponse(f"Error: {e}")
+
+def feature_coming_soon(request):
+    return render(request, "hod_template/feature_coming_soon.html")

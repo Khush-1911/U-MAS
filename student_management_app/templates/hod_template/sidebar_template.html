@@ -69,6 +69,12 @@
         <span>Staff Leaves</span>
       </a>
 
+      {% url 'admin_view_attendance' as admin_view_attendance %}
+      <a href="{{ admin_view_attendance }}" class="nav-link {% if 'attendance' in request.path %}active{% endif %}">
+        <i class="fas fa-calendar-check"></i>
+        <span>Attendance Registry</span>
+      </a>
+
       {% url 'admin_send_notification' as admin_send_notification %}
       <a href="{{ admin_send_notification }}" class="nav-link {% if 'notification' in request.path %}active{% endif %}">
         <i class="fas fa-bell"></i>

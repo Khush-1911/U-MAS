@@ -1,9 +1,12 @@
+{% extends 'principal_template/base_template.html' %}
+{% load static %}
+
 {% block page_title %}
 Institutional User Registry
 {% endblock page_title %}
 
 {% block main_content %}
-    <div class="card">
+    <div class="card glass">
       <div class="chart-header">
         <h3>Institutional Directory</h3>
         <p>Comprehensive list of authorized accounts for <strong>{{ user.institution.name }}</strong></p>

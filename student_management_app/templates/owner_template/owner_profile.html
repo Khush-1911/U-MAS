@@ -1,16 +1,16 @@
-{% extends 'staff_template/base_template.html' %}
+{% extends 'owner_template/base_template.html' %}
 {% block page_title %}
-Faculty Profile
+System Owner Profile
 {% endblock page_title %}
 
 {% block main_content %}
     <div class="card glass">
       <div class="chart-header">
-        <h3>Academic Identity</h3>
-        <p>Manage your faculty credentials and institutional settings.</p>
+        <h3>Account Sovereignty</h3>
+        <p>Manage your administrative identity and system-wide security credentials.</p>
       </div>
 
-      <form class="modern-form" action="{% url 'staff_profile_save' %}" method="post">
+      <form class="modern-form" action="{% url 'owner_profile_save' %}" method="post">
         {% csrf_token %}
         <div class="form-content">
           <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
@@ -32,20 +32,7 @@ Faculty Profile
             <label>Master Identity (Email)</label>
             <div class="input-wrapper">
               <input type="email" value="{{ user.email }}" disabled class="disabled-input">
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Communication Email (Notifications)</label>
-            <div class="input-wrapper">
-              <input type="email" name="notification_email" value="{{ user.notification_email }}" placeholder="Optional: defaults to account email">
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Residential Address</label>
-            <div class="input-wrapper">
-              <textarea name="address" rows="3" class="form-control" style="width: 100%; padding: 0.75rem; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container-low); color: var(--on-surface);">{{ staff.address }}</textarea>
+              <small>System identity is tied to this verified email address.</small>
             </div>
           </div>
 
@@ -59,8 +46,8 @@ Faculty Profile
 
         <div class="form-actions">
           <button type="submit" class="btn btn-primary">
-            <i class="fas fa-save"></i>
-            Update Faculty Profile
+            <i class="fas fa-shield-alt"></i>
+            Synchronize & Secure Profile
           </button>
         </div>
       </form>
@@ -71,6 +58,13 @@ Faculty Profile
         background: var(--surface-container-low) !important;
         opacity: 0.7;
         cursor: not-allowed;
+      }
+      .modern-form .form-group small {
+        display: block;
+        margin-top: 0.5rem;
+        font-size: 0.75rem;
+        color: var(--on-surface-variant);
+        opacity: 0.8;
       }
     </style>
 {% endblock main_content %}

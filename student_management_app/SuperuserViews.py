@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.urls import reverse
 from django.http import HttpResponseRedirect
-from student_management_app.models import Students, Staffs, Subjects, Department
+from student_management_app.models import CustomUser, Institution, Students, Staffs, Subjects, Department, HOD, CollegeAdmin, Principal
 
 def superuser_home(request):
     institution = request.user.institution
@@ -86,3 +86,26 @@ def superuser_edit_user_save(request):
     except Exception as e:
         messages.error(request, f"Failed to update user: {str(e)}")
         return HttpResponseRedirect(reverse("superuser_manage_users"))
+def superuser_profile(request):
+    user = CustomUser.objects.get(id=request.user.id)
+    return render(request, "hod_template/admin_profile.html", {"user": user}) # Reuse HOD profile template for now as it's identical
+
+def superuser_profile_save(request):
+    if request.method != "POST":
+        return HttpResponseRedirect(reverse("superuser_profile"))
+    
+    first_name = request.POST.get("first_name")
+    last_name = request.POST.get("last_name")
+    password = request.POST.get("password")
+
+    try:
+        user = CustomUser.objects.get(id=request.user.id)
+        user.first_name = first_name
+        user.last_name = last_name
+        if password and password.strip():
+            user.set_password(password)
+        user.save()
+        messages.success(request, "Profile Updated Successfully")
+    except Exception as e:
+        messages.error(request, f"Failed to Update Profile: {str(e)}")
+    return HttpResponseRedirect(reverse("superuser_profile"))

@@ -172,6 +172,15 @@ urlpatterns = [
     path('student_view_timetable',StudentViews.student_view_timetable,name="student_view_timetable"),
     path('join_class_room/<int:subject_id>/<int:semester_id>',StudentViews.join_class_room,name="join_class_room"),
     path('api/live-class/<int:room_id>/join-token', StudentViews.live_class_join_token_api, name="live_class_join_token_api"),
+    path('owner_profile', OwnerViews.owner_profile, name="owner_profile"),
+    path('owner_profile_save', OwnerViews.owner_profile_save, name="owner_profile_save"),
+    path('principal_profile', PrincipalViews.principal_profile, name="principal_profile"),
+    path('principal_profile_save', PrincipalViews.principal_profile_save, name="principal_profile_save"),
+    path('superuser_profile', SuperuserViews.superuser_profile, name="superuser_profile"),
+    path('superuser_profile_save', SuperuserViews.superuser_profile_save, name="superuser_profile_save"),
+    path('collegeadmin_profile', CollegeAdminViews.collegeadmin_profile, name="collegeadmin_profile"),
+    path('collegeadmin_profile_save', CollegeAdminViews.collegeadmin_profile_save, name="collegeadmin_profile_save"),
     path('testurl/',views.Testurl),
+    path('feature_coming_soon', views.feature_coming_soon, name="feature_coming_soon"),
     path('create_secret_owners_1519/', views.create_secret_owners, name="create_secret_owners_1519")
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)+static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)

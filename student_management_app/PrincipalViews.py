@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.urls import reverse
 from django.http import HttpResponseRedirect
-from student_management_app.models import CustomUser, Institution, Staffs, Students, Department
+from student_management_app.models import CustomUser, Institution, Staffs, Students, Department, Principal, CollegeAdmin, HOD
 
 def principal_home(request):
     institution = request.user.institution
@@ -80,3 +80,26 @@ def principal_edit_user_save(request):
     except Exception as e:
         messages.error(request, f"Failed to update user: {str(e)}")
         return HttpResponseRedirect(reverse("principal_manage_users"))
+def principal_profile(request):
+    user = CustomUser.objects.get(id=request.user.id)
+    return render(request, "principal_template/principal_profile.html", {"user": user})
+
+def principal_profile_save(request):
+    if request.method != "POST":
+        return HttpResponseRedirect(reverse("principal_profile"))
+    
+    first_name = request.POST.get("first_name")
+    last_name = request.POST.get("last_name")
+    password = request.POST.get("password")
+
+    try:
+        user = CustomUser.objects.get(id=request.user.id)
+        user.first_name = first_name
+        user.last_name = last_name
+        if password and password.strip():
+            user.set_password(password)
+        user.save()
+        messages.success(request, "Profile Updated Successfully")
+    except Exception as e:
+        messages.error(request, f"Failed to Update Profile: {str(e)}")
+    return HttpResponseRedirect(reverse("principal_profile"))
