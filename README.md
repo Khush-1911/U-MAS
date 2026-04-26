@@ -1,311 +1,127 @@
 # U-MAS (University Management & Attendance System)
 
-U-MAS is a Django-based multi-role web application for managing university operations: students, staff, courses, subjects, sessions, attendance, leave, feedback, notifications, results, and live classrooms.
+[![Django](https://img.shields.io/badge/Django-4.2+-092e20?style=for-the-badge&logo=django)](https://www.djangoproject.com/)
+[![Python](https://img.shields.io/badge/Python-3.10+-3776ab?style=for-the-badge&logo=python)](https://www.python.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon-4169e1?style=for-the-badge&logo=postgresql)](https://neon.tech/)
+[![Render](https://img.shields.io/badge/Render-Deployed-46E3B7?style=for-the-badge&logo=render)](https://render.com/)
 
-## 1. Tech Stack
+U-MAS is a comprehensive, production-ready Django-based Student Management System (SMS) designed to streamline university operations. It features a modern, role-based architecture with a premium user interface powered by the **Editorial Ether** design system.
+
+---
+
+## ✨ Key Features
+
+- **🎨 Modern UI/UX**: Built with the "Editorial Ether" design system, featuring glassmorphism, fluid animations, and a high-contrast palette.
+- **🔐 Multi-Role Architecture**: Specialized dashboards for Owner, Principal, Superuser (HOD), College Admin, Staff, and Students.
+- **📊 Real-time Analytics**: Interactive charts (Chart.js) for attendance, performance tracking, and resource distribution.
+- **🎥 Live Classrooms**: Integrated real-time virtual classroom support via RTCMultiConnection.
+- **📝 Attendance Management**: Streamlined attendance tracking for staff with comprehensive reports for students and HODs.
+- **📄 Result Management**: Secure mark entry and result viewing for staff and students.
+- **📨 Feedback & Notifications**: Built-in feedback loop and Firebase-ready notification system.
+- **📅 Leave Management**: End-to-end workflow for applying and approving leave requests.
+
+---
+
+## 🏗️ Tech Stack
 
 ### Backend
-- Python 3.x
-- Django (project currently runs on modern Django in this environment)
-- Django custom user model (`student_management_app.CustomUser`)
-- SQLite (default)
-- Optional MySQL-style configuration support via environment variables
+- **Framework**: Django 4.2+ (Python 3.10+)
+- **Database**: PostgreSQL (Production) / SQLite (Development)
+- **Deployment**: Gunicorn + WhiteNoise (Static Files)
+- **Database Mapping**: Neon Serverless Postgres
 
 ### Frontend
-- Django Templates (server-rendered pages)
-- Custom CSS theme (`student_management_app/static/ui/app.css`)
-- Bootstrap assets (local static files)
-- Font Awesome icons
-- jQuery
-- Chart.js (dashboard charts)
+- **Design System**: Editorial Ether (Custom Vanilla CSS + Tailwind-inspired utilities)
+- **Typography**: Plus Jakarta Sans, Inter, Manrope
+- **Icons**: Material Symbols & Font Awesome
+- **Libraries**: Chart.js, jQuery, RTCMultiConnection
 
-### Real-time / Integrations
-- Google reCAPTCHA validation on login
-- Firebase messaging service worker endpoint (template/stub config)
-- RTCMultiConnection-based live classroom pages
+---
 
-## 2. Project Structure
+## 👥 Role-Based Capabilities
 
-- `manage.py`: Django management entry point
-- `student_management_system/`: project settings and URL routing
-- `student_management_app/`: app logic (models, views, templates, static)
-- `student_management_app/models.py`: core data model
-- `student_management_app/HodViews.py`: HOD/Admin feature views
-- `student_management_app/StaffViews.py`: Staff feature views
-- `student_management_app/StudentViews.py`: Student feature views
-- `student_management_app/templates/`: UI templates
-- `student_management_app/static/`: CSS/JS/images/plugins
-- `.env.example`: safe environment variable template
-- `.gitignore`: excludes secrets, DB files, venvs, generated files
+### 👑 Owner / Principal / HOD
+- Full administrative oversight of students, staff, courses, and subjects.
+- Cross-departmental analytics and attendance oversight.
+- Management of leave requests (Approve/Reject).
+- System-wide notifications and feedback review.
 
-## 3. Data Model Overview
+### 👨‍🏫 Staff
+- Manage assigned students and track subject-wise attendance.
+- Upload/Update student results and internal marks.
+- Host live classrooms and interact with students.
+- Apply for leaves and submit professional feedback.
 
-Main entities:
-- `CustomUser` with role type: HOD (`1`), Staff (`2`), Student (`3`)
-- `AdminHOD`, `Staffs`, `Students` (role profiles)
-- `Courses`, `Subjects`, `SemesterModel`
-- `Attendance`, `AttendanceReport`
-- `LeaveReportStaff`, `LeaveReportStudent`
-- `FeedBackStaffs`, `FeedBackStudent`
-- `NotificationStaffs`, `NotificationStudent`
-- `StudentResult`
-- `OnlineClassRoom`
+### 🎓 Student
+- Personalized dashboard with attendance summaries and result tracking.
+- Join live classrooms directly from the dashboard.
+- View individual results and subject-wise performance.
+- Apply for leaves and submit academic feedback.
 
-## 4. Environment Configuration
+---
 
-This project reads sensitive/runtime values from environment variables in `student_management_system/settings.py`.
+## 🚀 Quick Start (Local Setup)
 
-Use `.env.example` as reference:
-
-```env
-DJANGO_SECRET_KEY=replace-with-secure-secret
-DJANGO_DEBUG=True
-DB_ENGINE=django.db.backends.sqlite3
-DB_NAME=db.sqlite3
-DB_USER=
-DB_PASSWORD=
-DB_HOST=
-DB_PORT=
-```
-
-Notes:
-- SQLite is default if DB variables are not overridden.
-- Do not commit `.env` or actual credentials.
-
-## 5. How to Run Locally
-
-### Step 1: Clone the repository
-
+### 1. Clone the Repository
 ```bash
 git clone https://github.com/Khush-1911/U-MAS.git
 cd U-MAS
 ```
 
-### Step 2: Create and activate virtual environment
-
+### 2. Set Up Virtual Environment
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
+python -m venv venv
+source venv/bin/activate  # Mac/Linux
+# venv\Scripts\activate  # Windows
 ```
 
-### Step 3: Install requirements
-
-No `requirements.txt` is currently committed. Install minimum required packages:
-
+### 3. Install Dependencies
 ```bash
-pip install django requests
+pip install -r requirements.txt
 ```
 
-If you use MySQL, also install an appropriate DB driver (example):
-
+### 4. Configure Environment
+Create a `.env` file from `.env.example`:
 ```bash
-pip install mysqlclient
+cp .env.example .env
 ```
+Update the `.env` with your `DJANGO_SECRET_KEY` and database credentials.
 
-### Step 4: Export environment variables (or use your shell profile)
-
+### 5. Run Migrations & Start Server
 ```bash
-export DJANGO_SECRET_KEY="change-this"
-export DJANGO_DEBUG="True"
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver
 ```
-
-### Step 5: Apply migrations
-
-```bash
-python3 manage.py migrate
-```
-
-### Step 6: Run server
-
-```bash
-python3 manage.py runserver
-```
-
-Open:
-- App: `http://127.0.0.1:8000/`
-- Django admin: `http://127.0.0.1:8000/admin/`
-
-## 6. Initial Setup Requirements (Important)
-
-Some code paths assume base records exist.
-
-1. Ensure at least one Course exists with ID `1`.
-2. Ensure at least one Session exists with ID `1`.
-
-Reason: `post_save` signal for student profile creation references the first available `Courses` and `SemesterModel` records.
-
-Recommended order for first-time setup:
-1. Create HOD/Admin account (`/signup_admin`)
-2. Login as HOD
-3. Add course(s)
-4. Add semester(s)
-5. Add staff
-6. Add subject(s)
-7. Add student(s) from staff or import them in bulk
-
-## 7. Role-Based Features and How to Use Them
-
-## HOD / Admin
-
-Entry page after login: `/admin_home`
-
-### Dashboard
-- View totals: Students, Staff, Courses, Subjects
-- View analytics charts for attendance and distribution
-
-### Staff Management
-- Add staff: `/add_staff`
-- Manage staff: `/manage_staff`
-- Edit staff: `/edit_staff/<staff_id>`
-- Delete staff: `/delete_staff/<staff_id>`
-
-### Student Management
-- Manage students: `/manage_student`
-- Edit student: `/edit_student/<student_id>`
-- Delete student: `/delete_student/<student_id>`
-
-### Course Management
-- Add course: `/add_course/`
-- Manage courses: `/manage_course`
-- Edit course: `/edit_course/<course_id>`
-- Delete course: `/delete_course/<course_id>`
-
-### Subject Management
-- Add subject: `/add_subject`
-- Manage subjects: `/manage_subject`
-- Edit subject: `/edit_subject/<subject_id>`
-- Delete subject: `/delete_subject/<subject_id>`
-
-### Semester Management
-- Manage/add semesters: `/manage_semester`
-- Delete semester: `/delete_semester/<semester_id>`
-
-### Leave Management
-- Student leave requests: `/student_leave_view`
-- Staff leave requests: `/staff_leave_view`
-- Approve/disapprove actions available from listing pages
-
-### Attendance Oversight
-- View attendance by subject/session/date: `/admin_view_attendance`
-
-### Feedback and Notifications
-- Student/staff feedback review + reply endpoints exist
-- Send notifications to staff/students via Firebase endpoints
-
-### Profile
-- Update HOD profile: `/admin_profile`
-
-## Staff
-
-Entry page after login: `/staff_home`
-
-### Dashboard
-- View all students, with edit/delete available only for assigned students
-- Attendance counts and subject-wise analytics
-
-### Attendance
-- Take attendance: `/staff_take_attendance`
-- Update attendance: `/staff_update_attendance`
-- Save endpoints: `save_attendance_data`, `save_updateattendance_data`
-
-### Leave
-- Apply leave: `/staff_apply_leave`
-
-### Feedback
-- Submit feedback: `/staff_feedback`
-
-### Profile
-- Update profile/password/address: `/staff_profile`
-
-### Notifications
-- Save FCM token: `/staff_fcmtoken_save`
-- View notifications: `/staff_all_notification`
-
-### Student Results
-- Add/update marks: `/staff_add_result`
-- Edit results via class-based view route: `/edit_student_result`
-
-### Live Classroom
-- Start classroom: `/start_live_classroom`
-- Process room creation/join data: `/start_live_classroom_process`
-
-## Student
-
-Entry page after login: `/student_home`
-
-### Dashboard
-- Total/present/absent attendance summary
-- Subject attendance chart
-- Active live classroom list for current session
-
-### Live Classroom
-- Join classroom: `/join_class_room/<subject_id>/<semester_id>`
-
-### Attendance
-- Attendance filter by subject/date range: `/student_view_attendance`
-
-### Leave
-- Apply leave: `/student_apply_leave`
-
-### Feedback
-- Submit feedback: `/student_feedback`
-
-### Profile
-- Update profile/password/address: `/student_profile`
-
-### Notifications
-- Save FCM token: `/student_fcmtoken_save`
-- View notifications: `/student_all_notification`
-
-### Results
-- View subject result records: `/student_view_result`
-
-## 8. Authentication and Authorization
-
-- Login route: `/`
-- Login processor: `/doLogin`
-- Logout: `/logout_user`
-- Role-based redirects after login:
-  - HOD -> `/admin_home`
-  - Staff -> `/staff_home`
-  - Student -> `/student_home`
-- Middleware enforces role-based path access (`LoginCheckMiddleWare`)
-
-## 9. Security and Production Notes
-
-Current codebase is suitable for development and learning deployments. Before production:
-
-1. Set `DJANGO_DEBUG=False`
-2. Set strict `ALLOWED_HOSTS`
-3. Use a strong secret key from environment
-4. Move reCAPTCHA secret key out of source code
-5. Replace placeholder Firebase server keys
-6. Use production DB credentials via environment variables
-7. Serve static/media with proper production setup (Nginx + Gunicorn/Uvicorn)
-8. Enable HTTPS and secure cookie settings
-
-## 10. Common Commands
-
-```bash
-python3 manage.py makemigrations
-python3 manage.py migrate
-python3 manage.py createsuperuser
-python3 manage.py runserver
-```
-
-## 11. Recent Project Changes Included
-
-- Custom modern UI theme replaces AdminLTE dependency usage in templates
-- HOD management pages support delete actions for:
-  - Staff
-  - Students
-  - Subjects
-  - Courses
-  - Sessions
-- Staff/Student manage lists now display role-table IDs for clearer separation
-- Last login column removed from HOD staff/student manage pages
-- Settings updated for environment-based secret and DB config
 
 ---
 
-If you want, the next improvement is adding a `requirements.txt` and `docker-compose.yml` so setup is one command and fully reproducible.
+## ☁️ Deployment (Render)
+
+This project is optimized for [Render](https://render.com). It uses `render.yaml` for infrastructure-as-code deployment.
+
+1. Connect your GitHub repository to Render.
+2. Render will automatically detect the `render.yaml` file.
+3. Configure the following Environment Variables in Render:
+   - `DATABASE_URL`: Your Neon PostgreSQL connection string.
+   - `DJANGO_SECRET_KEY`: A secure random string.
+   - `RECAPTCHA_SITE_KEY` & `RECAPTCHA_SECRET_KEY`: For login security.
+
+---
+
+## 🛡️ Security
+- **reCAPTCHA v3**: Integrated into the login flow to prevent bot attacks.
+- **Middleware Protection**: Custom role-based access control (RBAC) via `LoginCheckMiddleWare`.
+- **Environment Isolation**: Sensitive credentials are never hardcoded.
+
+---
+
+## 📝 Recent Updates
+- [x] Complete UI overhaul to **Editorial Ether** design system.
+- [x] Integration with Neon PostgreSQL for serverless scaling.
+- [x] Refined Staff/Student management with bulk action support.
+- [x] Enhanced responsive sidebar and glassmorphism components.
+
+---
+
+Developed with ❤️ by [Khush-1911](https://github.com/Khush-1911)
