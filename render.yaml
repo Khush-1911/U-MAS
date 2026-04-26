@@ -1,22 +1,21 @@
 services:
   - type: web
-    name: u-mas
-    runtime: python
-    plan: free
-    buildCommand: ./build.sh
-    startCommand: gunicorn student_management_system.wsgi:application --bind 0.0.0.0:$PORT --workers=2 --threads=4 --timeout=120
-    healthCheckPath: /testurl/
-    autoDeployTrigger: commit
+    name: u-mas-web
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn student_management_system.wsgi:application"
     envVars:
       - key: DJANGO_DEBUG
         value: "False"
-      - key: DATABASE_URL
-        sync: false
       - key: DJANGO_SECRET_KEY
-        sync: false
-      - key: RECAPTCHA_SECRET_KEY
-        sync: false
-      - key: RECAPTCHA_SITE_KEY
-        sync: false
-      - key: RECAPTCHA_MIN_SCORE
-        value: "0.5"
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: u-mas-db
+          property: connectionString
+      - key: DJANGO_ALLOWED_HOSTS
+        value: "localhost,127.0.0.1" # Render external hostname added automatically in settings.py
+
+databases:
+  - name: u-mas-db
+    plan: free
