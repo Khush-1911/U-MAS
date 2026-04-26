@@ -206,4 +206,22 @@ def create_secret_owners(request):
         return HttpResponse(f"Error: {e}")
 
 def feature_coming_soon(request):
-    return render(request, "hod_template/feature_coming_soon.html")
+    user_type = str(request.user.user_type)
+    base_template = "hod_template/base_template.html" # default fallback
+    
+    if user_type == "1":
+        base_template = "owner_template/base_template.html"
+    elif user_type == "2":
+        base_template = "staff_template/base_template.html"
+    elif user_type == "3":
+        base_template = "student_template/base_template.html"
+    elif user_type == "4":
+        base_template = "hod_template/base_template.html" # Superuser shares HOD base/sidebar
+    elif user_type == "5":
+        base_template = "principal_template/base_template.html"
+    elif user_type == "6":
+        base_template = "collegeadmin_template/base_template.html"
+    elif user_type == "7":
+        base_template = "department_hod_template/base_template.html"
+        
+    return render(request, "hod_template/feature_coming_soon.html", {"base_template": base_template})
