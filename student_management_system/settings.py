@@ -158,7 +158,10 @@ STATIC_URL = '/static/'
 if not DEBUG:
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 AUTH_USER_MODEL="student_management_app.CustomUser"
-AUTHENTICATION_BACKENDS=['student_management_app.EmailBackEnd.EmailBackEnd']
+AUTHENTICATION_BACKENDS = [
+    'student_management_app.EmailBackEnd.EmailBackEnd',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 EMAIL_BACKEND = os.getenv(
     "EMAIL_BACKEND",

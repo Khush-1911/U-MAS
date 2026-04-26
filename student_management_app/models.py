@@ -50,6 +50,7 @@ class CustomUser(AbstractUser):
         
         if str(self.user_type) == "1":
             self.is_superuser = True
+            self.is_staff = True
         
         if self.notification_email:
             self.notification_email = self.notification_email.strip().lower()
