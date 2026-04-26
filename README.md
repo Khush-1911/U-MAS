@@ -72,7 +72,7 @@ cd U-MAS
 ```bash
 python -m venv venv
 source venv/bin/activate  # Mac/Linux
-# venv\Scripts\activate  # Windows
+# .\.venv\Scripts\activate  # Windows
 ```
 
 ### 3. Install Dependencies
