@@ -9,20 +9,20 @@ U-MAS is a comprehensive, production-ready Django-based Student Management Syste
 
 ---
 
-## ✨ Key Features
+## Key Features
 
-- **🎨 Modern UI/UX**: Built with the "Editorial Ether" design system, featuring glassmorphism, fluid animations, and a high-contrast palette.
-- **🔐 Multi-Role Architecture**: Specialized dashboards for Owner, Principal, Superuser (HOD), College Admin, Staff, and Students.
-- **📊 Real-time Analytics**: Interactive charts (Chart.js) for attendance, performance tracking, and resource distribution.
-- **🎥 Live Classrooms**: Integrated real-time virtual classroom support via RTCMultiConnection.
-- **📝 Attendance Management**: Streamlined attendance tracking for staff with comprehensive reports for students and HODs.
-- **📄 Result Management**: Secure mark entry and result viewing for staff and students.
-- **📨 Feedback & Notifications**: Built-in feedback loop and Firebase-ready notification system.
-- **📅 Leave Management**: End-to-end workflow for applying and approving leave requests.
+- **Modern UI/UX**: Built with the "Editorial Ether" design system, featuring glassmorphism, fluid animations, and a high-contrast palette.
+- **Multi-Role Architecture**: Specialized dashboards for Owner, Principal, Superuser (HOD), College Admin, Staff, and Students.
+- **Real-time Analytics**: Interactive charts (Chart.js) for attendance, performance tracking, and resource distribution.
+- **Live Classrooms**: Integrated real-time virtual classroom support via RTCMultiConnection.
+- **Attendance Management**: Streamlined attendance tracking for staff with comprehensive reports for students and HODs.
+- **Result Management**: Secure mark entry and result viewing for staff and students.
+- **Feedback & Notifications**: Built-in feedback loop and Firebase-ready notification system.
+- **Leave Management**: End-to-end workflow for applying and approving leave requests.
 
 ---
 
-## 🏗️ Tech Stack
+## Tech Stack
 
 ### Backend
 - **Framework**: Django 4.2+ (Python 3.10+)
@@ -38,21 +38,21 @@ U-MAS is a comprehensive, production-ready Django-based Student Management Syste
 
 ---
 
-## 👥 Role-Based Capabilities
+## Role-Based Capabilities
 
-### 👑 Owner / Principal / HOD
+### Owner / Principal / HOD
 - Full administrative oversight of students, staff, courses, and subjects.
 - Cross-departmental analytics and attendance oversight.
 - Management of leave requests (Approve/Reject).
 - System-wide notifications and feedback review.
 
-### 👨‍🏫 Staff
+### Staff
 - Manage assigned students and track subject-wise attendance.
 - Upload/Update student results and internal marks.
 - Host live classrooms and interact with students.
 - Apply for leaves and submit professional feedback.
 
-### 🎓 Student
+### Student
 - Personalized dashboard with attendance summaries and result tracking.
 - Join live classrooms directly from the dashboard.
 - View individual results and subject-wise performance.
@@ -60,7 +60,7 @@ U-MAS is a comprehensive, production-ready Django-based Student Management Syste
 
 ---
 
-## 🚀 Quick Start (Local Setup)
+## Quick Start (Local Setup)
 
 ### 1. Clone the Repository
 ```bash
@@ -96,7 +96,7 @@ python manage.py runserver
 
 ---
 
-## ☁️ Deployment (Render)
+## Deployment (Render)
 
 This project is optimized for [Render](https://render.com). It uses `render.yaml` for infrastructure-as-code deployment.
 
@@ -109,14 +109,14 @@ This project is optimized for [Render](https://render.com). It uses `render.yaml
 
 ---
 
-## 🛡️ Security
+## Security
 - **reCAPTCHA v3**: Integrated into the login flow to prevent bot attacks.
 - **Middleware Protection**: Custom role-based access control (RBAC) via `LoginCheckMiddleWare`.
 - **Environment Isolation**: Sensitive credentials are never hardcoded.
 
 ---
 
-## 📝 Recent Updates
+## Recent Updates
 - [x] Complete UI overhaul to **Editorial Ether** design system.
 - [x] Integration with Neon PostgreSQL for serverless scaling.
 - [x] Refined Staff/Student management with bulk action support.
@@ -124,4 +124,4 @@ This project is optimized for [Render](https://render.com). It uses `render.yaml
 
 ---
 
-Developed with ❤️ by [Khush-1911](https://github.com/Khush-1911)
+Developed by [Khush-1911](https://github.com/Khush-1911)
