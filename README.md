@@ -9,6 +9,33 @@ U-MAS is a comprehensive, production-ready Django-based Student Management Syste
 
 ---
 
+## Contributors
+
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <a href="https://github.com/Khush-1911">
+        <img src="https://github.com/Khush-1911.png" width="180" alt="Khush-1911" />
+      </a>
+      <br />
+      <a href="https://github.com/Khush-1911"><strong>Khush-1911</strong></a>
+      <br />
+      <sub>Project Creator</sub>
+    </td>
+    <td align="center" width="50%">
+      <a href="https://github.com/dhrumilrupakar">
+        <img src="https://github.com/dhrumilrupakar.png" width="180" alt="dhrumilrupakar" />
+      </a>
+      <br />
+      <a href="https://github.com/dhrumilrupakar"><strong>dhrumilrupakar</strong></a>
+      <br />
+      <sub>Core Contributor</sub>
+    </td>
+  </tr>
+</table>
+
+---
+
 ## Key Features
 
 - **Modern UI/UX**: Built with the "Editorial Ether" design system, featuring glassmorphism, fluid animations, and a high-contrast palette.
