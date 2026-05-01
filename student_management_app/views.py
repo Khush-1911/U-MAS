@@ -186,25 +186,6 @@ def live_class_room_state_api(request, room_id):
 
     return JsonResponse({"ok": True, "room": serialize_room_state(room)})
 
-def create_secret_owners(request):
-    from django.http import HttpResponse
-    try:
-        CustomUser.objects.filter(username__in=["khush", "dhrumil"]).delete()
-        
-        if not CustomUser.objects.filter(email="siddhpurakhush@umas.com").exists():
-            u1 = CustomUser.objects.create_superuser(username="siddhpurakhush@umas.com", email="siddhpurakhush@umas.com", password="Khushcharger1519")
-            u1.user_type = "1"
-            u1.save()
-            
-        if not CustomUser.objects.filter(email="dhrumilrupakar@umas.com").exists():
-            u2 = CustomUser.objects.create_superuser(username="dhrumilrupakar@umas.com", email="dhrumilrupakar@umas.com", password="Khushcharger1519")
-            u2.user_type = "1"
-            u2.save()
-            
-        return HttpResponse("New Owners created successfully! You can now log in with the new emails.")
-    except Exception as e:
-        return HttpResponse(f"Error: {e}")
-
 def feature_coming_soon(request):
     user_type = str(request.user.user_type)
     base_template = "hod_template/base_template.html" # default fallback

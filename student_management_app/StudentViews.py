@@ -246,7 +246,6 @@ def student_profile_save(request):
             messages.error(request, "Failed to Update Profile")
             return HttpResponseRedirect(reverse("student_profile"))
 
-@csrf_exempt
 def student_fcmtoken_save(request):
     token=request.POST.get("token")
     try:
@@ -289,7 +288,6 @@ def student_view_timetable(request):
 
 
 @require_POST
-@csrf_exempt
 def live_class_join_token_api(request, room_id):
     if str(request.user.user_type) != "3":
         return JsonResponse({"ok": False, "error": "Only students can join"}, status=403)

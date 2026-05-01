@@ -35,7 +35,7 @@ def department_hod_upload_timetable(request):
         
     department = hod_profile.department
     classes = ClassModel.objects.filter(department=department)
-    semesters = SemesterModel.object.all()
+    semesters = SemesterModel.objects.all()
     
     return render(request, "department_hod_template/upload_timetable.html", {"classes": classes, "semesters": semesters})
 
@@ -52,7 +52,7 @@ def department_hod_upload_timetable_save(request):
 
         if timetable_file and class_id and semester_id:
             class_obj = ClassModel.objects.get(id=class_id, department=department)
-            semester_obj = SemesterModel.object.get(id=semester_id)
+            semester_obj = SemesterModel.objects.get(id=semester_id)
             # Save or update timetable
             timetable, created = Timetable.objects.get_or_create(
                 department=department,

@@ -654,7 +654,6 @@ def add_semester_save(request):
             messages.error(request, "Failed to Add Semester")
             return HttpResponseRedirect(reverse("manage_semester"))
 
-@csrf_exempt
 def check_email_exist(request):
     email=_normalize_email(request.POST.get("email"))
     user_obj=CustomUser.objects.filter(email__iexact=email).exists()
@@ -676,7 +675,6 @@ def student_feedback_message(request):
     )
     return render(request,"hod_template/student_feedback_template.html",{"feedbacks":feedbacks})
 
-@csrf_exempt
 def student_feedback_message_replied(request):
     feedback_id=request.POST.get("id")
     feedback_message=request.POST.get("message")
@@ -689,7 +687,6 @@ def student_feedback_message_replied(request):
     except:
         return HttpResponse("False")
 
-@csrf_exempt
 def staff_feedback_message_replied(request):
     feedback_id=request.POST.get("id")
     feedback_message=request.POST.get("message")
@@ -740,7 +737,6 @@ def admin_view_attendance(request):
     semesters=SemesterModel.objects.all()
     return render(request,"hod_template/admin_view_attendance.html",{"subjects":subjects,"semesters":semesters})
 
-@csrf_exempt
 def admin_get_attendance_dates(request):
     subject=request.POST.get("subject")
     semester_id=request.POST.get("semester_id")
@@ -755,7 +751,6 @@ def admin_get_attendance_dates(request):
     return JsonResponse(json.dumps(attendance_obj),safe=False)
 
 
-@csrf_exempt
 def admin_get_attendance_student(request):
     attendance_date=request.POST.get("attendance_date")
     attendance=Attendance.objects.get(id=attendance_date)
@@ -942,7 +937,6 @@ def send_bulk_notification(request):
     )
     return HttpResponseRedirect(reverse("admin_send_notification"))
 
-@csrf_exempt
 def send_student_notification(request):
     id=request.POST.get("id")
     title = (request.POST.get("title") or "Student Management System").strip()
@@ -967,7 +961,6 @@ def send_student_notification(request):
     print(data.text)
     return HttpResponse("True")
 
-@csrf_exempt
 def send_staff_notification(request):
     id=request.POST.get("id")
     title = (request.POST.get("title") or "Student Management System").strip()

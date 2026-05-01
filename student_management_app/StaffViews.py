@@ -719,7 +719,6 @@ def staff_take_attendance(request):
         },
     )
 
-@csrf_exempt
 def get_students(request):
     subject_id=request.POST.get("subject")
     semester_id=request.POST.get("semester_id")
@@ -763,7 +762,6 @@ def get_students(request):
         list_data.append(data_small)
     return JsonResponse(json.dumps(list_data),content_type="application/json",safe=False)
 
-@csrf_exempt
 def save_attendance_data(request):
     student_ids=request.POST.get("student_ids")
     subject_id=request.POST.get("subject_id")
@@ -820,7 +818,6 @@ def staff_update_attendance(request):
     subjects=Subjects.objects.filter(staff_id=request.user.id)
     return render(request,"staff_template/staff_update_attendance.html",{"subjects":subjects})
 
-@csrf_exempt
 def get_attendance_dates(request):
     subject=request.POST.get("subject")
     subject_obj=_subject_for_staff_or_none(subject, request.user.id)
@@ -835,7 +832,6 @@ def get_attendance_dates(request):
 
     return JsonResponse(json.dumps(attendance_obj),safe=False)
 
-@csrf_exempt
 def get_attendance_student(request):
     attendance_date=request.POST.get("attendance_date")
     attendance=Attendance.objects.filter(id=attendance_date).first()
@@ -853,7 +849,6 @@ def get_attendance_student(request):
         list_data.append(data_small)
     return JsonResponse(json.dumps(list_data),content_type="application/json",safe=False)
 
-@csrf_exempt
 def save_updateattendance_data(request):
     student_ids=request.POST.get("student_ids")
     attendance_date=request.POST.get("attendance_date")
@@ -1021,7 +1016,6 @@ def staff_profile_save(request):
             messages.error(request, "Failed to Update Profile")
             return HttpResponseRedirect(reverse("staff_profile"))
 
-@csrf_exempt
 def staff_fcmtoken_save(request):
     token=request.POST.get("token")
     try:
@@ -1076,7 +1070,6 @@ def save_student_result(request):
         messages.error(request, "Failed to Add Result")
         return HttpResponseRedirect(reverse("staff_add_result"))
 
-@csrf_exempt
 def fetch_result_student(request):
     subject_id=request.POST.get('subject_id')
     student_id=request.POST.get('student_id')
@@ -1165,7 +1158,6 @@ def end_live_classroom_api(request, room_id):
 
 
 @require_POST
-@csrf_exempt
 def save_live_class_snapshot_api(request, room_id):
     if str(request.user.user_type) != "2":
         return JsonResponse({"ok": False, "error": "Only staff can save snapshot"}, status=403)
