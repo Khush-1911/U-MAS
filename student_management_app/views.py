@@ -11,7 +11,6 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 
-from student_management_app.EmailBackEnd import EmailBackEnd
 from student_management_app.models import CustomUser, Department, SemesterModel, OnlineClassRoom, Staffs, Students
 from student_management_app.services.live_class_service import serialize_room_state
 from student_management_system import settings
@@ -95,9 +94,13 @@ def doLogin(request):
                 messages.error(request, "Captcha score too low. Please try again.")
                 return HttpResponseRedirect("/")
 
-        user=EmailBackEnd.authenticate(request,username=request.POST.get("email"),password=request.POST.get("password"))
+        user = authenticate(
+            request,
+            username=request.POST.get("email"),
+            password=request.POST.get("password"),
+        )
         if user!=None:
-            login(request,user)
+            login(request, user)
             user_type = str(user.user_type)
             if user_type == "1":
                 return HttpResponseRedirect(reverse("owner_home"))
