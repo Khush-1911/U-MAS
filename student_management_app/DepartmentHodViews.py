@@ -4,6 +4,14 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect
 from student_management_app.models import CustomUser, Institution, Staffs, Students, Department, HOD, Timetable, ClassModel, SemesterModel
 
+
+def _department_for_hod(request):
+    try:
+        hod_profile = HOD.objects.select_related("department").get(admin=request.user)
+    except HOD.DoesNotExist:
+        return None
+    return hod_profile.department
+
 def department_hod_home(request):
     try:
         hod_profile = HOD.objects.get(admin=request.user)
@@ -38,6 +46,24 @@ def department_hod_upload_timetable(request):
     semesters = SemesterModel.objects.all()
     
     return render(request, "department_hod_template/upload_timetable.html", {"classes": classes, "semesters": semesters})
+
+
+def department_hod_manage_students(request):
+    department = _department_for_hod(request)
+    if not department:
+        messages.error(request, "No department is assigned to this HOD.")
+        return HttpResponseRedirect(reverse("department_hod_home"))
+
+    students = (
+        Students.objects.filter(class_id__department=department)
+        .select_related("admin", "class_id", "semester_id", "mentor__admin")
+        .order_by("class_id__class_name", "admin__first_name", "admin__last_name", "id")
+    )
+    return render(
+        request,
+        "department_hod_template/manage_students.html",
+        {"department": department, "students": students},
+    )
 
 def department_hod_upload_timetable_save(request):
     if request.method != "POST":

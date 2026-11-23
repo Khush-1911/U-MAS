@@ -20,6 +20,7 @@ sent_mails/
 .env
 .env.*
 !.env.example
+login-details/
 
 # IDE / OS
 .DS_Store

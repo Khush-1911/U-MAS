@@ -1,103 +1,109 @@
 {% extends 'staff_template/base_template.html' %}
-{% block page_title %}
-Students Under Me
-{% endblock page_title %}
-{% block main_content %}
+{% block page_title %}My Students{% endblock page_title %}
 
-    <div class="row">
-      <div class="col-lg-5">
-        <div class="bg-surface-container-lowest rounded-2xl overflow-hidden">
-          <div class="px-8 py-5 border-b border-outline-variant/10"><h3 class="font-headline font-bold text-on-surface text-lg">Send Notification</h3></div>
-          <form action="{% url 'staff_send_student_notification' %}" method="post">
-            {% csrf_token %}
-            <div class="p-8 space-y-6">
-              <div class="space-y-2">
-                <label class="block font-label text-sm font-bold text-on-surface-variant">Title of Notification</label>
-                <input
-                  class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body"
-                  type="text"
-                  name="title"
-                  maxlength="255"
-                  placeholder="Enter notification title"
-                  required
-                >
-              </div>
-              <div class="space-y-2">
-                <label class="block font-label text-sm font-bold text-on-surface-variant">Body of Notification</label>
-                <textarea class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body resize-y" rows="4" name="message" placeholder="Enter notification message" required></textarea>
-              </div>
-              <div class="space-y-2">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                  <label class="mb-0">Select Assigned Students</label>
-                  <button class="px-3 py-1 bg-primary/10 text-primary font-label font-bold text-[10px] uppercase tracking-widest rounded-lg hover:bg-primary/20 transition-colors border-none cursor-pointer" type="button" id="select_all_students">Select Entire Roster</button>
-                </div>
-                <div class="border rounded p-2" style="max-height: 280px; overflow-y: auto;">
-                  {% for student in students %}
-                    <div class="form-check mb-1 student-item" data-department-id="{{ student.class_id.department.id }}">
-                      <input class="form-check-input student-checkbox" type="checkbox" name="student_ids" value="{{ student.admin.id }}" id="student_{{ student.admin.id }}">
-                      <label class="text-sm font-body text-on-surface cursor-pointer" for="student_{{ student.admin.id }}">
-                      {{ student.profile_id|default:student.id }} - {{ student.admin.get_full_name|default:student.admin.username }} ({{ student.class_id.class_name }} - {{ student.class_id.department.department_name }})
-                      </label>
-                  </div>
-                  {% empty %}
-                  <p class="text-on-surface-variant text-sm">No students assigned.</p>
-                  {% endfor %}
-                </div>
-                <p class="text-xs text-on-surface-variant mt-1">
-                  Selected students receive this in the app and by email.
-                </p>
-              </div>
-              {% if messages %}
-                {% for message in messages %}
-                  {% if message.tags == 'error' %}
-                  <div class="px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 bg-error/10 text-error">{{ message }}</div>
-                  {% endif %}
-                  {% if message.tags == 'success' %}
-                  <div class="px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 bg-green-100 text-green-700">{{ message }}</div>
-                  {% endif %}
-                {% endfor %}
-              {% endif %}
-            </div>
-            <div class="px-8 py-6 border-t border-outline-variant/20">
-              <button type="submit" class="w-full py-4 premium-gradient text-white font-display font-bold rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform">Send Notification</button>
-            </div>
-          </form>
+{% block main_content %}
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+  <div class="space-y-1">
+    <h2 class="text-4xl font-display font-extrabold text-on-surface tracking-tight">My Students</h2>
+    <p class="text-on-surface-variant max-w-2xl">Students are visible when you are their mentor or teach a subject in their class. Notifications can only be sent to this list.</p>
+  </div>
+  <span class="px-4 py-2 rounded-xl bg-primary/10 text-primary text-xs font-label font-bold uppercase tracking-wider">{{ students|length }} eligible student{{ students|length|pluralize }}</span>
+</div>
+
+<div class="grid grid-cols-1 xl:grid-cols-5 gap-6 items-start">
+  <section class="xl:col-span-2 bg-surface-container-lowest rounded-2xl overflow-hidden border border-outline-variant/10 shadow-xl shadow-indigo-900/5">
+    <div class="px-6 py-5 border-b border-outline-variant/10">
+      <h3 class="font-headline font-bold text-on-surface text-lg">Lecture Announcement</h3>
+      <p class="text-sm text-on-surface-variant mt-1">Share upcoming lecture information with selected eligible students.</p>
+    </div>
+    <form action="{% url 'staff_send_student_notification' %}" method="post">
+      {% csrf_token %}
+      <div class="p-6 space-y-5">
+        <div class="space-y-2">
+          <label class="block font-label text-sm font-bold text-on-surface-variant" for="notification-title">Title</label>
+          <input id="notification-title" class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" type="text" name="title" maxlength="255" placeholder="e.g. Tomorrow's Python lecture" required>
         </div>
-      </div>
-      <div class="col-lg-7">
-        <div class="bg-surface-container-lowest rounded-2xl overflow-hidden">
-          <div class="px-8 py-5 border-b border-outline-variant/10"><h3 class="font-headline font-bold text-on-surface text-lg">Assigned Students</h3></div>
-          <div class="p-8 space-y-6">
-            <table class="w-full text-left border-collapse">
-              <thead>
-                <tr>
-                  <th>Student ID</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Department</th>
-                  <th>Semester</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for student in students %}
-                <tr>
-                  <td>{{ student.profile_id|default:student.id }}</td>
-                  <td>{{ student.admin.first_name }} {{ student.admin.last_name }}</td>
-                  <td>{{ student.admin.email }}</td>
-                  <td>{{ student.class_id.class_name }} ({{ student.class_id.department.department_name }})</td>
-                  <td>{{ student.semester_id.semester_start_date|date:"d-m-Y" }} to {{ student.semester_id.semester_end_date|date:"d-m-Y" }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                  <td colspan="5">No students assigned.</td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
+        <div class="space-y-2">
+          <label class="block font-label text-sm font-bold text-on-surface-variant" for="notification-message">Lecture details</label>
+          <textarea id="notification-message" class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body resize-y" rows="5" name="message" placeholder="Include date, time, room or online meeting details." required></textarea>
+        </div>
+        <div class="space-y-3">
+          <div class="flex justify-between items-center gap-3">
+            <label class="font-label text-sm font-bold text-on-surface-variant">Recipients</label>
+            <button class="px-3 py-1 bg-primary/10 text-primary font-label font-bold text-[10px] uppercase tracking-widest rounded-lg hover:bg-primary/20 transition-colors border-none cursor-pointer" type="button" id="select_all_students">Select all</button>
           </div>
+          <div class="border border-outline-variant/20 rounded-xl p-3 max-h-72 overflow-y-auto bg-surface-container-low/40">
+            {% for student in students %}
+            <label class="flex gap-3 items-start py-2.5 border-b border-outline-variant/10 last:border-0 cursor-pointer" for="student_{{ student.id }}">
+              <input class="student-checkbox mt-1" type="checkbox" name="student_ids" value="{{ student.id }}" id="student_{{ student.id }}">
+              <span>
+                <span class="block text-sm font-semibold text-on-surface">{{ student.admin.get_full_name|default:student.admin.username }}</span>
+                <span class="block text-xs text-on-surface-variant">{{ student.access_scope }}</span>
+              </span>
+            </label>
+            {% empty %}
+            <p class="text-on-surface-variant text-sm py-4 text-center">No students are linked to your mentorship or teaching assignments.</p>
+            {% endfor %}
+          </div>
+          <p class="text-xs text-on-surface-variant">Selected students receive the announcement in the portal and by email.</p>
         </div>
-      
+        {% for message in messages %}
+        <div class="px-4 py-3 rounded-xl text-sm {% if message.tags == 'error' %}bg-error/10 text-error{% else %}bg-green-100 text-green-700{% endif %}">{{ message }}</div>
+        {% endfor %}
+      </div>
+      <div class="px-6 py-5 border-t border-outline-variant/20">
+        <button type="submit" class="w-full py-3 premium-gradient text-white font-display font-bold rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform">Send Announcement</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="xl:col-span-3 bg-surface-container-lowest rounded-2xl overflow-hidden border border-outline-variant/10 shadow-xl shadow-indigo-900/5">
+    <div class="px-6 py-5 border-b border-outline-variant/10">
+      <h3 class="font-headline font-bold text-on-surface text-lg">Eligible Student List</h3>
+      <p class="text-sm text-on-surface-variant mt-1">Read-only roster for your mentorship and subject classes.</p>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-[760px] w-full text-left border-collapse">
+        <thead class="bg-surface-container-low/60">
+          <tr>
+            <th class="px-6 py-4 text-xs font-label uppercase tracking-widest text-on-surface-variant">Student</th>
+            <th class="px-6 py-4 text-xs font-label uppercase tracking-widest text-on-surface-variant">Program / Department</th>
+            <th class="px-6 py-4 text-xs font-label uppercase tracking-widest text-on-surface-variant">Semester</th>
+            <th class="px-6 py-4 text-xs font-label uppercase tracking-widest text-on-surface-variant">Mentor</th>
+            <th class="px-6 py-4 text-xs font-label uppercase tracking-widest text-on-surface-variant">Access</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for student in students %}
+          <tr class="border-t border-outline-variant/10 hover:bg-primary-fixed/20 transition-colors">
+            <td class="px-6 py-4 align-top">
+              <p class="font-display font-bold text-on-surface text-sm">{{ student.admin.get_full_name|default:student.admin.username }}</p>
+              <p class="text-xs text-on-surface-variant mt-1">{{ student.profile_id|default:student.id }} · {{ student.admin.email }}</p>
+            </td>
+            <td class="px-6 py-4 align-top">
+              <p class="font-medium text-on-surface text-sm">{{ student.class_id.class_name|default:"Unassigned class" }}</p>
+              <p class="text-xs text-on-surface-variant mt-1">{{ student.class_id.department.department_name|default:"Unassigned department" }}</p>
+            </td>
+            <td class="px-6 py-4 align-top text-sm text-on-surface-variant whitespace-nowrap">
+              {% if student.semester_id %}{{ student.semester_id.semester_start_date|date:"d M Y" }} – {{ student.semester_id.semester_end_date|date:"d M Y" }}{% else %}Unassigned{% endif %}
+            </td>
+            <td class="px-6 py-4 align-top text-sm text-on-surface">
+              {% if student.mentor %}{{ student.mentor.admin.get_full_name|default:student.mentor.admin.username }}{% else %}Unassigned{% endif %}
+            </td>
+            <td class="px-6 py-4 align-top">
+              <span class="inline-flex px-2.5 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-label font-bold">{{ student.access_scope }}</span>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="5" class="px-8 py-16 text-center text-on-surface-variant">No eligible students found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
 {% endblock main_content %}
+
 {% block custom_js %}
 <script>
   $(document).ready(function() {

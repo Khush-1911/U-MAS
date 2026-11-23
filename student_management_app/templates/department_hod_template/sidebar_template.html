@@ -20,6 +20,12 @@
       <span class="material-symbols-outlined">calendar_month</span>
       <span>Upload Timetable</span>
     </a>
+
+    {% url 'department_hod_manage_students' as department_hod_manage_students %}
+    <a class="{% if request.path == department_hod_manage_students %}relative flex items-center gap-3 px-8 py-3 text-indigo-600 font-bold before:absolute before:left-0 before:h-6 before:w-1 before:bg-gradient-to-b before:from-indigo-600 before:to-indigo-400 before:rounded-r-full{% else %}flex items-center gap-3 px-8 py-3 text-slate-500 hover:bg-white/50 hover:text-indigo-600 transition-all duration-300{% endif %} font-medium" href="{{ department_hod_manage_students }}">
+      <span class="material-symbols-outlined">groups</span>
+      <span>Student Roster</span>
+    </a>
   </nav>
 
   <div class="pt-6 border-t border-slate-200/50 px-2 space-y-1">

@@ -1,12 +1,12 @@
-# Graph Report - U-MAS  (2026-05-01)
+# Graph Report - U-MAS  (2026-11-23)
 
 ## Corpus Check
-- 2697 files · ~8,385,095 words
+- 2699 files · ~8,386,174 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 9754 nodes · 33203 edges · 135 communities detected
-- Extraction: 82% EXTRACTED · 18% INFERRED · 0% AMBIGUOUS · INFERRED: 5814 edges (avg confidence: 0.79)
+- 9767 nodes · 33238 edges · 135 communities detected
+- Extraction: 82% EXTRACTED · 18% INFERRED · 0% AMBIGUOUS · INFERRED: 5834 edges (avg confidence: 0.79)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
@@ -148,9 +148,9 @@
 
 ## God Nodes (most connected - your core abstractions)
 1. `indexOf()` - 343 edges
-2. `get()` - 257 edges
+2. `get()` - 260 edges
 3. `replace()` - 256 edges
-4. `filter()` - 187 edges
+4. `filter()` - 189 edges
 5. `concat()` - 173 edges
 6. `max()` - 172 edges
 7. `each()` - 161 edges
@@ -159,150 +159,150 @@
 10. `_()` - 126 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `student_profile()` --calls--> `get()`  [INFERRED]
-  student_management_app/StudentViews.py → static/plugins/pdfmake/pdfmake.js
-- `student_notification_mark_read()` --calls--> `update()`  [INFERRED]
-  student_management_app/StudentViews.py → static/sweetalert2/sweetalert2.js
 - `EditResultViewClass` --uses--> `student_management_system URL Configuration  The `urlpatterns` list routes URLs`  [INFERRED]
-  student_management_app/EditResultVIewClass.py → student_management_system/urls.py
-- `create_user_profile()` --calls--> `create()`  [INFERRED]
-  student_management_app/models.py → static/plugins/summernote/summernote-lite.js
-- `principal_home()` --calls--> `filter()`  [INFERRED]
-  student_management_app/PrincipalViews.py → static/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.js
+  /Users/buntie/Desktop/Project ETC/U-MAS/student_management_app/EditResultVIewClass.py → student_management_system/urls.py
+- `StaffAddStudentForm` --calls--> `staff_add_student()`  [INFERRED]
+  /Users/buntie/Desktop/Project ETC/U-MAS/student_management_app/forms.py → student_management_app/StaffViews.py
+- `_student_queryset_visible_to_staff()` --calls--> `q()`  [INFERRED]
+  student_management_app/StaffViews.py → /Users/buntie/Desktop/Project ETC/U-MAS/static/datatables-colreorder/js/dataTables.colReorder.min.js
+- `_resolve_fallback_semester()` --calls--> `create()`  [INFERRED]
+  student_management_app/StaffViews.py → /Users/buntie/Desktop/Project ETC/U-MAS/static/plugins/summernote/summernote-lite.js
+- `_extract_import_rows()` --calls--> `detach()`  [INFERRED]
+  student_management_app/StaffViews.py → /Users/buntie/Desktop/Project ETC/U-MAS/static/jquery-ui/external/jquery/jquery.js
 
 ## Communities
 
 ### Community 0 - "Community 0"
 Cohesion: 0.01
-Nodes (763): toString(), removeListener(), guid(), vt(), reduce(), reset(), a(), c() (+755 more)
+Nodes (738): parseClassName(), vt(), reduce(), reset(), AATLayoutEngine(), AATLookupTable(), AATMorxProcessor(), AATStateMachine() (+730 more)
 
 ### Community 1 - "Community 1"
 Cohesion: 0.01
-Nodes (518): buildDayTable(), compareDaySegCols(), DayBgRow(), DayGrid(), DayGridDateProfileGenerator(), DayGridEventRenderer(), DayGridFillRenderer(), DayGridMirrorRenderer() (+510 more)
+Nodes (399): AbstractUser, filter(), handleFormReset(), handleInputChange(), ChoiceField, Exception, Calendar, CalendarComponent (+391 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.01
-Nodes (392): AbstractUser, filter(), handleFormReset(), handleInputChange(), ChoiceField, Exception, Calendar, CalendarComponent (+384 more)
+Cohesion: 0.02
+Nodes (426): updateRelatedObjectLinks(), D(), e(), F(), ha(), ia(), K(), ka() (+418 more)
 
 ### Community 3 - "Community 3"
-Cohesion: 0.02
-Nodes (405): updateConfig(), updateConfig(), abs(), absCeil(), absFloor(), absRound(), abstract(), add$1() (+397 more)
+Cohesion: 0.01
+Nodes (486): toDate(), valueOf(), buildDayTable(), compareDaySegCols(), DayBgRow(), DayGrid(), DayGridDateProfileGenerator(), DayGridEventRenderer() (+478 more)
 
 ### Community 4 - "Community 4"
 Cohesion: 0.02
-Nodes (338): addPopupIndex(), dismissAddRelatedObjectPopup(), dismissChangeRelatedObjectPopup(), dismissChildPopups(), dismissDeleteRelatedObjectPopup(), dismissRelatedLookupPopup(), removePopupIndex(), showAdminPopup() (+330 more)
+Nodes (407): updateConfig(), updateConfig(), abs(), absCeil(), absFloor(), absRound(), abstract(), add$1() (+399 more)
 
 ### Community 5 - "Community 5"
-Cohesion: 0.02
-Nodes (322): toDate(), valueOf(), addDays(), addDurations(), addEvent(), addMs(), addSources(), addToHash() (+314 more)
+Cohesion: 0.03
+Nodes (299): warn(), applyStyle(), applyStyleOnLoad(), arrow(), attachToScrollParents(), clockwise(), computeAutoPlacement(), computeStyle() (+291 more)
 
 ### Community 6 - "Community 6"
-Cohesion: 0.03
-Nodes (281): warn(), applyStyle(), applyStyleOnLoad(), arrow(), attachToScrollParents(), clockwise(), computeAutoPlacement(), computeStyle() (+273 more)
+Cohesion: 0.02
+Nodes (316): addDays(), addDurations(), addEvent(), addMs(), addSources(), addToHash(), addWeeks(), allConstraintsPass() (+308 more)
 
 ### Community 7 - "Community 7"
 Cohesion: 0.03
-Nodes (298): abs(), absCeil(), absFloor(), absRound(), add$1(), addFormatToken(), addParseToken(), addRegexToken() (+290 more)
+Nodes (269): extend(), DependencyLib(), getWindow(), indexOf(), isArraylike(), isValidElement(), isWindow(), isArrayLike() (+261 more)
 
 ### Community 8 - "Community 8"
 Cohesion: 0.03
-Nodes (266): extend(), DependencyLib(), getWindow(), indexOf(), isArraylike(), isValidElement(), isWindow(), isArrayLike() (+258 more)
+Nodes (298): abs(), absCeil(), absFloor(), absRound(), add$1(), addFormatToken(), addParseToken(), addRegexToken() (+290 more)
 
 ### Community 9 - "Community 9"
 Cohesion: 0.03
-Nodes (266): affectedCheckboxes(), checker(), clearAcross(), hide(), ready(), show(), showClear(), showQuestion() (+258 more)
+Nodes (261): affectedCheckboxes(), checker(), clearAcross(), hide(), ready(), show(), showClear(), showQuestion() (+253 more)
 
 ### Community 10 - "Community 10"
 Cohesion: 0.04
-Nodes (211): max(), _(), a(), ae(), ai(), an(), At(), b() (+203 more)
+Nodes (204): b(), c(), e(), toString(), removeListener(), guid(), a(), at() (+196 more)
 
 ### Community 11 - "Community 11"
-Cohesion: 0.05
-Nodes (199): _(), a(), Ae(), an(), at(), b(), be(), bt() (+191 more)
+Cohesion: 0.04
+Nodes (206): max(), _(), a(), ae(), ai(), an(), At(), b() (+198 more)
 
 ### Community 12 - "Community 12"
 Cohesion: 0.05
-Nodes (181): b(), c(), e(), a(), at(), c(), e(), f() (+173 more)
+Nodes (193): _(), a(), Ae(), an(), at(), b(), be(), bt() (+185 more)
 
 ### Community 13 - "Community 13"
-Cohesion: 0.03
-Nodes (168): D(), e(), F(), ha(), ia(), K(), ka(), L() (+160 more)
-
-### Community 14 - "Community 14"
-Cohesion: 0.04
-Nodes (147): p(), v(), a(), at(), e(), f(), ft(), I() (+139 more)
-
-### Community 15 - "Community 15"
 Cohesion: 0.04
 Nodes (159): abstract(), addListener(), addResizeListener(), adjustPointPositionForLabelHeight(), arrayUnique(), boundingRects(), buildGraph(), buildLayoutBoxes() (+151 more)
 
-### Community 16 - "Community 16"
-Cohesion: 0.04
-Nodes (106): a(), b(), c(), d(), e(), f(), g(), h() (+98 more)
-
-### Community 17 - "Community 17"
+### Community 14 - "Community 14"
 Cohesion: 0.05
-Nodes (148): accumulate(), adler32(), arrayLikeToArrayLike(), arrayLikeToString(), ArrayReader(), bi_flush(), bi_reverse(), bi_windup() (+140 more)
+Nodes (147): accumulate(), adler32(), arrayLikeToArrayLike(), arrayLikeToString(), ArrayReader(), bi_flush(), bi_reverse(), bi_windup() (+139 more)
 
-### Community 18 - "Community 18"
-Cohesion: 0.06
-Nodes (128): createNewSlider(), defineBridget(), getPositionPercentages(), noop(), attachToScrollParents(), computeAutoPlacement(), find(), findCommonOffsetParent() (+120 more)
+### Community 15 - "Community 15"
+Cohesion: 0.04
+Nodes (115): p(), v(), a(), at(), e(), f(), ft(), I() (+107 more)
 
-### Community 19 - "Community 19"
+### Community 16 - "Community 16"
 Cohesion: 0.05
 Nodes (138): ToUpperCase(), addCellInfoToVirtual(), adjustStartPoint(), AirPopover(), all(), ancestor(), and(), appendChildNodes() (+130 more)
 
-### Community 20 - "Community 20"
+### Community 17 - "Community 17"
 Cohesion: 0.05
 Nodes (137): addCellInfoToVirtual(), adjustStartPoint(), AirPopover(), all(), ancestor(), and(), appendChildNodes(), attachEvents() (+129 more)
+
+### Community 18 - "Community 18"
+Cohesion: 0.04
+Nodes (127): FastClick(), AjaxAdapter(), AllowClear(), ArrayAdapter(), AttachBody(), AttachContainer(), BaseAdapter(), BaseConstructor() (+119 more)
+
+### Community 19 - "Community 19"
+Cohesion: 0.04
+Nodes (82): a(), b(), c(), d(), e(), f(), g(), h() (+74 more)
+
+### Community 20 - "Community 20"
+Cohesion: 0.08
+Nodes (111): _(), _a(), Aa(), ad(), Ae(), an(), b(), be() (+103 more)
 
 ### Community 21 - "Community 21"
 Cohesion: 0.07
 Nodes (108): Animation(), base3(), bezlen(), cacher(), catmullRom2bezier(), clone(), clrToString(), CubicBezierAtTime() (+100 more)
 
 ### Community 22 - "Community 22"
-Cohesion: 0.08
-Nodes (111): _(), _a(), Aa(), ad(), Ae(), an(), b(), be() (+103 more)
+Cohesion: 0.09
+Nodes (110): $(), a(), ae(), ar(), at(), b(), be(), bt() (+102 more)
 
 ### Community 23 - "Community 23"
 Cohesion: 0.09
-Nodes (110): $(), a(), ae(), ar(), at(), b(), be(), bt() (+102 more)
+Nodes (84): createNewSlider(), defineBridget(), getPositionPercentages(), noop(), a(), b(), c(), d() (+76 more)
 
 ### Community 24 - "Community 24"
 Cohesion: 0.07
 Nodes (72): _init(), _classCallCheck(), DateTimePicker(), defineProperties(), _inherits(), _possibleConstructorReturn(), TempusDominusBootstrap4(), CheckboxField() (+64 more)
 
 ### Community 25 - "Community 25"
+Cohesion: 0.08
+Nodes (65): AddonHandler(), assertArray(), buildGraph(), clamp(), _classCallCheck(), Color(), ColorHandler(), ColorItem() (+57 more)
+
+### Community 26 - "Community 26"
 Cohesion: 0.11
 Nodes (64): applyStyle(), applyStyleOnLoad(), arrow(), attachToScrollParents(), clockwise(), computeAutoPlacement(), computeStyle(), destroy() (+56 more)
 
-### Community 26 - "Community 26"
+### Community 27 - "Community 27"
 Cohesion: 0.09
 Nodes (69): addCombinator(), addGetHookIf(), addHandle(), adjustCSS(), adoptValue(), assert(), boxModelAdjustment(), buildFragment() (+61 more)
 
-### Community 27 - "Community 27"
+### Community 28 - "Community 28"
+Cohesion: 0.1
+Nodes (59): addPopupIndex(), dismissAddRelatedObjectPopup(), dismissChangeRelatedObjectPopup(), dismissChildPopups(), dismissDeleteRelatedObjectPopup(), dismissRelatedLookupPopup(), removePopupIndex(), showAdminPopup() (+51 more)
+
+### Community 29 - "Community 29"
+Cohesion: 0.1
+Nodes (56): Animation(), base3(), bezlen(), cacher(), catmullRom2bezier(), clone(), clrToString(), CubicBezierAtTime() (+48 more)
+
+### Community 30 - "Community 30"
 Cohesion: 0.11
 Nodes (55): eifelerRegelAppliesToNumber(), format(), forms(), isFunction(), lastNumber(), mutation(), numberAsNoun(), plural() (+47 more)
 
-### Community 28 - "Community 28"
-Cohesion: 0.1
-Nodes (52): alignDigits(), analyseMask(), autoEscape(), buildPostMask(), defaultCase(), generateMaskSet(), getTokenizer(), groupify() (+44 more)
-
-### Community 29 - "Community 29"
+### Community 31 - "Community 31"
 Cohesion: 0.18
 Nodes (45): cloneInline(), _(), a(), b(), be(), c(), ce(), d() (+37 more)
 
-### Community 30 - "Community 30"
+### Community 32 - "Community 32"
 Cohesion: 0.07
 Nodes (39): isRegExp(), addMatch(), asXRegExp(), augment(), buildAstral(), cacheAstral(), cacheInvertedBmp(), charCode() (+31 more)
-
-### Community 31 - "Community 31"
-Cohesion: 0.14
-Nodes (47): _assertThisInitialized(), _classCallCheck(), _construct(), _createClass(), _defineProperties(), disableButtons(), disableConfirmButton(), disableInput() (+39 more)
-
-### Community 32 - "Community 32"
-Cohesion: 0.22
-Nodes (45): _(), a(), ae(), b(), be(), c(), ce(), d() (+37 more)
 
 ### Community 33 - "Community 33"
 Cohesion: 0.17
@@ -318,79 +318,79 @@ Nodes (44): attachToScrollParents(), computeAutoPlacement(), find(), findCommonO
 
 ### Community 36 - "Community 36"
 Cohesion: 0.18
-Nodes (41): a(), ae(), bn(), Bt(), c(), ce(), ee(), fe() (+33 more)
+Nodes (44): attachToScrollParents(), computeAutoPlacement(), find(), findCommonOffsetParent(), findIndex(), getArea(), getBordersSize(), getBoundaries() (+36 more)
 
 ### Community 37 - "Community 37"
 Cohesion: 0.13
-Nodes (31): a(), b(), d(), Alert(), allowedAttribute(), Button(), Carousel(), _createClass() (+23 more)
+Nodes (45): a(), ae(), at(), b(), be(), ce(), D(), de() (+37 more)
 
 ### Community 38 - "Community 38"
 Cohesion: 0.18
-Nodes (36): AddonHandler(), assertArray(), buildGraph(), clamp(), _classCallCheck(), Color(), ColorHandler(), ColorItem() (+28 more)
+Nodes (41): a(), ae(), bn(), Bt(), c(), ce(), ee(), fe() (+33 more)
 
 ### Community 39 - "Community 39"
 Cohesion: 0.16
 Nodes (35): Ae(), b(), be(), ca(), D(), de(), ea(), fe() (+27 more)
 
 ### Community 40 - "Community 40"
-Cohesion: 0.2
-Nodes (28): Animation(), base3(), bezlen(), cacher(), catmullRom2bezier(), clone(), clrToString(), CubicBezierAtTime() (+20 more)
+Cohesion: 0.16
+Nodes (28): Alert(), allowedAttribute(), Button(), Carousel(), _createClass(), _defineProperties(), _defineProperty(), Dropdown() (+20 more)
 
 ### Community 41 - "Community 41"
+Cohesion: 0.35
+Nodes (27): _(), a(), b(), c(), d(), e(), f(), g() (+19 more)
+
+### Community 42 - "Community 42"
 Cohesion: 0.24
 Nodes (26): a(), aa(), ac(), af(), B(), c(), D(), E() (+18 more)
 
-### Community 42 - "Community 42"
+### Community 43 - "Community 43"
 Cohesion: 0.33
 Nodes (26): A(), b(), c(), d(), e(), f(), g(), h() (+18 more)
 
-### Community 43 - "Community 43"
+### Community 44 - "Community 44"
+Cohesion: 0.26
+Nodes (12): analyseMask(), getTokenizer(), isDateInRange(), isValidDate(), analyseMask(), getTokenizer(), isDateInRange(), isValidDate() (+4 more)
+
+### Community 45 - "Community 45"
 Cohesion: 0.31
 Nodes (14): AjaxMonitor(), Bar(), ctor(), DocumentMonitor(), ElementMonitor(), ElementTracker(), Evented(), EventLagMonitor() (+6 more)
 
-### Community 44 - "Community 44"
+### Community 46 - "Community 46"
 Cohesion: 0.34
 Nodes (12): AutoScroller, ElementMirror, ElementScrollGeomCache, ExternalDraggable, ExternalElementDragging, FeaturefulElementDragging, HitDragging, InferredElementDragging (+4 more)
 
-### Community 45 - "Community 45"
+### Community 47 - "Community 47"
 Cohesion: 0.41
 Nodes (9): DayBgRow, DayGrid, DayGridEventRenderer, DayGridSlicer, DayGridView, DayTile, DayTileEventRenderer, Popover (+1 more)
 
-### Community 46 - "Community 46"
+### Community 48 - "Community 48"
 Cohesion: 0.53
 Nodes (7): categoriesTickGenerator(), getNextIndex(), init(), processDatapoints(), processRawData(), setupCategoriesForAxis(), transformPointsOnAxis()
 
-### Community 47 - "Community 47"
+### Community 49 - "Community 49"
 Cohesion: 0.56
 Nodes (6): DependencyLib(), getWindow(), indexOf(), isArraylike(), isValidElement(), isWindow()
 
-### Community 48 - "Community 48"
-Cohesion: 0.56
-Nodes (6): analyseMask(), getTokenizer(), isDateInRange(), isValidDate(), pad(), parse()
-
-### Community 49 - "Community 49"
-Cohesion: 0.56
-Nodes (6): analyseMask(), getTokenizer(), isDateInRange(), isValidDate(), pad(), parse()
-
 ### Community 50 - "Community 50"
-Cohesion: 0.68
-Nodes (5): dateGenerator(), floorInBase(), formatDate(), init(), makeUtcWrapper()
-
-### Community 51 - "Community 51"
-Cohesion: 0.54
-Nodes (5): AllDaySplitter, SimpleTimeGrid, TimeGrid, TimeGridSlicer, TimeGridView
-
-### Community 52 - "Community 52"
 Cohesion: 0.68
 Nodes (5): forms(), special(), translate(), translateSeconds(), translateSingular()
 
-### Community 53 - "Community 53"
+### Community 51 - "Community 51"
 Cohesion: 0.64
 Nodes (5): lastNumber(), mutation(), relativeTimeWithMutation(), softMutation(), specialMutationForYears()
 
-### Community 54 - "Community 54"
+### Community 52 - "Community 52"
+Cohesion: 0.54
+Nodes (5): AllDaySplitter, SimpleTimeGrid, TimeGrid, TimeGridSlicer, TimeGridView
+
+### Community 53 - "Community 53"
 Cohesion: 0.67
 Nodes (4): format(), relativeSeconds(), relativeTimeWithPlural(), relativeTimeWithSingular()
+
+### Community 54 - "Community 54"
+Cohesion: 0.62
+Nodes (4): plural(), processHoursFunction(), relativeTimeWithPlural(), weekdaysCaseReplace()
 
 ### Community 55 - "Community 55"
 Cohesion: 0.29
@@ -409,12 +409,12 @@ Cohesion: 0.67
 Nodes (3): indexOf(), isArraylike(), isWindow()
 
 ### Community 59 - "Community 59"
-Cohesion: 0.67
-Nodes (3): indexOf(), isArraylike(), isWindow()
-
-### Community 60 - "Community 60"
 Cohesion: 0.6
 Nodes (3): fnArraySwitch(), fnDomSwitch(), fnInvertKeyValues()
+
+### Community 60 - "Community 60"
+Cohesion: 0.67
+Nodes (3): indexOf(), isArraylike(), isWindow()
 
 ### Community 62 - "Community 62"
 Cohesion: 0.6
@@ -835,9 +835,9 @@ Nodes (1): WSGI config for student_management_system project.  It exposes the WS
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 120`** (4 nodes): `Packer`, `Packer.d.ts`, `Packer.d.ts`, `Packer.d.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 121`** (3 nodes): `AppConfig`, `apps.py`, `StudentManagementAppConfig`
+- **Thin community `Community 121`** (3 nodes): `AppConfig`, `StudentManagementAppConfig`, `apps.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 122`** (3 nodes): `settings.py`, `Django settings for student_management_system project.  Generated by 'django-adm`, `_split_csv_env()`
+- **Thin community `Community 122`** (3 nodes): `Django settings for student_management_system project.  Generated by 'django-adm`, `_split_csv_env()`, `settings.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 124`** (2 nodes): `Migration`, `0005_alter_customuser_email_alter_customuser_id.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
@@ -863,23 +863,23 @@ Nodes (1): WSGI config for student_management_system project.  It exposes the WS
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 135`** (2 nodes): `Migration`, `0004_alter_customuser_id.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 136`** (2 nodes): `wsgi.py`, `WSGI config for student_management_system project.  It exposes the WSGI callable`
+- **Thin community `Community 136`** (2 nodes): `WSGI config for student_management_system project.  It exposes the WSGI callable`, `wsgi.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `indexOf()` connect `Community 6` to `Community 0`, `Community 1`, `Community 2`, `Community 3`, `Community 4`, `Community 5`, `Community 7`, `Community 8`, `Community 9`, `Community 10`, `Community 11`, `Community 12`, `Community 13`, `Community 14`, `Community 15`, `Community 16`, `Community 18`, `Community 19`, `Community 20`, `Community 21`, `Community 22`, `Community 23`, `Community 25`, `Community 26`, `Community 27`, `Community 28`, `Community 29`, `Community 30`, `Community 32`, `Community 34`, `Community 35`, `Community 36`, `Community 37`, `Community 38`, `Community 41`, `Community 42`, `Community 48`, `Community 49`?**
-  _High betweenness centrality (0.072) - this node is a cross-community bridge._
-- **Why does `replace()` connect `Community 4` to `Community 0`, `Community 1`, `Community 2`, `Community 3`, `Community 5`, `Community 6`, `Community 7`, `Community 8`, `Community 9`, `Community 10`, `Community 11`, `Community 12`, `Community 13`, `Community 14`, `Community 16`, `Community 18`, `Community 19`, `Community 21`, `Community 22`, `Community 23`, `Community 25`, `Community 26`, `Community 27`, `Community 28`, `Community 29`, `Community 30`, `Community 32`, `Community 33`, `Community 34`, `Community 35`, `Community 36`, `Community 38`, `Community 39`, `Community 41`, `Community 42`, `Community 48`, `Community 49`?**
-  _High betweenness centrality (0.062) - this node is a cross-community bridge._
-- **Why does `get()` connect `Community 2` to `Community 0`, `Community 33`, `Community 4`, `Community 38`, `Community 8`, `Community 9`, `Community 10`, `Community 11`, `Community 12`, `Community 13`, `Community 14`, `Community 24`, `Community 26`, `Community 31`?**
-  _High betweenness centrality (0.047) - this node is a cross-community bridge._
+- **Why does `indexOf()` connect `Community 5` to `Community 1`, `Community 2`, `Community 3`, `Community 4`, `Community 6`, `Community 7`, `Community 8`, `Community 9`, `Community 10`, `Community 11`, `Community 12`, `Community 13`, `Community 16`, `Community 17`, `Community 18`, `Community 19`, `Community 20`, `Community 21`, `Community 22`, `Community 23`, `Community 25`, `Community 26`, `Community 27`, `Community 28`, `Community 30`, `Community 31`, `Community 32`, `Community 34`, `Community 35`, `Community 36`, `Community 38`, `Community 40`, `Community 41`, `Community 42`, `Community 43`, `Community 44`?**
+  _High betweenness centrality (0.068) - this node is a cross-community bridge._
+- **Why does `replace()` connect `Community 2` to `Community 0`, `Community 1`, `Community 3`, `Community 4`, `Community 5`, `Community 6`, `Community 7`, `Community 8`, `Community 9`, `Community 10`, `Community 11`, `Community 12`, `Community 15`, `Community 16`, `Community 18`, `Community 19`, `Community 20`, `Community 21`, `Community 22`, `Community 23`, `Community 25`, `Community 26`, `Community 27`, `Community 28`, `Community 30`, `Community 31`, `Community 32`, `Community 33`, `Community 34`, `Community 35`, `Community 36`, `Community 37`, `Community 38`, `Community 39`, `Community 41`, `Community 42`, `Community 43`, `Community 44`?**
+  _High betweenness centrality (0.065) - this node is a cross-community bridge._
+- **Why does `isnan()` connect `Community 11` to `Community 0`, `Community 2`, `Community 3`, `Community 4`, `Community 5`, `Community 6`, `Community 7`, `Community 8`, `Community 10`, `Community 12`, `Community 13`, `Community 18`, `Community 19`, `Community 20`, `Community 21`, `Community 22`, `Community 23`, `Community 25`, `Community 26`, `Community 30`, `Community 31`, `Community 34`, `Community 35`, `Community 36`, `Community 38`, `Community 39`, `Community 41`, `Community 43`?**
+  _High betweenness centrality (0.037) - this node is a cross-community bridge._
 - **Are the 339 inferred relationships involving `indexOf()` (e.g. with `getRgbHslContent()` and `processStyle()`) actually correct?**
   _`indexOf()` has 339 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 249 inferred relationships involving `get()` (e.g. with `student_home()` and `join_class_room()`) actually correct?**
-  _`get()` has 249 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 252 inferred relationships involving `get()` (e.g. with `student_home()` and `join_class_room()`) actually correct?**
+  _`get()` has 252 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 245 inferred relationships involving `replace()` (e.g. with `migrate_file()` and `init()`) actually correct?**
   _`replace()` has 245 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 180 inferred relationships involving `filter()` (e.g. with `.authenticate()` and `student_home()`) actually correct?**
-  _`filter()` has 180 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 182 inferred relationships involving `filter()` (e.g. with `.authenticate()` and `student_home()`) actually correct?**
+  _`filter()` has 182 INFERRED edges - model-reasoned connections that need verification._

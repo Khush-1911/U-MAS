@@ -15,12 +15,6 @@
 
     <p class="px-8 text-[10px] font-label text-on-surface-variant uppercase tracking-widest mb-2 mt-6">Academic Management</p>
 
-    {% url 'staff_manage_student' as staff_manage_student %}
-    <a class="{% if request.path == staff_manage_student or '/staff_edit_student/' in request.path %}relative flex items-center gap-3 px-8 py-3 text-indigo-600 font-bold before:absolute before:left-0 before:h-6 before:w-1 before:bg-gradient-to-b before:from-indigo-600 before:to-indigo-400 before:rounded-r-full{% else %}flex items-center gap-3 px-8 py-3 text-slate-500 hover:bg-white/50 hover:text-indigo-600 transition-all duration-300{% endif %} font-medium" href="{{ staff_manage_student }}">
-      <span class="material-symbols-outlined">groups</span>
-      <span>Student Roster</span>
-    </a>
-
     {% url 'staff_take_attendance' as staff_take_attendance %}
     <a class="{% if 'attendance' in request.path %}relative flex items-center gap-3 px-8 py-3 text-indigo-600 font-bold before:absolute before:left-0 before:h-6 before:w-1 before:bg-gradient-to-b before:from-indigo-600 before:to-indigo-400 before:rounded-r-full{% else %}flex items-center gap-3 px-8 py-3 text-slate-500 hover:bg-white/50 hover:text-indigo-600 transition-all duration-300{% endif %} font-medium" href="{{ staff_take_attendance }}">
       <span class="material-symbols-outlined">event_available</span>
@@ -30,7 +24,7 @@
     {% url 'staff_students_under_me' as staff_students_under_me %}
     <a class="{% if request.path == staff_students_under_me %}relative flex items-center gap-3 px-8 py-3 text-indigo-600 font-bold before:absolute before:left-0 before:h-6 before:w-1 before:bg-gradient-to-b before:from-indigo-600 before:to-indigo-400 before:rounded-r-full{% else %}flex items-center gap-3 px-8 py-3 text-slate-500 hover:bg-white/50 hover:text-indigo-600 transition-all duration-300{% endif %} font-medium" href="{{ staff_students_under_me }}">
       <span class="material-symbols-outlined">campaign</span>
-      <span>Announcements</span>
+      <span>My Students &amp; Announcements</span>
     </a>
 
     <p class="px-8 text-[10px] font-label text-on-surface-variant uppercase tracking-widest mb-2 mt-6">Personal &amp; Admin</p>

@@ -1,0 +1,47 @@
+{% extends 'department_hod_template/base_template.html' %}
+{% block page_title %}Student Roster{% endblock page_title %}
+
+{% block main_content %}
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+  <div class="space-y-1">
+    <p class="text-xs font-label text-primary uppercase tracking-widest font-bold">{{ department.department_name }}</p>
+    <h2 class="text-4xl font-display font-extrabold text-on-surface tracking-tight">Student Roster</h2>
+    <p class="text-on-surface-variant max-w-xl">Students enrolled in your department, arranged by class and mentor.</p>
+  </div>
+  <span class="px-4 py-2 rounded-xl bg-primary/10 text-primary text-xs font-label font-bold uppercase tracking-wider">{{ students|length }} enrolled student{{ students|length|pluralize }}</span>
+</div>
+
+<section class="bg-surface-container-lowest rounded-2xl overflow-hidden border border-outline-variant/10 shadow-xl shadow-indigo-900/5">
+  <div class="overflow-x-auto">
+    <table class="min-w-[850px] w-full text-left border-collapse">
+      <thead class="bg-surface-container-low/60">
+        <tr>
+          <th class="px-6 py-4 text-xs font-label uppercase tracking-widest text-on-surface-variant">Student</th>
+          <th class="px-6 py-4 text-xs font-label uppercase tracking-widest text-on-surface-variant">Class</th>
+          <th class="px-6 py-4 text-xs font-label uppercase tracking-widest text-on-surface-variant">Semester</th>
+          <th class="px-6 py-4 text-xs font-label uppercase tracking-widest text-on-surface-variant">Mentor</th>
+          <th class="px-6 py-4 text-xs font-label uppercase tracking-widest text-on-surface-variant">Contact</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for student in students %}
+        <tr class="border-t border-outline-variant/10 hover:bg-primary-fixed/20 transition-colors">
+          <td class="px-6 py-4 align-top">
+            <p class="font-display font-bold text-on-surface text-sm">{{ student.admin.get_full_name|default:student.admin.username }}</p>
+            <p class="text-xs text-on-surface-variant mt-1">{{ student.profile_id|default:student.id }} · {{ student.gender|default:"Not specified" }}</p>
+          </td>
+          <td class="px-6 py-4 align-top text-sm font-medium text-on-surface">{{ student.class_id.class_name|default:"Unassigned" }}</td>
+          <td class="px-6 py-4 align-top text-sm text-on-surface-variant whitespace-nowrap">
+            {% if student.semester_id %}{{ student.semester_id.semester_start_date|date:"d M Y" }} – {{ student.semester_id.semester_end_date|date:"d M Y" }}{% else %}Unassigned{% endif %}
+          </td>
+          <td class="px-6 py-4 align-top text-sm text-on-surface">{% if student.mentor %}{{ student.mentor.admin.get_full_name|default:student.mentor.admin.username }}{% else %}Unassigned{% endif %}</td>
+          <td class="px-6 py-4 align-top text-sm text-on-surface-variant">{{ student.admin.email }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="px-8 py-16 text-center text-on-surface-variant">No students are enrolled in this department.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock main_content %}

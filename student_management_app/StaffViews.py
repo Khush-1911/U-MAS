@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
+from django.db.models import Q
 from django.forms import model_to_dict
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -89,9 +90,17 @@ def _student_for_staff_or_none(student_admin_id, staff_obj):
     ).select_related("admin", "class_id__department", "semester_id", "mentor__admin").first()
 
 
-def _student_queryset_for_staff_list():
+def _student_queryset_visible_to_staff(staff_obj):
+    taught_class_ids = Subjects.objects.filter(
+        staff_id=staff_obj.admin_id,
+        class_id__isnull=False,
+    ).values_list("class_id", flat=True)
     return (
-        Students.objects.select_related("admin", "class_id__department", "semester_id", "mentor__admin")
+        Students.objects.filter(
+            Q(mentor=staff_obj) | Q(class_id__in=taught_class_ids)
+        )
+        .select_related("admin", "class_id__department", "semester_id", "mentor__admin")
+        .distinct()
         .order_by("admin__first_name", "admin__last_name", "admin__username", "id")
     )
 
@@ -319,22 +328,25 @@ def staff_home(request):
     return render(request,"staff_template/staff_home_template.html",{"students_count":students_count,"attendance_count":attendance_count,"leave_count":leave_count,"subject_count":subject_count,"subject_list":subject_list,"attendance_list":attendance_list,"student_list":student_list,"present_list":student_list_attendance_present,"absent_list":student_list_attendance_absent})
 
 def staff_manage_student(request):
-    staff_obj = _logged_in_staff(request)
-    students = _student_queryset_for_staff_list()
-    return render(
-        request,
-        "staff_template/staff_manage_student.html",
-        {"students": students, "staff_obj": staff_obj},
-    )
+    messages.info(request, "Student roster management is available to the HOD. You can view and notify only your students here.")
+    return HttpResponseRedirect(reverse("staff_students_under_me"))
 
 
 def staff_students_under_me(request):
     staff_obj = _logged_in_staff(request)
-    students = (
-        Students.objects.filter(mentor=staff_obj)
-        .select_related("admin", "class_id__department", "semester_id")
-        .order_by("admin__first_name", "admin__last_name", "admin__username", "id")
+    taught_class_ids = set(
+        Subjects.objects.filter(staff_id=staff_obj.admin_id, class_id__isnull=False)
+        .values_list("class_id", flat=True)
     )
+    students = _student_queryset_visible_to_staff(staff_obj)
+    for student in students:
+        is_mentor = student.mentor_id == staff_obj.id
+        is_subject_student = student.class_id_id in taught_class_ids
+        student.access_scope = (
+            "Mentor and subject class" if is_mentor and is_subject_student
+            else "Mentor" if is_mentor
+            else "Subject class"
+        )
     return render(
         request,
         "staff_template/staff_students_under_me.html",
@@ -361,15 +373,10 @@ def staff_send_student_notification(request):
         messages.error(request, "Please select at least one student")
         return HttpResponseRedirect(reverse("staff_students_under_me"))
 
-    students = list(
-        Students.objects.filter(
-            mentor=staff_obj,
-            id__in=selected_student_ids,
-        ).select_related("admin")
-    )
+    students = list(_student_queryset_visible_to_staff(staff_obj).filter(id__in=selected_student_ids))
 
     if not students:
-        messages.error(request, "No assigned students matched your selection")
+        messages.error(request, "No eligible students matched your selection")
         return HttpResponseRedirect(reverse("staff_students_under_me"))
 
     sender_name = request.user.get_full_name().strip() or request.user.username or "Staff"
@@ -387,7 +394,7 @@ def staff_send_student_notification(request):
     )
     messages.success(
         request,
-        f"Notification sent to {len(students)} assigned student(s).",
+        f"Notification sent to {len(students)} eligible student(s).",
     )
     return HttpResponseRedirect(reverse("staff_students_under_me"))
 
