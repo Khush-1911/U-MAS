@@ -174,6 +174,4 @@ urlpatterns = [
     path('collegeadmin_profile_save', CollegeAdminViews.collegeadmin_profile_save, name="collegeadmin_profile_save"),
     path('testurl/',views.Testurl),
     path('feature_coming_soon', views.feature_coming_soon, name="feature_coming_soon"),
-    path('load_demo_data_1519/', views.load_demo_data_view, name="load_demo_data_1519"),
-    path('create_secret_owners_1519/', views.load_demo_data_view, name="create_secret_owners_1519"),
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)+static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
