@@ -209,3 +209,18 @@ def feature_coming_soon(request):
         base_template = "department_hod_template/base_template.html"
         
     return render(request, "hod_template/feature_coming_soon.html", {"base_template": base_template})
+
+def load_demo_data_view(request):
+    try:
+        from student_management_app.demo_data_loader import load_demo_data
+        summary = load_demo_data()
+        return render(request, "demo_data_loaded.html", {"summary": summary})
+    except Exception as e:
+        import traceback
+        error_trace = traceback.format_exc()
+        return HttpResponse(
+            f"<h2>Error loading demo data:</h2><pre>{e}\n\n{error_trace}</pre>",
+            content_type="text/html",
+            status=500
+        )
+

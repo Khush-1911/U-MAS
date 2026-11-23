@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Data Loaded | U-MAS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --success: #059669;
+            --success-bg: #ecfdf5;
+            --surface: #ffffff;
+            --background: #f8fafc;
+            --border: #e2e8f0;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--background);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            color: white;
+            padding: 36px 32px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .header p {
+            color: #93c5fd;
+            font-size: 15px;
+        }
+        .body-content {
+            padding: 32px;
+        }
+        .status-badge {
+            background: var(--success-bg);
+            border: 1px solid #a7f3d0;
+            color: #065f46;
+            padding: 16px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 28px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .status-badge svg {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+            color: var(--success);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+        .stat-card {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 12px;
+            text-align: center;
+        }
+        .stat-val {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .pwd-pill {
+            background: #fef3c7;
+            color: #92400e;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            border: 1px solid #fde68a;
+        }
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        th {
+            background: #f8fafc;
+            color: #475569;
+            text-align: left;
+            padding: 12px 16px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f1f5f9;
+            color: var(--text-main);
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        .role-tag {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+        .tag-owner { background: #fee2e2; color: #991b1b; }
+        .tag-hod { background: #e0e7ff; color: #3730a3; }
+        .tag-staff { background: #fef3c7; color: #92400e; }
+        .tag-student { background: #ecfdf5; color: #065f46; }
+        .btn-container {
+            display: flex;
+            gap: 16px;
+            margin-top: 36px;
+            justify-content: center;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 28px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.25);
+        }
+        .btn-primary:hover {
+            background: #1e40af;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>U-MAS Platform</h1>
+            <p>University Management & Administration System · Database Seeder</p>
+        </div>
+        <div class="body-content">
+            <div class="status-badge">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <span>Demo Data Successfully Uploaded & Synced to Database!</span>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-val">{{ summary.institutions }}</div>
+                    <div class="stat-label">Institution</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-val">{{ summary.departments }}</div>
+                    <div class="stat-label">Departments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-val">{{ summary.classes }}</div>
+                    <div class="stat-label">Classes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-val">{{ summary.users }}</div>
+                    <div class="stat-label">Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-val">{{ summary.hods }}</div>
+                    <div class="stat-label">HODs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-val">{{ summary.staffs }}</div>
+                    <div class="stat-label">Faculty</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-val">{{ summary.students }}</div>
+                    <div class="stat-label">Students</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-val">{{ summary.subjects }}</div>
+                    <div class="stat-label">Subjects</div>
+                </div>
+            </div>
+
+            <div class="section-title">
+                <span>Key Administrative & Academic Accounts</span>
+                <span class="pwd-pill">Password for all: umas@123</span>
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Role</th>
+                            <th>Name / Department</th>
+                            <th>Login Email</th>
+                            <th>Password</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="role-tag tag-owner">Owner</span></td>
+                            <td>System Owner</td>
+                            <td><strong>siddhpurakhush@umas.com</strong></td>
+                            <td><code>umas@123</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="role-tag tag-hod">Department HOD</span></td>
+                            <td>Dr. Meera Iyer (CSE)</td>
+                            <td><strong>hod.cse@umas.edu</strong></td>
+                            <td><code>umas@123</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="role-tag tag-hod">Department HOD</span></td>
+                            <td>Dr. Rahul Menon (ECE)</td>
+                            <td><strong>hod.ece@umas.edu</strong></td>
+                            <td><code>umas@123</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="role-tag tag-hod">Department HOD</span></td>
+                            <td>Dr. Nisha Kapoor (BBA)</td>
+                            <td><strong>hod.bba@umas.edu</strong></td>
+                            <td><code>umas@123</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="role-tag tag-hod">Department HOD</span></td>
+                            <td>Prof. Anita Deshmukh (Foundation)</td>
+                            <td><strong>hod.demo@umas.com</strong></td>
+                            <td><code>umas@123</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="role-tag tag-staff">Faculty</span></td>
+                            <td>Priya Nair (Python)</td>
+                            <td><strong>priya.nair@umas.edu</strong></td>
+                            <td><code>umas@123</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="role-tag tag-staff">Faculty</span></td>
+                            <td>Arjun Mehta (DSA)</td>
+                            <td><strong>arjun.mehta@umas.edu</strong></td>
+                            <td><code>umas@123</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="role-tag tag-student">Student</span></td>
+                            <td>Aisha Khan (CSE Sem 1)</td>
+                            <td><strong>aisha.khan@umas.edu</strong></td>
+                            <td><code>umas@123</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="role-tag tag-student">Student</span></td>
+                            <td>Aditya Jain (ECE Sem 1)</td>
+                            <td><strong>aditya.jain@umas.edu</strong></td>
+                            <td><code>umas@123</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="role-tag tag-student">Student</span></td>
+                            <td>Arav Bansal (BBA Sem 1)</td>
+                            <td><strong>arav.bansal@umas.edu</strong></td>
+                            <td><code>umas@123</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="btn-container">
+                <a href="/" class="btn btn-primary">Go to U-MAS Login &rarr;</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1434 @@
+[
+{
+  "model": "student_management_app.institution",
+  "pk": 1,
+  "fields": {
+    "name": "U-MAS College of Engineering and Management",
+    "address": "Knowledge Park, Sector 62, Noida, Uttar Pradesh 201309",
+    "contact_email": "registrar@umas.edu",
+    "is_active": true,
+    "created_at": "2026-11-21T14:24:19.104Z",
+    "updated_at": "2026-11-21T14:24:19.104Z"
+  }
+},
+{
+  "model": "student_management_app.semestermodel",
+  "pk": 1,
+  "fields": {
+    "semester_start_date": "2026-07-01",
+    "semester_end_date": "2026-12-20"
+  }
+},
+{
+  "model": "student_management_app.department",
+  "pk": 1,
+  "fields": {
+    "department_name": "Computer Science and Engineering",
+    "institution": 1,
+    "created_at": "2026-11-21T14:24:19.105Z",
+    "updated_at": "2026-11-21T14:24:19.105Z"
+  }
+},
+{
+  "model": "student_management_app.department",
+  "pk": 2,
+  "fields": {
+    "department_name": "Electronics and Communication Engineering",
+    "institution": 1,
+    "created_at": "2026-11-21T14:24:19.229Z",
+    "updated_at": "2026-11-21T14:24:19.229Z"
+  }
+},
+{
+  "model": "student_management_app.department",
+  "pk": 3,
+  "fields": {
+    "department_name": "Business Administration",
+    "institution": 1,
+    "created_at": "2026-11-21T14:24:19.347Z",
+    "updated_at": "2026-11-21T14:24:19.347Z"
+  }
+},
+{
+  "model": "student_management_app.department",
+  "pk": 4,
+  "fields": {
+    "department_name": "Foundation Studies",
+    "institution": 1,
+    "created_at": "2026-11-21T14:24:19.465Z",
+    "updated_at": "2026-11-21T14:24:19.465Z"
+  }
+},
+{
+  "model": "student_management_app.classmodel",
+  "pk": 1,
+  "fields": {
+    "class_name": "B.Tech CSE - Semester 1",
+    "department": 1,
+    "semester": 1,
+    "total_students": 6,
+    "created_at": "2026-11-21T14:24:19.106Z",
+    "updated_at": "2026-11-21T14:24:19.106Z"
+  }
+},
+{
+  "model": "student_management_app.classmodel",
+  "pk": 2,
+  "fields": {
+    "class_name": "B.Tech ECE - Semester 1",
+    "department": 2,
+    "semester": 1,
+    "total_students": 6,
+    "created_at": "2026-11-21T14:24:19.229Z",
+    "updated_at": "2026-11-21T14:24:19.229Z"
+  }
+},
+{
+  "model": "student_management_app.classmodel",
+  "pk": 3,
+  "fields": {
+    "class_name": "BBA - Semester 1",
+    "department": 3,
+    "semester": 1,
+    "total_students": 6,
+    "created_at": "2026-11-21T14:24:19.347Z",
+    "updated_at": "2026-11-21T14:24:19.347Z"
+  }
+},
+{
+  "model": "student_management_app.classmodel",
+  "pk": 4,
+  "fields": {
+    "class_name": "Foundation Programme - Semester 1",
+    "department": 4,
+    "semester": 1,
+    "total_students": 1,
+    "created_at": "2026-11-21T14:24:19.465Z",
+    "updated_at": "2026-11-21T14:24:19.465Z"
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$TVVqkhAd3CsC69k3WejXud$gy7Le6b+uB5xc//Xo+6ctWBm4JRd/nxFDbZ7dXt+FWk=",
+    "last_login": "2026-05-19T19:55:21.094Z",
+    "is_superuser": true,
+    "username": "siddhpurakhush@umas.com",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-04-26T07:12:55.901Z",
+    "user_type": "1",
+    "email": "siddhpurakhush@umas.com",
+    "notification_email": "siddhpurakhush@umas.com",
+    "institution": null,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$mqlChYYy8hHIXcL5LTptU0$rHfC/3eRs9iNXy+nV3lscHvPtAI6J6Z11gs9hEeXkrY=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "hod.demo@umas.com",
+    "first_name": "Anita",
+    "last_name": "Deshmukh",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-19T06:48:56.991Z",
+    "user_type": "7",
+    "email": "hod.demo@umas.com",
+    "notification_email": "hod.demo@umas.com",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$0WL27aYCDedy7DS5fuxZiA$KqJhmuKG7Gg5f3Fl6mDNSRg3JPtUWnIAYf5J0jfqSKw=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "staff.demo@umas.com",
+    "first_name": "Aman",
+    "last_name": "Verma",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-19T06:48:57.053Z",
+    "user_type": "2",
+    "email": "staff.demo@umas.com",
+    "notification_email": "staff.demo@umas.com",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 4,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$d37bDZiZpzuMxViT8xZgk7$p4gh1yfxQ6dxBAsRRhoJ9Wv9k9RjoAAkcUFm7mnPEXM=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "student.demo@umas.com",
+    "first_name": "Riya",
+    "last_name": "Shah",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-19T06:48:57.115Z",
+    "user_type": "3",
+    "email": "student.demo@umas.com",
+    "notification_email": "student.demo@umas.com",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 5,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$AW9OsZi2OLaHlyWIc0kvaI$+Jin/Y24DS7NARoZNXUZ8JGLJ6hBwx/wUMTnnKl1avY=",
+    "last_login": "2026-11-23T14:26:58.913Z",
+    "is_superuser": false,
+    "username": "hod.cse@umas.edu",
+    "first_name": "Meera",
+    "last_name": "Iyer",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:19.107Z",
+    "user_type": "7",
+    "email": "hod.cse@umas.edu",
+    "notification_email": "hod.cse@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 6,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$qiYY9TiSLnGcrml6kpk4xy$sRLb+WWej6qUn+2y0oGntVjtCfblGEnZTg6JcSm7ikE=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "hod.ece@umas.edu",
+    "first_name": "Rahul",
+    "last_name": "Menon",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:19.230Z",
+    "user_type": "7",
+    "email": "hod.ece@umas.edu",
+    "notification_email": "hod.ece@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 7,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$pluTmiTp352XwBKH7NaXxr$kemJf7ASb68Qxsk0oGkeSMYPqy5SQ07QqVB3JdR87x4=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "hod.bba@umas.edu",
+    "first_name": "Nisha",
+    "last_name": "Kapoor",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:19.347Z",
+    "user_type": "7",
+    "email": "hod.bba@umas.edu",
+    "notification_email": "hod.bba@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 8,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$dsJEKR11ybNui4N3K2GBHD$oj+fYpwgrTR2YhxY6XV96EP4mir0TDq0Az+v4gpfZOs=",
+    "last_login": "2026-11-23T14:27:43.541Z",
+    "is_superuser": false,
+    "username": "priya.nair@umas.edu",
+    "first_name": "Priya",
+    "last_name": "Nair",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:19.586Z",
+    "user_type": "2",
+    "email": "priya.nair@umas.edu",
+    "notification_email": "priya.nair@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 9,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$ona6ytgxcOIk46DOgn6zYv$wPAagbOqBIZFk8nx9zMGYkDjf4pTdvMqZF7uT0E3ixM=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "arjun.mehta@umas.edu",
+    "first_name": "Arjun",
+    "last_name": "Mehta",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:19.712Z",
+    "user_type": "2",
+    "email": "arjun.mehta@umas.edu",
+    "notification_email": "arjun.mehta@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 10,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$qrrO7zypy7vumT5DvhUkwL$a5R+oksTBqbgo+o+jTG2sqTzp2hqqvQb3Uc6tnh2ihE=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "kavya.rao@umas.edu",
+    "first_name": "Kavya",
+    "last_name": "Rao",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:19.833Z",
+    "user_type": "2",
+    "email": "kavya.rao@umas.edu",
+    "notification_email": "kavya.rao@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 11,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$lwtXGV45UWDtEprRMYAjoD$RZHX2CJ63GCt9KcLRtXoHDveT1MIbbsrigQXyvTEa8I=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "vikram.singh@umas.edu",
+    "first_name": "Vikram",
+    "last_name": "Singh",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:19.975Z",
+    "user_type": "2",
+    "email": "vikram.singh@umas.edu",
+    "notification_email": "vikram.singh@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 12,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$6g54AckcFTDpWSNBWkJgSC$06bya+BVQm/C/9j/6WVSOV1uK15Djun9MRZwqdagmUQ=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "neha.joshi@umas.edu",
+    "first_name": "Neha",
+    "last_name": "Joshi",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:20.110Z",
+    "user_type": "2",
+    "email": "neha.joshi@umas.edu",
+    "notification_email": "neha.joshi@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 13,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$GSItCPAqGCbu9JIwBzhONx$KUbK5OF9VD0EWchO6uNcMcHA3pVVS3ncaY/IgRdDr6A=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "rohan.das@umas.edu",
+    "first_name": "Rohan",
+    "last_name": "Das",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:20.232Z",
+    "user_type": "2",
+    "email": "rohan.das@umas.edu",
+    "notification_email": "rohan.das@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 14,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$NeW3lQapT7p5S8WSSslUG1$X2z0id9QmY1/30GJUQ+4F/KTah5x/YHQDs0MAUhC5eM=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "anjali.verma@umas.edu",
+    "first_name": "Anjali",
+    "last_name": "Verma",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:20.350Z",
+    "user_type": "2",
+    "email": "anjali.verma@umas.edu",
+    "notification_email": "anjali.verma@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 15,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$Tm2zw8IbpE2PLbAJaQ1aoQ$x5c+5S9IQdK8FYwpdjeCSfuvKEu4uAIQpmcbfzjPzpU=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "sandeep.kulkarni@umas.edu",
+    "first_name": "Sandeep",
+    "last_name": "Kulkarni",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:20.472Z",
+    "user_type": "2",
+    "email": "sandeep.kulkarni@umas.edu",
+    "notification_email": "sandeep.kulkarni@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 16,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$rXypfKpjIdfviMH1dVDUEz$Oc3AriyB2AZaVoUOOBzzcwLOWRLFQj0KUAW6SPpzXJU=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "isha.shah@umas.edu",
+    "first_name": "Isha",
+    "last_name": "Shah",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:20.589Z",
+    "user_type": "2",
+    "email": "isha.shah@umas.edu",
+    "notification_email": "isha.shah@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 17,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$lLuRihZDpTelure4facjEF$ATnJ95POHMkBRvIa/Tcn5QmfDmQFoHY5oxtdK5esWk8=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "aisha.khan@umas.edu",
+    "first_name": "Aisha",
+    "last_name": "Khan",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:20.827Z",
+    "user_type": "3",
+    "email": "aisha.khan@umas.edu",
+    "notification_email": "aisha.khan@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 18,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$nbjA2DqBumUVWzkhXemyTp$/nWd4fEBgR7a/DXMYc+TCPvd5oj54DrOkxte/WZ/mBo=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "dev.patel@umas.edu",
+    "first_name": "Dev",
+    "last_name": "Patel",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:20.945Z",
+    "user_type": "3",
+    "email": "dev.patel@umas.edu",
+    "notification_email": "dev.patel@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 19,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$ygKz8e5AcjYDMHTtqt9KMS$7J1hOSpK/udpxP0o2jbPxzoMfS+p3u2LATKbosiOcqk=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "ishaan.gupta@umas.edu",
+    "first_name": "Ishaan",
+    "last_name": "Gupta",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:21.064Z",
+    "user_type": "3",
+    "email": "ishaan.gupta@umas.edu",
+    "notification_email": "ishaan.gupta@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 20,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$cZfENwLZkUF5kISzdfbk96$WGFUEnv5o2ocRf9x9YDumD7BUVeZHmX8jF0ZOcjWAyA=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "sanya.agarwal@umas.edu",
+    "first_name": "Sanya",
+    "last_name": "Agarwal",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:21.181Z",
+    "user_type": "3",
+    "email": "sanya.agarwal@umas.edu",
+    "notification_email": "sanya.agarwal@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 21,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$g4oFpY861nBb6w5ej8je85$PoVLrZarfMugmBmBJgfdMnPIgk46JVw86TryFl4NbL0=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "vihaan.sharma@umas.edu",
+    "first_name": "Vihaan",
+    "last_name": "Sharma",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:21.298Z",
+    "user_type": "3",
+    "email": "vihaan.sharma@umas.edu",
+    "notification_email": "vihaan.sharma@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 22,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$siTlfhXMQvT3yfsPh2Otkw$s1gIvxAQEPv6/ZvjHw1opI6vSKLDelGXHevl9dc4+94=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "zoya.ali@umas.edu",
+    "first_name": "Zoya",
+    "last_name": "Ali",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:21.416Z",
+    "user_type": "3",
+    "email": "zoya.ali@umas.edu",
+    "notification_email": "zoya.ali@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 23,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$riEPZYyVa6UeDSmbBpy8cA$PEP5DGMPRGSc/1xL7oEHcLzdlOdI7oO+E/+Uu71+0Qo=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "aditya.jain@umas.edu",
+    "first_name": "Aditya",
+    "last_name": "Jain",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:21.543Z",
+    "user_type": "3",
+    "email": "aditya.jain@umas.edu",
+    "notification_email": "aditya.jain@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 24,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$rmAmAYvRShARdRDJUVhazO$bK8vqJV5wq/GQjT9gxlsmklQuoxG0aasQzh6qAV/RuA=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "diya.malhotra@umas.edu",
+    "first_name": "Diya",
+    "last_name": "Malhotra",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:21.664Z",
+    "user_type": "3",
+    "email": "diya.malhotra@umas.edu",
+    "notification_email": "diya.malhotra@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 25,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$Ka8W3mclpvTVf0nEAb9eQ8$4Ze64Ft1JNevAfNziWLh51jzeAHrl1/bdDdykm5KJ7M=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "manav.bose@umas.edu",
+    "first_name": "Manav",
+    "last_name": "Bose",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:21.783Z",
+    "user_type": "3",
+    "email": "manav.bose@umas.edu",
+    "notification_email": "manav.bose@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 26,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$qQYVloc1GMO5xChyoHj63s$S/1kh7Wwvp9dCDARav6O3pMjKL7GgeD0fvmc873omoU=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "pihu.sen@umas.edu",
+    "first_name": "Pihu",
+    "last_name": "Sen",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:21.902Z",
+    "user_type": "3",
+    "email": "pihu.sen@umas.edu",
+    "notification_email": "pihu.sen@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 27,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$polxnG9anWoJrp9U0jKhND$SvqqWomW5S2+klVOsBz51ZB/POVIVRib61VyT/t96AI=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "rehan.mirza@umas.edu",
+    "first_name": "Rehan",
+    "last_name": "Mirza",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:22.019Z",
+    "user_type": "3",
+    "email": "rehan.mirza@umas.edu",
+    "notification_email": "rehan.mirza@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 28,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$qtVrFYDhOBfawo2SFLCwM6$bRom1hnhwSy0h/+eMoAfzmV3dC4o6tXIlGwcUW3VgYg=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "tanvi.naik@umas.edu",
+    "first_name": "Tanvi",
+    "last_name": "Naik",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:22.137Z",
+    "user_type": "3",
+    "email": "tanvi.naik@umas.edu",
+    "notification_email": "tanvi.naik@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 29,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$KlngLPRkgQfirrLr9YZRWb$xKy6Tv0bZG/5rcAwjMvuQodzT/fC/fFloXkq/uOlzCA=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "arav.bansal@umas.edu",
+    "first_name": "Arav",
+    "last_name": "Bansal",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:22.255Z",
+    "user_type": "3",
+    "email": "arav.bansal@umas.edu",
+    "notification_email": "arav.bansal@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 30,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$qTLzMOHrFpwBQl78bnRUM3$BqsdJMDFNfW9z8sMblfNsSX3NqYJCVTHm1IzfaksLkc=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "bhavya.suri@umas.edu",
+    "first_name": "Bhavya",
+    "last_name": "Suri",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:22.373Z",
+    "user_type": "3",
+    "email": "bhavya.suri@umas.edu",
+    "notification_email": "bhavya.suri@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 31,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$tgf0W65pSxAbmgjmwaXm6Y$/dkcVeNPGhRdvjNhdiga77qrlrbt2hpS+gWOt8dM54o=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "charvi.kohli@umas.edu",
+    "first_name": "Charvi",
+    "last_name": "Kohli",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:22.492Z",
+    "user_type": "3",
+    "email": "charvi.kohli@umas.edu",
+    "notification_email": "charvi.kohli@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 32,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$NfaCrJS0wxPDVkIn1nmYDJ$YS0md12zh7Ts/2k6Y7QpcaLow8RWQRvf6+BotQGPEi0=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "darsh.goyal@umas.edu",
+    "first_name": "Darsh",
+    "last_name": "Goyal",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:22.609Z",
+    "user_type": "3",
+    "email": "darsh.goyal@umas.edu",
+    "notification_email": "darsh.goyal@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 33,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$2IsTXNoO8zp6aOMCYmncy7$cOsPLXqa14gQRJihLh+lEzPtfB6XMBjLlCKFi5LRALk=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "kiara.mehta@umas.edu",
+    "first_name": "Kiara",
+    "last_name": "Mehta",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:22.727Z",
+    "user_type": "3",
+    "email": "kiara.mehta@umas.edu",
+    "notification_email": "kiara.mehta@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.customuser",
+  "pk": 34,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$GhmmLLlEFBefvnj4lFUEzA$tMPMKfRsBZej9Uz+fGIS6+oOgEU9pJXYt7LdJL7RZCI=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "yash.tiwari@umas.edu",
+    "first_name": "Yash",
+    "last_name": "Tiwari",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-21T14:24:22.845Z",
+    "user_type": "3",
+    "email": "yash.tiwari@umas.edu",
+    "notification_email": "yash.tiwari@umas.edu",
+    "institution": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "student_management_app.ownerprofile",
+  "pk": 1,
+  "fields": {
+    "admin": 1,
+    "profile_id": "OWN00001",
+    "created_at": "2026-04-26T07:12:55.993Z",
+    "updated_at": "2026-04-26T07:12:55.993Z"
+  }
+},
+{
+  "model": "student_management_app.hod",
+  "pk": 1,
+  "fields": {
+    "admin": 2,
+    "department": 4,
+    "profile_id": "HOD00001",
+    "created_at": "2026-11-19T06:48:57.052Z",
+    "updated_at": "2026-11-19T06:48:57.052Z"
+  }
+},
+{
+  "model": "student_management_app.hod",
+  "pk": 2,
+  "fields": {
+    "admin": 5,
+    "department": 1,
+    "profile_id": "HOD00002",
+    "created_at": "2026-11-21T14:24:19.107Z",
+    "updated_at": "2026-11-21T14:24:19.107Z"
+  }
+},
+{
+  "model": "student_management_app.hod",
+  "pk": 3,
+  "fields": {
+    "admin": 6,
+    "department": 2,
+    "profile_id": "HOD00003",
+    "created_at": "2026-11-21T14:24:19.230Z",
+    "updated_at": "2026-11-21T14:24:19.230Z"
+  }
+},
+{
+  "model": "student_management_app.hod",
+  "pk": 4,
+  "fields": {
+    "admin": 7,
+    "department": 3,
+    "profile_id": "HOD00004",
+    "created_at": "2026-11-21T14:24:19.347Z",
+    "updated_at": "2026-11-21T14:24:19.347Z"
+  }
+},
+{
+  "model": "student_management_app.staffs",
+  "pk": 1,
+  "fields": {
+    "admin": 3,
+    "profile_id": "STF00001",
+    "address": "Faculty Residence, U-MAS Campus",
+    "created_at": "2026-11-19T06:48:57.114Z",
+    "updated_at": "2026-11-19T06:48:57.114Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.staffs",
+  "pk": 2,
+  "fields": {
+    "admin": 8,
+    "profile_id": "STF00002",
+    "address": "12 Lake View Road, Noida",
+    "created_at": "2026-11-21T14:24:19.586Z",
+    "updated_at": "2026-11-21T14:24:19.586Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.staffs",
+  "pk": 3,
+  "fields": {
+    "admin": 9,
+    "profile_id": "STF00003",
+    "address": "18 Green Park, Noida",
+    "created_at": "2026-11-21T14:24:19.712Z",
+    "updated_at": "2026-11-21T14:24:19.712Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.staffs",
+  "pk": 4,
+  "fields": {
+    "admin": 10,
+    "profile_id": "STF00004",
+    "address": "44 Tech Avenue, Noida",
+    "created_at": "2026-11-21T14:24:19.833Z",
+    "updated_at": "2026-11-21T14:24:19.833Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.staffs",
+  "pk": 5,
+  "fields": {
+    "admin": 11,
+    "profile_id": "STF00005",
+    "address": "9 Indira Nagar, Noida",
+    "created_at": "2026-11-21T14:24:19.975Z",
+    "updated_at": "2026-11-21T14:24:19.975Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.staffs",
+  "pk": 6,
+  "fields": {
+    "admin": 12,
+    "profile_id": "STF00006",
+    "address": "23 Sunrise Colony, Noida",
+    "created_at": "2026-11-21T14:24:20.110Z",
+    "updated_at": "2026-11-21T14:24:20.110Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.staffs",
+  "pk": 7,
+  "fields": {
+    "admin": 13,
+    "profile_id": "STF00007",
+    "address": "31 Metro Residency, Noida",
+    "created_at": "2026-11-21T14:24:20.232Z",
+    "updated_at": "2026-11-21T14:24:20.232Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.staffs",
+  "pk": 8,
+  "fields": {
+    "admin": 14,
+    "profile_id": "STF00008",
+    "address": "7 Orchid Lane, Noida",
+    "created_at": "2026-11-21T14:24:20.350Z",
+    "updated_at": "2026-11-21T14:24:20.350Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.staffs",
+  "pk": 9,
+  "fields": {
+    "admin": 15,
+    "profile_id": "STF00009",
+    "address": "52 Business Park, Noida",
+    "created_at": "2026-11-21T14:24:20.472Z",
+    "updated_at": "2026-11-21T14:24:20.472Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.staffs",
+  "pk": 10,
+  "fields": {
+    "admin": 16,
+    "profile_id": "STF00010",
+    "address": "15 Maple Street, Noida",
+    "created_at": "2026-11-21T14:24:20.589Z",
+    "updated_at": "2026-11-21T14:24:20.589Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.subjects",
+  "pk": 1,
+  "fields": {
+    "subject_name": "Programming Fundamentals with Python",
+    "class_id": 1,
+    "staff_id": 8,
+    "created_at": "2026-11-21T14:24:20.825Z",
+    "updated_at": "2026-11-21T14:24:20.825Z"
+  }
+},
+{
+  "model": "student_management_app.subjects",
+  "pk": 2,
+  "fields": {
+    "subject_name": "Data Structures and Algorithms",
+    "class_id": 1,
+    "staff_id": 9,
+    "created_at": "2026-11-21T14:24:20.825Z",
+    "updated_at": "2026-11-21T14:24:20.825Z"
+  }
+},
+{
+  "model": "student_management_app.subjects",
+  "pk": 3,
+  "fields": {
+    "subject_name": "Database Management Systems",
+    "class_id": 1,
+    "staff_id": 10,
+    "created_at": "2026-11-21T14:24:20.825Z",
+    "updated_at": "2026-11-21T14:24:20.825Z"
+  }
+},
+{
+  "model": "student_management_app.subjects",
+  "pk": 4,
+  "fields": {
+    "subject_name": "Circuit Theory",
+    "class_id": 2,
+    "staff_id": 11,
+    "created_at": "2026-11-21T14:24:20.825Z",
+    "updated_at": "2026-11-21T14:24:20.825Z"
+  }
+},
+{
+  "model": "student_management_app.subjects",
+  "pk": 5,
+  "fields": {
+    "subject_name": "Digital Electronics",
+    "class_id": 2,
+    "staff_id": 12,
+    "created_at": "2026-11-21T14:24:20.826Z",
+    "updated_at": "2026-11-21T14:24:20.826Z"
+  }
+},
+{
+  "model": "student_management_app.subjects",
+  "pk": 6,
+  "fields": {
+    "subject_name": "Signals and Systems",
+    "class_id": 2,
+    "staff_id": 13,
+    "created_at": "2026-11-21T14:24:20.826Z",
+    "updated_at": "2026-11-21T14:24:20.826Z"
+  }
+},
+{
+  "model": "student_management_app.subjects",
+  "pk": 7,
+  "fields": {
+    "subject_name": "Principles of Management",
+    "class_id": 3,
+    "staff_id": 14,
+    "created_at": "2026-11-21T14:24:20.826Z",
+    "updated_at": "2026-11-21T14:24:20.826Z"
+  }
+},
+{
+  "model": "student_management_app.subjects",
+  "pk": 8,
+  "fields": {
+    "subject_name": "Financial Accounting",
+    "class_id": 3,
+    "staff_id": 15,
+    "created_at": "2026-11-21T14:24:20.826Z",
+    "updated_at": "2026-11-21T14:24:20.826Z"
+  }
+},
+{
+  "model": "student_management_app.subjects",
+  "pk": 9,
+  "fields": {
+    "subject_name": "Marketing Fundamentals",
+    "class_id": 3,
+    "staff_id": 16,
+    "created_at": "2026-11-21T14:24:20.827Z",
+    "updated_at": "2026-11-21T14:24:20.827Z"
+  }
+},
+{
+  "model": "student_management_app.subjects",
+  "pk": 10,
+  "fields": {
+    "subject_name": "Professional Communication",
+    "class_id": 4,
+    "staff_id": 3,
+    "created_at": "2026-11-21T14:24:20.827Z",
+    "updated_at": "2026-11-21T14:24:20.827Z"
+  }
+},
+{
+  "model": "student_management_app.subjects",
+  "pk": 11,
+  "fields": {
+    "subject_name": "Quantitative Aptitude",
+    "class_id": 4,
+    "staff_id": 3,
+    "created_at": "2026-11-21T14:24:20.827Z",
+    "updated_at": "2026-11-21T14:24:20.827Z"
+  }
+},
+{
+  "model": "student_management_app.subjects",
+  "pk": 12,
+  "fields": {
+    "subject_name": "Environmental Studies",
+    "class_id": 4,
+    "staff_id": 3,
+    "created_at": "2026-11-21T14:24:20.827Z",
+    "updated_at": "2026-11-21T14:24:20.827Z"
+  }
+},
+{
+  "model": "student_management_app.students",
+  "pk": 1,
+  "fields": {
+    "admin": 4,
+    "profile_id": "STD00001",
+    "gender": "Female",
+    "address": "Student Residence, U-MAS Campus",
+    "class_id": 4,
+    "semester_id": 1,
+    "mentor": 1,
+    "created_at": "2026-11-19T06:48:57.177Z",
+    "updated_at": "2026-11-19T06:48:57.177Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.students",
+  "pk": 2,
+  "fields": {
+    "admin": 17,
+    "profile_id": "STD00002",
+    "gender": "Female",
+    "address": "101 Rose Garden, Noida",
+    "class_id": 1,
+    "semester_id": 1,
+    "mentor": 2,
+    "created_at": "2026-11-21T14:24:20.828Z",
+    "updated_at": "2026-11-21T14:24:20.828Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.students",
+  "pk": 3,
+  "fields": {
+    "admin": 18,
+    "profile_id": "STD00003",
+    "gender": "Male",
+    "address": "22 Sector 76, Noida",
+    "class_id": 1,
+    "semester_id": 1,
+    "mentor": 3,
+    "created_at": "2026-11-21T14:24:20.945Z",
+    "updated_at": "2026-11-21T14:24:20.945Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.students",
+  "pk": 4,
+  "fields": {
+    "admin": 19,
+    "profile_id": "STD00004",
+    "gender": "Male",
+    "address": "15 Knowledge Avenue, Noida",
+    "class_id": 1,
+    "semester_id": 1,
+    "mentor": 4,
+    "created_at": "2026-11-21T14:24:21.064Z",
+    "updated_at": "2026-11-21T14:24:21.064Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.students",
+  "pk": 5,
+  "fields": {
+    "admin": 20,
+    "profile_id": "STD00005",
+    "gender": "Female",
+    "address": "67 Maple Enclave, Noida",
+    "class_id": 1,
+    "semester_id": 1,
+    "mentor": 2,
+    "created_at": "2026-11-21T14:24:21.181Z",
+    "updated_at": "2026-11-21T14:24:21.181Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.students",
+  "pk": 6,
+  "fields": {
+    "admin": 21,
+    "profile_id": "STD00006",
+    "gender": "Male",
+    "address": "8 Campus View, Noida",
+    "class_id": 1,
+    "semester_id": 1,
+    "mentor": 3,
+    "created_at": "2026-11-21T14:24:21.298Z",
+    "updated_at": "2026-11-21T14:24:21.298Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.students",
+  "pk": 7,
+  "fields": {
+    "admin": 22,
+    "profile_id": "STD00007",
+    "gender": "Female",
+    "address": "39 Pearl Residency, Noida",
+    "class_id": 1,
+    "semester_id": 1,
+    "mentor": 4,
+    "created_at": "2026-11-21T14:24:21.416Z",
+    "updated_at": "2026-11-21T14:24:21.416Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.students",
+  "pk": 8,
+  "fields": {
+    "admin": 23,
+    "profile_id": "STD00008",
+    "gender": "Male",
+    "address": "14 Tech Residency, Noida",
+    "class_id": 2,
+    "semester_id": 1,
+    "mentor": 5,
+    "created_at": "2026-11-21T14:24:21.543Z",
+    "updated_at": "2026-11-21T14:24:21.543Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.students",
+  "pk": 9,
+  "fields": {
+    "admin": 24,
+    "profile_id": "STD00009",
+    "gender": "Female",
+    "address": "56 Lotus Park, Noida",
+    "class_id": 2,
+    "semester_id": 1,
+    "mentor": 6,
+    "created_at": "2026-11-21T14:24:21.665Z",
+    "updated_at": "2026-11-21T14:24:21.665Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.students",
+  "pk": 10,
+  "fields": {
+    "admin": 25,
+    "profile_id": "STD00010",
+    "gender": "Male",
+    "address": "28 Sector 50, Noida",
+    "class_id": 2,
+    "semester_id": 1,
+    "mentor": 7,
+    "created_at": "2026-11-21T14:24:21.784Z",
+    "updated_at": "2026-11-21T14:24:21.784Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.students",
+  "pk": 11,
+  "fields": {
+    "admin": 26,
+    "profile_id": "STD00011",
+    "gender": "Female",
+    "address": "93 Innovation Street, Noida",
+    "class_id": 2,
+    "semester_id": 1,
+    "mentor": 5,
+    "created_at": "2026-11-21T14:24:21.902Z",
+    "updated_at": "2026-11-21T14:24:21.902Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.students",
+  "pk": 12,
+  "fields": {
+    "admin": 27,
+    "profile_id": "STD00012",
+    "gender": "Male",
+    "address": "10 Harmony Apartments, Noida",
+    "class_id": 2,
+    "semester_id": 1,
+    "mentor": 6,
+    "created_at": "2026-11-21T14:24:22.020Z",
+    "updated_at": "2026-11-21T14:24:22.020Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.students",
+  "pk": 13,
+  "fields": {
+    "admin": 28,
+    "profile_id": "STD00013",
+    "gender": "Female",
+    "address": "74 Orchid Heights, Noida",
+    "class_id": 2,
+    "semester_id": 1,
+    "mentor": 7,
+    "created_at": "2026-11-21T14:24:22.137Z",
+    "updated_at": "2026-11-21T14:24:22.137Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.students",
+  "pk": 14,
+  "fields": {
+    "admin": 29,
+    "profile_id": "STD00014",
+    "gender": "Male",
+    "address": "17 Commerce Road, Noida",
+    "class_id": 3,
+    "semester_id": 1,
+    "mentor": 8,
+    "created_at": "2026-11-21T14:24:22.255Z",
+    "updated_at": "2026-11-21T14:24:22.255Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.students",
+  "pk": 15,
+  "fields": {
+    "admin": 30,
+    "profile_id": "STD00015",
+    "gender": "Female",
+    "address": "62 Executive Enclave, Noida",
+    "class_id": 3,
+    "semester_id": 1,
+    "mentor": 9,
+    "created_at": "2026-11-21T14:24:22.374Z",
+    "updated_at": "2026-11-21T14:24:22.374Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.students",
+  "pk": 16,
+  "fields": {
+    "admin": 31,
+    "profile_id": "STD00016",
+    "gender": "Female",
+    "address": "31 Market View, Noida",
+    "class_id": 3,
+    "semester_id": 1,
+    "mentor": 10,
+    "created_at": "2026-11-21T14:24:22.492Z",
+    "updated_at": "2026-11-21T14:24:22.492Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.students",
+  "pk": 17,
+  "fields": {
+    "admin": 32,
+    "profile_id": "STD00017",
+    "gender": "Male",
+    "address": "4 Business Bay, Noida",
+    "class_id": 3,
+    "semester_id": 1,
+    "mentor": 8,
+    "created_at": "2026-11-21T14:24:22.610Z",
+    "updated_at": "2026-11-21T14:24:22.610Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.students",
+  "pk": 18,
+  "fields": {
+    "admin": 33,
+    "profile_id": "STD00018",
+    "gender": "Female",
+    "address": "80 Sector 78, Noida",
+    "class_id": 3,
+    "semester_id": 1,
+    "mentor": 9,
+    "created_at": "2026-11-21T14:24:22.727Z",
+    "updated_at": "2026-11-21T14:24:22.727Z",
+    "fcm_token": ""
+  }
+},
+{
+  "model": "student_management_app.students",
+  "pk": 19,
+  "fields": {
+    "admin": 34,
+    "profile_id": "STD00019",
+    "gender": "Male",
+    "address": "26 Management Lane, Noida",
+    "class_id": 3,
+    "semester_id": 1,
+    "mentor": 10,
+    "created_at": "2026-11-21T14:24:22.845Z",
+    "updated_at": "2026-11-21T14:24:22.845Z",
+    "fcm_token": ""
+  }
+}
+]

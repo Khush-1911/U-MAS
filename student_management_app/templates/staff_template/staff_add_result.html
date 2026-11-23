@@ -71,7 +71,7 @@ Add Results
             .done(function(response){
                 var json_data=JSON.parse(response);
                 console.log(json_data)
-                var div_data="<div class='form-group'><label class="block font-label text-sm font-bold text-on-surface-variant">Student List</label><select class='student_list form-control' name='student_list'>";
+                var div_data="<div class='form-group'><label class='block font-label text-sm font-bold text-on-surface-variant'>Student List</label><select class='student_list form-control' name='student_list'>";
                 for(key in json_data)
                 {
                     div_data+="<option value='"+json_data[key]['id']+"'>ID : "+json_data[key]['id']+" : "+json_data[key]['name']+"</option>";
@@ -80,10 +80,10 @@ Add Results
                 div_data+="</div>";
                 div_data+="<div class='form-group'><div class='row'>"
                 div_data+="<div class='col-lg-6'>";
-                div_data+="<label class="block font-label text-sm font-bold text-on-surface-variant"> Assignment Marks : </label><input type='text' name='assignment_marks' class='form-control' placeholder='Assignment Marks'>";
+                div_data+="<label class='block font-label text-sm font-bold text-on-surface-variant'> Assignment Marks : </label><input type='text' name='assignment_marks' class='form-control' placeholder='Assignment Marks'>";
                 div_data+="</div>";
                 div_data+="<div class='col-lg-6'>";
-                div_data+="<label class="block font-label text-sm font-bold text-on-surface-variant"> Exam Marks : </label><input type='text' name='exam_marks' class='form-control' placeholder='Exam Marks'>";
+                div_data+="<label class='block font-label text-sm font-bold text-on-surface-variant'> Exam Marks : </label><input type='text' name='exam_marks' class='form-control' placeholder='Exam Marks'>";
                 div_data+="</div>"
                 div_data+="</div></div>";
 
