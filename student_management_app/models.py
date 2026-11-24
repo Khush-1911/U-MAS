@@ -241,6 +241,18 @@ class NotificationStaffs(models.Model):
     sender_name = models.CharField(max_length=255, default="HOD")
     title = models.CharField(max_length=255, default="Notification")
     message = models.TextField()
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+    objects = models.Manager()
+
+class NotificationHOD(models.Model):
+    id = models.AutoField(primary_key=True)
+    hod_id = models.ForeignKey(HOD, on_delete=models.CASCADE)
+    sender_name = models.CharField(max_length=255, default="HOD")
+    title = models.CharField(max_length=255, default="Notification")
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     objects = models.Manager()

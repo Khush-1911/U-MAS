@@ -12,10 +12,14 @@ from django.views.decorators.csrf import csrf_exempt
 from student_management_app.forms import AddStudentForm, EditStudentForm
 from student_management_app.models import CustomUser, Staffs, Department, Subjects, Students, SemesterModel, ClassModel, \
     FeedBackStudent, FeedBackStaffs, LeaveReportStudent, LeaveReportStaff, Attendance, AttendanceReport, \
-    NotificationStudent, NotificationStaffs
+    NotificationStudent, NotificationStaffs, NotificationHOD, HOD
 from student_management_app.notification_utils import (
     create_student_notifications,
     send_student_notification_emails,
+    create_staff_notifications,
+    send_staff_notification_emails,
+    create_hod_notifications,
+    send_hod_notification_emails,
 )
 
 
@@ -824,6 +828,7 @@ def admin_send_notification_staff(request):
 def admin_send_notification(request):
     staffs = Staffs.objects.select_related("admin").order_by("admin__first_name", "admin__last_name", "id")
     students = Students.objects.select_related("admin", "class_id__department").order_by("admin__first_name", "admin__last_name", "id")
+    hods = HOD.objects.select_related("admin", "department").order_by("admin__first_name", "admin__last_name", "id")
     departments = Department.objects.order_by("department_name")
     admin_to_staff = {staff.admin_id: staff.id for staff in staffs}
     staff_department_map = {staff.id: [] for staff in staffs}
@@ -837,6 +842,7 @@ def admin_send_notification(request):
         {
             "staffs": staffs,
             "students": students,
+            "hods": hods,
             "departments": departments,
             "staff_department_map_json": json.dumps(staff_department_map),
         },
@@ -853,6 +859,7 @@ def send_bulk_notification(request):
     sender_name = _notification_sender_name(request.user)
     selected_staff_ids = request.POST.getlist("staff_ids")
     selected_student_ids = request.POST.getlist("student_ids")
+    selected_hod_ids = request.POST.getlist("hod_ids")
     selected_department_id = (request.POST.get("department_id") or "").strip()
     selected_staff_department_id = (request.POST.get("staff_department_id") or "").strip()
 
@@ -864,16 +871,23 @@ def send_bulk_notification(request):
         messages.error(request, "Notification body is required")
         return HttpResponseRedirect(reverse("admin_send_notification"))
 
-    if target_group not in {"staff", "student", "all"}:
+    if target_group not in {"staff", "student", "hod", "all"}:
         messages.error(request, "Please select whom to send")
         return HttpResponseRedirect(reverse("admin_send_notification"))
 
     staff_qs = Staffs.objects.none()
     student_qs = Students.objects.none()
+    hod_qs = HOD.objects.none()
 
     if target_group == "all":
         staff_qs = Staffs.objects.all()
         student_qs = Students.objects.all()
+        hod_qs = HOD.objects.all()
+    elif target_group == "hod":
+        if selected_hod_ids:
+            hod_qs = HOD.objects.filter(id__in=selected_hod_ids)
+        else:
+            hod_qs = HOD.objects.all()
     elif target_group == "staff":
         filtered_staff_qs = Staffs.objects.all()
         if selected_staff_department_id and selected_staff_department_id != "all_departments":
@@ -900,22 +914,18 @@ def send_bulk_notification(request):
 
     staff_recipients = list(staff_qs)
     student_recipients = list(student_qs)
+    hod_recipients = list(hod_qs)
 
-    if not staff_recipients and not student_recipients:
+    if not staff_recipients and not student_recipients and not hod_recipients:
         messages.error(request, "No recipients found for selected options")
         return HttpResponseRedirect(reverse("admin_send_notification"))
 
     if staff_recipients:
-        NotificationStaffs.objects.bulk_create(
-            [
-                NotificationStaffs(
-                    staff_id=staff,
-                    sender_name=sender_name,
-                    title=title,
-                    message=message,
-                )
-                for staff in staff_recipients
-            ]
+        create_staff_notifications(
+            staff_recipients,
+            sender_name=sender_name,
+            title=title,
+            message=message,
         )
     if student_recipients:
         create_student_notifications(
@@ -930,10 +940,31 @@ def send_bulk_notification(request):
             title=title,
             message=message,
         )
+    if hod_recipients:
+        create_hod_notifications(
+            hod_recipients,
+            sender_name=sender_name,
+            title=title,
+            message=message,
+        )
+        send_hod_notification_emails(
+            hod_recipients,
+            sender_name=sender_name,
+            title=title,
+            message=message,
+        )
+
+    counts_parts = []
+    if staff_recipients:
+        counts_parts.append(f"{len(staff_recipients)} staff")
+    if student_recipients:
+        counts_parts.append(f"{len(student_recipients)} students")
+    if hod_recipients:
+        counts_parts.append(f"{len(hod_recipients)} HODs")
 
     messages.success(
         request,
-        f"Notification sent to {len(staff_recipients)} staff and {len(student_recipients)} students.",
+        f"Notification sent to {', '.join(counts_parts)}.",
     )
     return HttpResponseRedirect(reverse("admin_send_notification"))
 

@@ -18,8 +18,11 @@
     </div>
     <div class="flex items-center gap-6">
       <div class="flex items-center gap-4">
-        <a href="{% url 'staff_all_notification' %}" class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors relative">
+        <a href="{% url 'staff_all_notification' %}" class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors relative" title="Notifications">
           <span class="material-symbols-outlined">notifications</span>
+          {% if staff_unread_notification_count %}
+          <span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full border-2 border-white"></span>
+          {% endif %}
         </a>
       </div>
       <div class="h-8 w-[1px] bg-outline-variant/30"></div>

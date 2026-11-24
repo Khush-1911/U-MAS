@@ -13,6 +13,17 @@
       <span>Home</span>
     </a>
 
+    {% url 'staff_all_notification' as staff_all_notification %}
+    <a class="{% if request.path == staff_all_notification %}relative flex items-center gap-3 px-8 py-3 text-indigo-600 font-bold before:absolute before:left-0 before:h-6 before:w-1 before:bg-gradient-to-b before:from-indigo-600 before:to-indigo-400 before:rounded-r-full{% else %}flex items-center gap-3 px-8 py-3 text-slate-500 hover:bg-white/50 hover:text-indigo-600 transition-all duration-300{% endif %} font-medium" href="{{ staff_all_notification }}">
+      <span class="material-symbols-outlined">notifications</span>
+      <span>Notifications</span>
+      {% if staff_unread_notification_count %}
+        <span class="ml-auto px-2 py-0.5 rounded-full text-xs font-label font-bold bg-error/10 text-error" id="staffNotificationBadge">
+          {% if staff_unread_notification_count > 99 %}99+{% else %}{{ staff_unread_notification_count }}{% endif %}
+        </span>
+      {% endif %}
+    </a>
+
     <p class="px-8 text-[10px] font-label text-on-surface-variant uppercase tracking-widest mb-2 mt-6">Academic Management</p>
 
     {% url 'staff_take_attendance' as staff_take_attendance %}

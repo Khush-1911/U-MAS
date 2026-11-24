@@ -52,7 +52,7 @@
       <span class="material-symbols-outlined">notifications</span>
       <span>Notifications</span>
       {% if student_unread_notification_count %}
-        <span class="ml-auto px-2 py-0.5 rounded-full bg-error text-white text-[10px] font-label font-bold">
+        <span class="ml-auto px-2 py-0.5 rounded-full bg-error text-white text-[10px] font-label font-bold" id="studentNotificationBadge">
           {% if student_unread_notification_count > 99 %}99+{% else %}{{ student_unread_notification_count }}{% endif %}
         </span>
       {% endif %}

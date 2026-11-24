@@ -12,7 +12,7 @@ from django.db import transaction
 from django.db.models import Q
 from django.forms import model_to_dict
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -1034,9 +1034,41 @@ def staff_fcmtoken_save(request):
         return HttpResponse("False")
 
 def staff_all_notification(request):
-    staff=Staffs.objects.get(admin=request.user.id)
-    notifications=NotificationStaffs.objects.filter(staff_id=staff.id).order_by("-created_at")
-    return render(request,"staff_template/all_notification.html",{"notifications":notifications})
+    staff = Staffs.objects.get(admin=request.user.id)
+    notifications = NotificationStaffs.objects.filter(staff_id=staff.id).order_by("is_read", "-created_at")
+    unread_count = notifications.filter(is_read=False).count()
+    read_count = notifications.filter(is_read=True).count()
+    return render(
+        request,
+        "staff_template/all_notification.html",
+        {
+            "notifications": notifications,
+            "unread_count": unread_count,
+            "read_count": read_count,
+            "total_count": notifications.count(),
+        },
+    )
+
+
+def staff_notification_mark_read(request, notification_id):
+    try:
+        staff = Staffs.objects.get(admin=request.user.id)
+    except Staffs.DoesNotExist:
+        return JsonResponse({"ok": False, "error": "Staff profile not found"}, status=403)
+
+    if notification_id == 0:
+        NotificationStaffs.objects.filter(staff_id=staff.id, is_read=False).update(is_read=True)
+        unread_count = 0
+    else:
+        notification = get_object_or_404(NotificationStaffs, id=notification_id, staff_id=staff.id)
+        notification.is_read = True
+        notification.save(update_fields=["is_read"])
+        unread_count = NotificationStaffs.objects.filter(staff_id=staff.id, is_read=False).count()
+
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest" or request.method == "POST":
+        return JsonResponse({"ok": True, "unread_count": unread_count})
+
+    return HttpResponseRedirect(reverse("staff_all_notification"))
 
 def staff_add_result(request):
     subjects=Subjects.objects.filter(staff_id=request.user.id)

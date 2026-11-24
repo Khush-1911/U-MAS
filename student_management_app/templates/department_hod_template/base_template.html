@@ -17,6 +17,14 @@
       <h2 class="text-lg font-bold font-headline text-on-surface">{% block page_title %}{% endblock page_title %}</h2>
     </div>
     <div class="flex items-center gap-6">
+      <div class="flex items-center gap-4">
+        <a href="{% url 'department_hod_notifications' %}" class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors relative" title="Notifications">
+          <span class="material-symbols-outlined">notifications</span>
+          {% if hod_unread_notification_count %}
+          <span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full border-2 border-white"></span>
+          {% endif %}
+        </a>
+      </div>
       <div class="h-8 w-[1px] bg-outline-variant/30"></div>
       <div class="flex items-center gap-3">
         <div class="text-right">

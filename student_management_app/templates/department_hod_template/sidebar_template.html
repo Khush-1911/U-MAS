@@ -26,6 +26,25 @@
       <span class="material-symbols-outlined">groups</span>
       <span>Student Roster</span>
     </a>
+
+    <p class="px-8 text-[10px] font-label text-on-surface-variant uppercase tracking-widest mb-2 mt-6">Communications</p>
+
+    {% url 'department_hod_send_notification' as department_hod_send_notification %}
+    <a class="{% if request.path == department_hod_send_notification %}relative flex items-center gap-3 px-8 py-3 text-indigo-600 font-bold before:absolute before:left-0 before:h-6 before:w-1 before:bg-gradient-to-b before:from-indigo-600 before:to-indigo-400 before:rounded-r-full{% else %}flex items-center gap-3 px-8 py-3 text-slate-500 hover:bg-white/50 hover:text-indigo-600 transition-all duration-300{% endif %} font-medium" href="{{ department_hod_send_notification }}">
+      <span class="material-symbols-outlined">campaign</span>
+      <span>Send Notification</span>
+    </a>
+
+    {% url 'department_hod_notifications' as department_hod_notifications %}
+    <a class="{% if request.path == department_hod_notifications %}relative flex items-center gap-3 px-8 py-3 text-indigo-600 font-bold before:absolute before:left-0 before:h-6 before:w-1 before:bg-gradient-to-b before:from-indigo-600 before:to-indigo-400 before:rounded-r-full{% else %}flex items-center gap-3 px-8 py-3 text-slate-500 hover:bg-white/50 hover:text-indigo-600 transition-all duration-300{% endif %} font-medium" href="{{ department_hod_notifications }}">
+      <span class="material-symbols-outlined">notifications</span>
+      <span>Notifications</span>
+      {% if hod_unread_notification_count %}
+        <span class="ml-auto px-2 py-0.5 rounded-full text-xs font-label font-bold bg-error/10 text-error" id="hodNotificationBadge">
+          {% if hod_unread_notification_count > 99 %}99+{% else %}{{ hod_unread_notification_count }}{% endif %}
+        </span>
+      {% endif %}
+    </a>
   </nav>
 
   <div class="pt-6 border-t border-slate-200/50 px-2 space-y-1">

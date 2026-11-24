@@ -1,0 +1,307 @@
+{% extends 'department_hod_template/base_template.html' %}
+{% block page_title %}Notification Center{% endblock page_title %}
+
+{% block main_content %}
+<header class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+  <div>
+    <h2 class="text-4xl font-extrabold text-on-surface font-headline tracking-tight">Notification Center</h2>
+    <p class="text-on-surface-variant font-body mt-2">Official updates, campus circulars, and departmental messages directed to your office.</p>
+  </div>
+  <div class="flex items-center gap-3">
+    {% if unread_count %}
+      <button type="button" id="mark_all_read_btn" class="px-5 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label font-bold text-xs transition-colors flex items-center gap-2 border-none cursor-pointer">
+        <span class="material-symbols-outlined text-sm">done_all</span>
+        <span>Mark All as Read</span>
+      </button>
+    {% endif %}
+    <a href="{% url 'department_hod_send_notification' %}" class="px-6 py-2.5 rounded-xl bg-primary text-white font-label font-bold text-xs shadow-lg shadow-primary/20 hover:shadow-xl active:scale-95 transition-all flex items-center gap-2 no-underline">
+      <span class="material-symbols-outlined text-sm">campaign</span>
+      <span>Broadcast New</span>
+    </a>
+  </div>
+</header>
+
+<!-- Filter Tabs & Search Bar -->
+<div class="bg-surface-container-lowest rounded-2xl p-4 mb-6 border border-outline-variant/10 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+  <!-- Status Filter Pills -->
+  <div class="flex items-center gap-2" id="filter_tabs">
+    <button type="button" data-filter="all" class="filter-tab active px-4 py-2 rounded-xl text-xs font-label font-bold transition-all bg-primary text-white shadow-sm border-none cursor-pointer flex items-center gap-1.5">
+      <span>All</span>
+      <span class="px-2 py-0.5 rounded-full text-[10px] bg-white/20 text-white font-body" id="total_count_badge">{{ total_count }}</span>
+    </button>
+    <button type="button" data-filter="unread" class="filter-tab px-4 py-2 rounded-xl text-xs font-label font-bold transition-all bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high border-none cursor-pointer flex items-center gap-1.5">
+      <span>Unread</span>
+      <span class="px-2 py-0.5 rounded-full text-[10px] bg-error/10 text-error font-body font-bold" id="unread_count_badge">{{ unread_count }}</span>
+    </button>
+    <button type="button" data-filter="read" class="filter-tab px-4 py-2 rounded-xl text-xs font-label font-bold transition-all bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high border-none cursor-pointer flex items-center gap-1.5">
+      <span>Read</span>
+      <span class="px-2 py-0.5 rounded-full text-[10px] bg-surface-container-highest text-on-surface-variant font-body" id="read_count_badge">{{ read_count }}</span>
+    </button>
+  </div>
+
+  <!-- Search Input -->
+  <div class="relative w-full md:w-80">
+    <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-base">search</span>
+    <input
+      type="text"
+      id="notification_search"
+      placeholder="Search announcements, senders..."
+      class="w-full pl-10 pr-4 py-2.5 bg-surface-container-low border border-outline-variant/20 rounded-xl text-xs font-body text-on-surface focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+    >
+  </div>
+</div>
+
+<!-- Notification Feed -->
+<div class="space-y-4" id="notification_list">
+  {% for notification in notifications %}
+    <div
+      class="notification-item group bg-surface-container-lowest rounded-2xl p-6 border transition-all duration-200 hover:shadow-lg hover:border-primary/30 relative overflow-hidden {% if not notification.is_read %}border-primary/20 bg-primary/[0.02] is-unread{% else %}border-outline-variant/10 is-read{% endif %}"
+      data-id="{{ notification.id }}"
+      data-title="{{ notification.title|default:'Department Notification'|escape }}"
+      data-sender="{{ notification.sender_name|default:'Administration'|escape }}"
+      data-message="{{ notification.message|escape }}"
+      data-date="{{ notification.created_at|date:'d M Y, h:i A' }}"
+      data-is-read="{% if notification.is_read %}true{% else %}false{% endif %}"
+    >
+      <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-3">
+        <div class="flex items-start gap-4 min-w-0">
+          <div class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 mt-0.5 {% if not notification.is_read %}bg-primary text-white shadow-lg shadow-primary/25{% else %}bg-surface-container text-on-surface-variant{% endif %}">
+            <span class="material-symbols-outlined text-2xl">{% if not notification.is_read %}notifications_active{% else %}mark_email_read{% endif %}</span>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <h4 class="font-headline font-bold text-on-surface text-base md:text-lg notification-title">{{ notification.title|default:"Announcement" }}</h4>
+              {% if not notification.is_read %}
+                <span class="unread-pill px-2.5 py-0.5 rounded-full text-[10px] font-label font-bold bg-error/10 text-error uppercase tracking-wider">Unread</span>
+              {% else %}
+                <span class="read-pill px-2.5 py-0.5 rounded-full text-[10px] font-label font-bold bg-surface-container text-on-surface-variant uppercase tracking-wider">Read</span>
+              {% endif %}
+            </div>
+            <div class="flex items-center gap-2 mt-1 text-xs text-on-surface-variant font-body">
+              <span class="font-semibold text-primary notification-sender">{{ notification.sender_name|default:"HOD Office" }}</span>
+              <span>•</span>
+              <span class="notification-date">{{ notification.created_at|date:"d M Y, h:i A" }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preview Body -->
+      <div class="pl-0 sm:pl-16 mt-2">
+        <p class="font-body text-sm text-on-surface-variant leading-relaxed line-clamp-2 notification-message-preview">
+          {{ notification.message }}
+        </p>
+
+        <!-- Actions -->
+        <div class="mt-4 pt-3 border-t border-outline-variant/10 flex items-center justify-between">
+          <button type="button" class="btn-open-modal text-primary text-xs font-label font-bold hover:underline flex items-center gap-1.5 bg-transparent border-none p-0 cursor-pointer">
+            <span class="material-symbols-outlined text-base">visibility</span>
+            <span>Read Full Announcement</span>
+          </button>
+          {% if not notification.is_read %}
+            <button type="button" class="btn-mark-single-read px-3 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-label font-bold transition-colors border-none cursor-pointer flex items-center gap-1" data-id="{{ notification.id }}">
+              <span class="material-symbols-outlined text-sm">done</span>
+              <span>Mark as Read</span>
+            </button>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <div class="bg-surface-container-lowest rounded-3xl p-16 text-center border border-dashed border-outline-variant/30">
+      <div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant mx-auto mb-4">
+        <span class="material-symbols-outlined text-3xl">inbox</span>
+      </div>
+      <h4 class="font-headline font-bold text-on-surface text-lg">No Notifications Yet</h4>
+      <p class="font-body text-sm text-on-surface-variant mt-1 max-w-md mx-auto">
+        When announcements or circulars are sent to your department office by peer HODs or administrative offices, they will appear here.
+      </p>
+    </div>
+  {% endfor %}
+</div>
+
+<!-- Empty search results placeholder (hidden by default) -->
+<div id="no_search_results" class="hidden bg-surface-container-lowest rounded-3xl p-12 text-center border border-dashed border-outline-variant/20 mt-4">
+  <span class="material-symbols-outlined text-4xl text-outline-variant/50 mb-2 block">search_off</span>
+  <p class="font-body text-sm text-on-surface-variant">No announcements matched your current search and filter criteria.</p>
+</div>
+
+<!-- Full Reading Modal -->
+<div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4 z-[2000]" id="readingModal" aria-hidden="true">
+  <div class="w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200 flex flex-col max-h-[90vh]">
+    <div class="flex items-center justify-between px-8 py-6 border-b border-outline-variant/15">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+          <span class="material-symbols-outlined">campaign</span>
+        </div>
+        <div>
+          <span class="text-[10px] font-label font-bold text-primary uppercase tracking-widest block">Official Notice</span>
+          <h4 class="font-headline font-bold text-on-surface text-lg" id="modalTitle">Notification Title</h4>
+        </div>
+      </div>
+      <button type="button" class="modal-close-btn w-9 h-9 rounded-full bg-surface-container hover:bg-surface-container-highest flex items-center justify-center text-on-surface-variant text-xl leading-none border-none cursor-pointer transition-colors">&times;</button>
+    </div>
+
+    <div class="p-8 overflow-y-auto space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-surface-container-low border border-outline-variant/10 text-xs">
+        <div>
+          <span class="font-label text-on-surface-variant uppercase tracking-wider block text-[10px]">Issued By</span>
+          <strong class="font-body text-on-surface text-sm" id="modalSender">HOD Office</strong>
+        </div>
+        <div>
+          <span class="font-label text-on-surface-variant uppercase tracking-wider block text-[10px]">Received At</span>
+          <span class="font-body text-on-surface" id="modalDate">24 Nov 2026</span>
+        </div>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-surface-container-low/50 border border-outline-variant/10">
+        <p class="font-body text-on-surface text-sm md:text-base leading-relaxed whitespace-pre-wrap select-text" id="modalMessage"></p>
+      </div>
+    </div>
+
+    <div class="px-8 py-5 border-t border-outline-variant/15 bg-surface-container-lowest flex justify-end gap-3">
+      <button type="button" class="modal-close-btn px-6 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-highest text-on-surface font-label font-bold text-xs transition-colors border-none cursor-pointer">
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+{% endblock main_content %}
+
+{% block custom_js %}
+<script>
+  $(document).ready(function() {
+    var markReadUrlTemplate = "{% url 'department_hod_notification_mark_read' 0 %}";
+
+    function sendMarkRead(id, callback) {
+      var url = markReadUrlTemplate.replace("/0", "/" + id);
+      $.ajax({
+        url: url,
+        type: "POST",
+        headers: { "X-CSRFToken": "{{ csrf_token }}" },
+        success: function(resp) {
+          if (callback) callback(resp);
+        }
+      });
+    }
+
+    function applyFilters() {
+      var activeFilter = $(".filter-tab.active").data("filter");
+      var searchVal = $("#notification_search").val().toLowerCase().trim();
+      var visibleCount = 0;
+
+      $(".notification-item").each(function() {
+        var $el = $(this);
+        var isRead = $el.attr("data-is-read") === "true";
+        var title = ($el.attr("data-title") || "").toLowerCase();
+        var sender = ($el.attr("data-sender") || "").toLowerCase();
+        var message = ($el.attr("data-message") || "").toLowerCase();
+
+        var matchesFilter = (activeFilter === "all") || (activeFilter === "read" && isRead) || (activeFilter === "unread" && !isRead);
+        var matchesSearch = (!searchVal) || (title.indexOf(searchVal) > -1) || (sender.indexOf(searchVal) > -1) || (message.indexOf(searchVal) > -1);
+
+        if (matchesFilter && matchesSearch) {
+          $el.show();
+          visibleCount++;
+        } else {
+          $el.hide();
+        }
+      });
+
+      if (visibleCount === 0 && $(".notification-item").length > 0) {
+        $("#no_search_results").removeClass("hidden");
+      } else {
+        $("#no_search_results").addClass("hidden");
+      }
+    }
+
+    $(".filter-tab").on("click", function() {
+      $(".filter-tab").removeClass("active bg-primary text-white shadow-sm").addClass("bg-surface-container text-on-surface-variant");
+      $(this).removeClass("bg-surface-container text-on-surface-variant").addClass("active bg-primary text-white shadow-sm");
+      applyFilters();
+    });
+
+    $("#notification_search").on("keyup", applyFilters);
+
+    // Open Modal
+    $(".btn-open-modal").on("click", function() {
+      var $item = $(this).closest(".notification-item");
+      var id = $item.data("id");
+      var title = $item.data("title");
+      var sender = $item.data("sender");
+      var date = $item.data("date");
+      var message = $item.data("message");
+      var isRead = $item.attr("data-is-read") === "true";
+
+      $("#modalTitle").text(title);
+      $("#modalSender").text(sender);
+      $("#modalDate").text(date);
+      $("#modalMessage").text(message);
+
+      $("#readingModal").removeClass("hidden").addClass("flex");
+
+      if (!isRead) {
+        sendMarkRead(id, function(resp) {
+          $item.attr("data-is-read", "true").removeClass("is-unread border-primary/20 bg-primary/[0.02]").addClass("is-read border-outline-variant/10");
+          $item.find(".unread-pill").replaceWith('<span class="read-pill px-2.5 py-0.5 rounded-full text-[10px] font-label font-bold bg-surface-container text-on-surface-variant uppercase tracking-wider">Read</span>');
+          $item.find(".btn-mark-single-read").remove();
+          if (resp && resp.unread_count !== undefined) {
+            $("#unread_count_badge").text(resp.unread_count);
+            if (resp.unread_count === 0) {
+              $("#hodNotificationBadge").hide();
+            } else {
+              $("#hodNotificationBadge").text(resp.unread_count);
+            }
+          }
+        });
+      }
+    });
+
+    // Single Mark as Read
+    $(".btn-mark-single-read").on("click", function(e) {
+      e.stopPropagation();
+      var $btn = $(this);
+      var $item = $btn.closest(".notification-item");
+      var id = $btn.data("id");
+
+      sendMarkRead(id, function(resp) {
+        $item.attr("data-is-read", "true").removeClass("is-unread border-primary/20 bg-primary/[0.02]").addClass("is-read border-outline-variant/10");
+        $item.find(".unread-pill").replaceWith('<span class="read-pill px-2.5 py-0.5 rounded-full text-[10px] font-label font-bold bg-surface-container text-on-surface-variant uppercase tracking-wider">Read</span>');
+        $btn.remove();
+        if (resp && resp.unread_count !== undefined) {
+          $("#unread_count_badge").text(resp.unread_count);
+          if (resp.unread_count === 0) {
+            $("#hodNotificationBadge").hide();
+            $("#mark_all_read_btn").fadeOut();
+          } else {
+            $("#hodNotificationBadge").text(resp.unread_count);
+          }
+        }
+      });
+    });
+
+    // Mark All as Read
+    $("#mark_all_read_btn").on("click", function() {
+      sendMarkRead(0, function(resp) {
+        $(".notification-item").attr("data-is-read", "true").removeClass("is-unread border-primary/20 bg-primary/[0.02]").addClass("is-read border-outline-variant/10");
+        $(".unread-pill").replaceWith('<span class="read-pill px-2.5 py-0.5 rounded-full text-[10px] font-label font-bold bg-surface-container text-on-surface-variant uppercase tracking-wider">Read</span>');
+        $(".btn-mark-single-read").remove();
+        $("#unread_count_badge").text("0");
+        $("#hodNotificationBadge").hide();
+        $("#mark_all_read_btn").fadeOut();
+        applyFilters();
+      });
+    });
+
+    $(".modal-close-btn").on("click", function() {
+      $("#readingModal").removeClass("flex").addClass("hidden");
+    });
+
+    $("#readingModal").on("click", function(e) {
+      if (e.target === this) {
+        $(this).removeClass("flex").addClass("hidden");
+      }
+    });
+  });
+</script>
+{% endblock custom_js %}

@@ -32,7 +32,8 @@ Send Notification
                   <option value="">Select option</option>
                   <option value="staff">Staff</option>
                   <option value="student">Student</option>
-                  <option value="all">All (Staff + Students)</option>
+                  <option value="hod">HOD</option>
+                  <option value="all">All (Staff + Students + HODs)</option>
                 </select>
               </div>
 
@@ -96,6 +97,25 @@ Send Notification
                 </div>
               </div>
 
+              <div id="hod_wrap" style="display:none;">
+                <div class="flex justify-between items-center mb-2">
+                  <label class="block font-label text-sm font-bold text-on-surface-variant">Select Department HODs</label>
+                  <button class="px-3 py-1 rounded-lg bg-primary/10 text-primary text-[10px] font-label font-bold uppercase tracking-wider hover:bg-primary/20 transition-colors border-none cursor-pointer" type="button" id="select_all_hods">Select All HODs</button>
+                </div>
+                <div class="border rounded p-2" style="max-height: 260px; overflow-y: auto;">
+                  {% for hod in hods %}
+                  <div class="form-check mb-1 hod-item">
+                    <input class="form-check-input hod-checkbox" type="checkbox" name="hod_ids" value="{{ hod.id }}" id="hod_{{ hod.id }}">
+                    <label class="text-sm font-body text-on-surface cursor-pointer" for="hod_{{ hod.id }}">
+                      {{ hod.profile_id|default:hod.id }} - {{ hod.admin.get_full_name|default:hod.admin.username }} ({{ hod.department.department_name|default:"HOD" }})
+                    </label>
+                  </div>
+                  {% empty %}
+                  <p class="text-on-surface-variant text-sm">No HODs available.</p>
+                  {% endfor %}
+                </div>
+              </div>
+
               <div id="all_wrap" class="px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 bg-primary/10 text-primary" style="display:none;">
                 <span class="material-symbols-outlined">info</span>
                 <span>Broadcast message to all institutional personnel (Staff + Students).</span>
@@ -129,13 +149,19 @@ Send Notification
     const target = $("#target_group").val();
     const isStaff = target === "staff";
     const isStudent = target === "student";
+    const isHOD = target === "hod";
     const isAll = target === "all";
 
     $("#staff_wrap").toggle(isStaff);
     $("#staff_department_wrap").toggle(isStaff);
     $("#student_wrap").toggle(isStudent);
     $("#department_wrap").toggle(isStudent);
+    $("#hod_wrap").toggle(isHOD);
     $("#all_wrap").toggle(isAll);
+
+    if (!isHOD) {
+      $(".hod-checkbox").prop("checked", false);
+    }
 
     if (!isStaff) {
       $(".staff-checkbox").prop("checked", false);
@@ -211,6 +237,10 @@ Send Notification
 
     $("#select_all_students").on("click", function() {
       $(".student-item:visible").find(".student-checkbox").prop("checked", true);
+    });
+
+    $("#select_all_hods").on("click", function() {
+      $(".hod-checkbox").prop("checked", true);
     });
   });
 </script>
