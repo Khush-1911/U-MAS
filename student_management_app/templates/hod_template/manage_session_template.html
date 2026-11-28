@@ -5,21 +5,20 @@ Add Session Year
 {% block main_content %}
     
             
-            <div class="bg-surface-container-lowest rounded-2xl overflow-hidden">
-              <div class="px-8 py-5 border-b border-outline-variant/10"><h3 class="font-headline font-bold text-on-surface text-lg">Add Session Year</h3></div>
-              
+            <div class="bg-surface-container-lowest rounded-2xl overflow-hidden mb-8 border border-outline-variant/10 shadow-xl shadow-indigo-900/5">
+              <div class="px-5 md:px-8 py-5 border-b border-outline-variant/10"><h3 class="font-headline font-bold text-on-surface text-lg">Add Session Year</h3></div>
               
               <form role="form" action="/add_session_save" method="post">
                   {% csrf_token %}
-                <div class="p-8 space-y-6">
+                <div class="p-5 md:p-8 space-y-6">
                   <div class="space-y-2">
                     <label class="block font-label text-sm font-bold text-on-surface-variant">Session Start Year </label>
-                    <input type="date" class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" name="session_start" placeholder="Enter Session Start Year">
+                    <input type="date" class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" name="session_start" placeholder="Enter Session Start Year" required>
                   </div>
 
                  <div class="space-y-2">
                     <label class="block font-label text-sm font-bold text-on-surface-variant">Session End Year </label>
-                    <input type="date" class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" name="session_end" placeholder="Enter Session End Year">
+                    <input type="date" class="w-full px-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-body" name="session_end" placeholder="Enter Session End Year" required>
                   </div>
 
                    <div class="space-y-2">
@@ -34,49 +33,45 @@ Add Session Year
                         {% endfor %}
                       {% endif %}
                     </div>
-
                 </div>
-                
 
-                <div class="px-8 py-6 border-t border-outline-variant/20">
+                <div class="px-5 md:px-8 py-6 border-t border-outline-variant/20">
                   <button type="submit" class="w-full py-4 premium-gradient text-white font-display font-bold rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform">Add Session Year</button>
                 </div>
               </form>
             </div>
-            
 
-          </div>
-          </div>
-      </div>
-
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-12">
-            <div class="bg-surface-container-lowest rounded-2xl overflow-hidden">
-              <div class="px-8 py-5 border-b border-outline-variant/10"><h3 class="font-headline font-bold text-on-surface text-lg">Session Years</h3></div>
-              <div class="p-8 space-y-6">
-                <table class="w-full text-left border-collapse">
+            <div class="bg-surface-container-lowest rounded-2xl overflow-hidden border border-outline-variant/10 shadow-xl shadow-indigo-900/5">
+              <div class="px-5 md:px-8 py-5 border-b border-outline-variant/10"><h3 class="font-headline font-bold text-on-surface text-lg">Session Years</h3></div>
+              <div class="p-4 md:p-8 space-y-6">
+                <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse" style="min-width: 480px;">
                   <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Start Year</th>
-                      <th>End Year</th>
-                      <th>Action</th>
+                    <tr class="bg-surface-container-low/50">
+                      <th class="px-4 py-3 text-xs font-label uppercase tracking-widest text-on-surface-variant">ID</th>
+                      <th class="px-4 py-3 text-xs font-label uppercase tracking-widest text-on-surface-variant">Start Year</th>
+                      <th class="px-4 py-3 text-xs font-label uppercase tracking-widest text-on-surface-variant">End Year</th>
+                      <th class="px-4 py-3 text-xs font-label uppercase tracking-widest text-on-surface-variant text-right">Action</th>
                     </tr>
                   </thead>
                   <tbody>
                   {% for session in sessions %}
-                    <tr>
-                      <td>{{ session.id }}</td>
-                      <td>{{ session.session_start_year }}</td>
-                      <td>{{ session.session_end_year }}</td>
-                      <td>
+                    <tr class="group hover:bg-primary-fixed/20 transition-colors {% if forloop.counter|divisibleby:2 %}bg-surface-container-low/20{% else %}bg-white{% endif %}">
+                      <td class="px-4 py-4">{{ session.id }}</td>
+                      <td class="px-4 py-4 font-semibold text-on-surface">{{ session.session_start_year }}</td>
+                      <td class="px-4 py-4 font-semibold text-on-surface">{{ session.session_end_year }}</td>
+                      <td class="px-4 py-4 text-right">
                         <a href="{% url 'delete_session' session_id=session.id %}" class="px-4 py-2 rounded-lg bg-error/10 text-error text-xs font-label font-bold uppercase tracking-wider hover:bg-error/20 transition-colors no-underline" onclick="return confirm('Delete this session?');">Delete</a>
                       </td>
+                    </tr>
+                  {% empty %}
+                    <tr>
+                      <td colspan="4" class="px-4 py-8 text-center text-on-surface-variant">No session years recorded.</td>
                     </tr>
                   {% endfor %}
                   </tbody>
                 </table>
+                </div>
               </div>
             </div>
           

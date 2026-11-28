@@ -23,6 +23,44 @@ def collegeadmin_home(request):
     }
     return render(request, "collegeadmin_template/home_content.html", context)
 
+def collegeadmin_manage_students(request):
+    institution = request.user.institution
+    if not institution:
+        messages.error(request, "No institution assigned")
+        return HttpResponseRedirect(reverse("collegeadmin_home"))
+
+    students = Students.objects.filter(
+        admin__institution=institution
+    ).select_related("admin", "class_id", "class_id__department", "semester_id", "mentor", "mentor__admin").order_by("-id")
+
+    return render(request, "collegeadmin_template/manage_students.html", {
+        "institution": institution,
+        "students": students,
+    })
+
+def collegeadmin_manage_staff(request):
+    institution = request.user.institution
+    if not institution:
+        messages.error(request, "No institution assigned")
+        return HttpResponseRedirect(reverse("collegeadmin_home"))
+
+    staff_qs = Staffs.objects.filter(
+        admin__institution=institution
+    ).select_related("admin").order_by("-id")
+
+    staff_data = []
+    for s in staff_qs:
+        subjects = list(Subjects.objects.filter(staff_id=s.admin).values_list("subject_name", flat=True))
+        staff_data.append({
+            "staff": s,
+            "subjects": subjects,
+        })
+
+    return render(request, "collegeadmin_template/manage_staff.html", {
+        "institution": institution,
+        "staff_data": staff_data,
+    })
+
 def collegeadmin_manage_grades(request):
     return render(request, "collegeadmin_template/manage_grades.html")
 

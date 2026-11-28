@@ -104,6 +104,59 @@ def department_hod_manage_students(request):
     )
 
 
+def department_hod_manage_staff(request):
+    department = _department_for_hod(request)
+    if not department:
+        messages.error(request, "No department is assigned to this HOD.")
+        return HttpResponseRedirect(reverse("department_hod_home"))
+
+    staffs = _staffs_for_department(department).select_related("admin")
+    staff_data = []
+    for staff in staffs:
+        subjects = list(
+            Subjects.objects.filter(
+                staff_id=staff.admin_id,
+                class_id__department=department,
+            ).values_list("subject_name", flat=True)
+        )
+        staff_data.append({
+            "staff": staff,
+            "subjects": subjects,
+        })
+
+    return render(
+        request,
+        "department_hod_template/manage_staff.html",
+        {
+            "department": department,
+            "staff_data": staff_data,
+            "staff_count": len(staff_data),
+        },
+    )
+
+
+def department_hod_peer_directory(request):
+    department = _department_for_hod(request)
+    if not department:
+        messages.error(request, "No department is assigned to this HOD.")
+        return HttpResponseRedirect(reverse("department_hod_home"))
+
+    other_hods = (
+        HOD.objects.exclude(admin=request.user)
+        .select_related("admin", "department", "department__institution")
+        .order_by("department__department_name", "admin__first_name", "admin__last_name", "id")
+    )
+    return render(
+        request,
+        "department_hod_template/peer_directory.html",
+        {
+            "department": department,
+            "other_hods": other_hods,
+            "hod_count": other_hods.count(),
+        },
+    )
+
+
 def department_hod_upload_timetable_save(request):
     if request.method != "POST":
         return HttpResponseRedirect(reverse("department_hod_upload_timetable"))

@@ -4,54 +4,56 @@ Students
 {% endblock page_title %}
 {% block main_content %}
 
-        <div class="bg-surface-container-lowest rounded-2xl overflow-hidden">
-          <div class="px-8 py-5 border-b border-outline-variant/10"><h3 class="font-headline font-bold text-on-surface text-lg">Students</h3></div>
-          <div class="p-8 space-y-6">
-            <table class="w-full text-left border-collapse">
+        <div class="bg-surface-container-lowest rounded-2xl overflow-hidden border border-outline-variant/10 shadow-xl shadow-indigo-900/5">
+          <div class="px-5 md:px-8 py-5 border-b border-outline-variant/10"><h3 class="font-headline font-bold text-on-surface text-lg">Students</h3></div>
+          <div class="p-4 md:p-8 space-y-6">
+            <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse" style="min-width: 600px;">
               <thead>
-                <tr>
-                  <th>Student ID</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Department</th>
-                  <th>Semester</th>
-                  <th>Assigned Staff</th>
-                  <th>Action</th>
+                <tr class="bg-surface-container-low/50">
+                  <th class="px-4 py-3 text-xs font-label uppercase tracking-widest text-on-surface-variant">Student ID</th>
+                  <th class="px-4 py-3 text-xs font-label uppercase tracking-widest text-on-surface-variant">Name</th>
+                  <th class="px-4 py-3 text-xs font-label uppercase tracking-widest text-on-surface-variant">Email</th>
+                  <th class="px-4 py-3 text-xs font-label uppercase tracking-widest text-on-surface-variant">Department</th>
+                  <th class="px-4 py-3 text-xs font-label uppercase tracking-widest text-on-surface-variant">Semester</th>
+                  <th class="px-4 py-3 text-xs font-label uppercase tracking-widest text-on-surface-variant">Assigned Staff</th>
+                  <th class="px-4 py-3 text-xs font-label uppercase tracking-widest text-on-surface-variant text-right">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {% for student in students %}
-                <tr>
-                  <td>{{ student.profile_id|default:student.id }}</td>
-                  <td>{{ student.admin.first_name }} {{ student.admin.last_name }}</td>
-                  <td>{{ student.admin.email }}</td>
-                  <td>{{ student.class_id.class_name }} ({{ student.class_id.department.department_name }})</td>
-                  <td>{{ student.semester_id.semester_start_date }} TO {{ student.semester_id.semester_end_date }}</td>
-                  <td>
+                <tr class="group hover:bg-primary-fixed/20 transition-colors {% if forloop.counter|divisibleby:2 %}bg-surface-container-low/20{% else %}bg-white{% endif %}">
+                  <td class="px-4 py-4">{{ student.profile_id|default:student.id }}</td>
+                  <td class="px-4 py-4 font-semibold text-on-surface">{{ student.admin.first_name }} {{ student.admin.last_name }}</td>
+                  <td class="px-4 py-4 text-sm text-on-surface-variant">{{ student.admin.email }}</td>
+                  <td class="px-4 py-4 text-sm text-on-surface-variant">{{ student.class_id.class_name }} ({{ student.class_id.department.department_name }})</td>
+                  <td class="px-4 py-4 text-sm text-on-surface-variant">{{ student.semester_id.semester_start_date }} TO {{ student.semester_id.semester_end_date }}</td>
+                  <td class="px-4 py-4 text-sm">
                     {% if student.mentor %}
                       {{ student.mentor.profile_id|default:student.mentor.id }} - {{ student.mentor.admin.get_full_name|default:student.mentor.admin.username }}
                     {% else %}
                       Unassigned
                     {% endif %}
                   </td>
-                  <td>
+                  <td class="px-4 py-4 text-right">
                     {% if student.mentor_id == staff_obj.id %}
-                      <a href="{% url 'staff_edit_student' student_id=student.admin.id %}" class="px-4 py-2 rounded-lg bg-primary/10 text-primary text-xs font-label font-bold uppercase tracking-wider hover:bg-primary/20 transition-colors no-underline">Edit</a>
-                      <a href="{% url 'staff_delete_student' student_id=student.admin.id %}" class="px-4 py-2 rounded-lg bg-error/10 text-error text-xs font-label font-bold uppercase tracking-wider hover:bg-error/20 transition-colors no-underline" onclick="return confirm('Delete this student?');">Delete</a>
+                      <a href="{% url 'staff_edit_student' student_id=student.admin.id %}" class="px-3 py-1.5 rounded-lg bg-primary/10 text-primary text-xs font-label font-bold uppercase tracking-wider hover:bg-primary/20 transition-colors no-underline">Edit</a>
+                      <a href="{% url 'staff_delete_student' student_id=student.admin.id %}" class="px-3 py-1.5 rounded-lg bg-error/10 text-error text-xs font-label font-bold uppercase tracking-wider hover:bg-error/20 transition-colors no-underline" onclick="return confirm('Delete this student?');">Delete</a>
                     {% elif student.mentor %}
-                      <span class="badge badge-secondary">Assigned to another staff</span>
+                      <span class="px-2 py-1 rounded bg-secondary/10 text-secondary text-xs">Assigned to another staff</span>
                     {% else %}
-                      <span class="badge badge-warning">Waiting for HOD assignment</span>
+                      <span class="px-2 py-1 rounded bg-yellow-100 text-yellow-800 text-xs">Waiting for HOD assignment</span>
                     {% endif %}
                   </td>
                 </tr>
                 {% empty %}
                 <tr>
-                  <td colspan="7">No students found.</td>
+                  <td colspan="7" class="px-4 py-8 text-center text-on-surface-variant">No students found.</td>
                 </tr>
                 {% endfor %}
               </tbody>
             </table>
+            </div>
           </div>
         </div>
       

@@ -5,43 +5,78 @@
 <!-- Header -->
 <header class="mb-10">
   <h2 class="text-4xl font-extrabold text-on-surface font-headline tracking-tight">Institutional Intelligence</h2>
-  <p class="text-on-surface-variant font-body mt-2 text-lg opacity-80">Real-time metrics for institutional oversight.</p>
+  <p class="text-on-surface-variant font-body mt-2 text-lg opacity-80">Real-time metrics for institutional oversight.
+  </p>
 </header>
 
-<!-- Bento Grid Metrics -->
+<!-- Bento Grid Metrics (Clickable) -->
 <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
-    <div class="p-3 rounded-xl bg-primary-container/10 text-primary w-fit">
-      <span class="material-symbols-outlined text-3xl">school</span>
+  <a href="{% url 'principal_manage_users' %}?role=3"
+    class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container hover:border-primary/40 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border border-outline-variant/10 no-underline cursor-pointer">
+    <div class="flex justify-between items-start">
+      <div class="p-3 rounded-xl bg-primary-container/10 text-primary w-fit">
+        <span class="material-symbols-outlined text-3xl">school</span>
+      </div>
+      <span
+        class="material-symbols-outlined text-outline-variant/50 group-hover:text-primary group-hover:translate-x-1 transition-all text-xl">arrow_forward</span>
     </div>
     <div class="mt-8">
       <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Student Body</p>
-      <h3 class="text-4xl font-extrabold font-headline mt-1">{{ student_count }}</h3>
+      <h3 class="text-4xl font-extrabold font-headline mt-1 text-on-surface group-hover:text-primary transition-colors">
+        {{ student_count }}</h3>
       <span class="text-xs text-on-surface-variant font-body mt-2 block">Active Enrollment</span>
+      <span
+        class="text-[11px] font-label font-bold text-primary mt-3 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <span>View institutional students</span>
+        <span class="material-symbols-outlined text-xs">arrow_forward</span>
+      </span>
     </div>
-  </div>
+  </a>
 
-  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
-    <div class="p-3 rounded-xl bg-secondary-container/10 text-secondary w-fit">
-      <span class="material-symbols-outlined text-3xl">badge</span>
+  <a href="{% url 'principal_manage_users' %}?role=2"
+    class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container hover:border-secondary/40 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border border-outline-variant/10 no-underline cursor-pointer">
+    <div class="flex justify-between items-start">
+      <div class="p-3 rounded-xl bg-secondary-container/10 text-secondary w-fit">
+        <span class="material-symbols-outlined text-3xl">badge</span>
+      </div>
+      <span
+        class="material-symbols-outlined text-outline-variant/50 group-hover:text-secondary group-hover:translate-x-1 transition-all text-xl">arrow_forward</span>
     </div>
     <div class="mt-8">
       <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Academic Faculty</p>
-      <h3 class="text-4xl font-extrabold font-headline mt-1">{{ staff_count }}</h3>
+      <h3
+        class="text-4xl font-extrabold font-headline mt-1 text-on-surface group-hover:text-secondary transition-colors">
+        {{ staff_count }}</h3>
       <span class="text-xs text-on-surface-variant font-body mt-2 block">Certified Staff</span>
+      <span
+        class="text-[11px] font-label font-bold text-secondary mt-3 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <span>View academic faculty</span>
+        <span class="material-symbols-outlined text-xs">arrow_forward</span>
+      </span>
     </div>
-  </div>
+  </a>
 
-  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
-    <div class="p-3 rounded-xl bg-error-container/30 text-error w-fit">
-      <span class="material-symbols-outlined text-3xl">domain</span>
+  <a href="{% url 'principal_departments' %}"
+    class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container hover:border-error/40 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border border-outline-variant/10 no-underline cursor-pointer">
+    <div class="flex justify-between items-start">
+      <div class="p-3 rounded-xl bg-error-container/30 text-error w-fit">
+        <span class="material-symbols-outlined text-3xl">domain</span>
+      </div>
+      <span
+        class="material-symbols-outlined text-outline-variant/50 group-hover:text-error group-hover:translate-x-1 transition-all text-xl">arrow_forward</span>
     </div>
     <div class="mt-8">
       <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Departments</p>
-      <h3 class="text-4xl font-extrabold font-headline mt-1">{{ department_count }}</h3>
+      <h3 class="text-4xl font-extrabold font-headline mt-1 text-on-surface group-hover:text-error transition-colors">{{
+        department_count }}</h3>
       <span class="text-xs text-on-surface-variant font-body mt-2 block">Operational Units</span>
+      <span
+        class="text-[11px] font-label font-bold text-error mt-3 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <span>View departments</span>
+        <span class="material-symbols-outlined text-xs">arrow_forward</span>
+      </span>
     </div>
-  </div>
+  </a>
 </section>
 
 <!-- Activity Card -->

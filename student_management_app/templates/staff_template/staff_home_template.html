@@ -6,63 +6,102 @@
 <header class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
   <div>
     <h2 class="text-4xl font-extrabold text-on-surface font-headline tracking-tight">Faculty Overview</h2>
-    <p class="text-on-surface-variant font-body mt-2 text-lg opacity-80">Your academic dashboard with key performance metrics.</p>
+    <p class="text-on-surface-variant font-body mt-2 text-lg opacity-80">Your academic dashboard with key performance
+      metrics.</p>
   </div>
 </header>
 
-<!-- Bento Grid Metrics -->
+<!-- Bento Grid Metrics (Clickable) -->
 <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+  <a href="{% url 'staff_students_under_me' %}"
+    class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container hover:border-primary/40 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border border-outline-variant/10 no-underline cursor-pointer">
     <div class="flex justify-between items-start">
       <div class="p-3 rounded-xl bg-primary-container/10 text-primary">
         <span class="material-symbols-outlined text-3xl">groups</span>
       </div>
+      <span
+        class="material-symbols-outlined text-outline-variant/50 group-hover:text-primary group-hover:translate-x-1 transition-all text-xl">arrow_forward</span>
     </div>
     <div class="mt-8">
       <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Mentees</p>
-      <h3 class="text-4xl font-extrabold font-headline mt-1">{{ students_count }}</h3>
+      <h3 class="text-4xl font-extrabold font-headline mt-1 text-on-surface group-hover:text-primary transition-colors">
+        {{ students_count }}</h3>
       <span class="text-xs text-on-surface-variant font-body mt-2 block">Assigned Students</span>
+      <span
+        class="text-[11px] font-label font-bold text-primary mt-3 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <span>View mentees &amp; roster</span>
+        <span class="material-symbols-outlined text-xs">arrow_forward</span>
+      </span>
     </div>
-  </div>
+  </a>
 
-  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+  <a href="{% url 'staff_take_attendance' %}"
+    class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container hover:border-secondary/40 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border border-outline-variant/10 no-underline cursor-pointer">
     <div class="flex justify-between items-start">
       <div class="p-3 rounded-xl bg-secondary-container/10 text-secondary">
         <span class="material-symbols-outlined text-3xl">event_available</span>
       </div>
+      <span
+        class="material-symbols-outlined text-outline-variant/50 group-hover:text-secondary group-hover:translate-x-1 transition-all text-xl">arrow_forward</span>
     </div>
     <div class="mt-8">
       <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Attendance Logs</p>
-      <h3 class="text-4xl font-extrabold font-headline mt-1">{{ attendance_count }}</h3>
+      <h3
+        class="text-4xl font-extrabold font-headline mt-1 text-on-surface group-hover:text-secondary transition-colors">
+        {{ attendance_count }}</h3>
       <span class="text-xs text-on-surface-variant font-body mt-2 block">Lifetime Records</span>
+      <span
+        class="text-[11px] font-label font-bold text-secondary mt-3 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <span>Open attendance registry</span>
+        <span class="material-symbols-outlined text-xs">arrow_forward</span>
+      </span>
     </div>
-  </div>
+  </a>
 
-  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+  <a href="{% url 'staff_apply_leave' %}"
+    class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container hover:border-tertiary/40 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border border-outline-variant/10 no-underline cursor-pointer">
     <div class="flex justify-between items-start">
       <div class="p-3 rounded-xl bg-tertiary-container/10 text-tertiary">
         <span class="material-symbols-outlined text-3xl">flight_takeoff</span>
       </div>
+      <span
+        class="material-symbols-outlined text-outline-variant/50 group-hover:text-tertiary group-hover:translate-x-1 transition-all text-xl">arrow_forward</span>
     </div>
     <div class="mt-8">
       <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Leave Status</p>
-      <h3 class="text-4xl font-extrabold font-headline mt-1">{{ leave_count }}</h3>
+      <h3
+        class="text-4xl font-extrabold font-headline mt-1 text-on-surface group-hover:text-tertiary transition-colors">
+        {{ leave_count }}</h3>
       <span class="text-xs text-on-surface-variant font-body mt-2 block">Approved Requests</span>
+      <span
+        class="text-[11px] font-label font-bold text-tertiary mt-3 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <span>View leave requests</span>
+        <span class="material-symbols-outlined text-xs">arrow_forward</span>
+      </span>
     </div>
-  </div>
+  </a>
 
-  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+  <a href="{% url 'staff_add_result' %}"
+    class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container hover:border-error/40 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border border-outline-variant/10 no-underline cursor-pointer">
     <div class="flex justify-between items-start">
       <div class="p-3 rounded-xl bg-error-container/30 text-error">
         <span class="material-symbols-outlined text-3xl">menu_book</span>
       </div>
+      <span
+        class="material-symbols-outlined text-outline-variant/50 group-hover:text-error group-hover:translate-x-1 transition-all text-xl">arrow_forward</span>
     </div>
     <div class="mt-8">
       <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Active Subjects</p>
-      <h3 class="text-4xl font-extrabold font-headline mt-1">{{ subject_count }}</h3>
+      <h3 class="text-4xl font-extrabold font-headline mt-1 text-on-surface group-hover:text-error transition-colors">{{
+        subject_count }}</h3>
       <span class="text-xs text-on-surface-variant font-body mt-2 block">Curated Courses</span>
+      <span
+        class="text-[11px] font-label font-bold text-error mt-3 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <span>Manage course results</span>
+        <span class="material-symbols-outlined text-xs">arrow_forward</span>
+      </span>
     </div>
-  </div>
+  </a>
 </section>
 
 <!-- Activity Section -->
@@ -70,7 +109,8 @@
   <div class="flex justify-between items-center mb-8">
     <div>
       <h4 class="text-xl font-bold font-headline">Recent Academic Activity</h4>
-      <p class="text-sm text-on-surface-variant font-body">Monitor your departmental contributions and student progress.</p>
+      <p class="text-sm text-on-surface-variant font-body">Monitor your departmental contributions and student progress.
+      </p>
     </div>
   </div>
   <div class="py-12 text-center text-on-surface-variant">

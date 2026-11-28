@@ -23,54 +23,82 @@
   </div>
 </header>
 
-<!-- Bento Grid Metrics -->
+<!-- Bento Grid Metrics (Clickable) -->
 <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300 border border-outline-variant/10">
-    <div class="p-3 rounded-xl bg-primary-container/10 text-primary w-fit">
-      <span class="material-symbols-outlined text-3xl">school</span>
+  <a href="{% url 'department_hod_manage_students' %}" class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container hover:border-primary/40 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border border-outline-variant/10 no-underline cursor-pointer">
+    <div class="flex items-center justify-between">
+      <div class="p-3 rounded-xl bg-primary-container/10 text-primary w-fit">
+        <span class="material-symbols-outlined text-3xl">school</span>
+      </div>
+      <span class="material-symbols-outlined text-outline-variant/50 group-hover:text-primary group-hover:translate-x-1 transition-all text-xl">arrow_forward</span>
     </div>
     <div class="mt-6">
       <p class="text-on-surface-variant font-label text-xs uppercase tracking-widest">Enrolled Scholars</p>
-      <h3 class="text-3xl font-extrabold font-headline mt-1">{{ student_count }}</h3>
+      <h3 class="text-3xl font-extrabold font-headline mt-1 text-on-surface group-hover:text-primary transition-colors">{{ student_count }}</h3>
       <span class="text-xs text-on-surface-variant font-body mt-2 block flex items-center gap-1">
         <span class="material-symbols-outlined text-sm">domain</span>
         {{ department_name }}
       </span>
+      <span class="text-[11px] font-label font-bold text-primary mt-3 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <span>View student roster</span>
+        <span class="material-symbols-outlined text-xs">arrow_forward</span>
+      </span>
     </div>
-  </div>
+  </a>
 
-  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300 border border-outline-variant/10">
-    <div class="p-3 rounded-xl bg-secondary-container/10 text-secondary w-fit">
-      <span class="material-symbols-outlined text-3xl">badge</span>
+  <a href="{% url 'department_hod_manage_staff' %}" class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container hover:border-secondary/40 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border border-outline-variant/10 no-underline cursor-pointer">
+    <div class="flex items-center justify-between">
+      <div class="p-3 rounded-xl bg-secondary-container/10 text-secondary w-fit">
+        <span class="material-symbols-outlined text-3xl">badge</span>
+      </div>
+      <span class="material-symbols-outlined text-outline-variant/50 group-hover:text-secondary group-hover:translate-x-1 transition-all text-xl">arrow_forward</span>
     </div>
     <div class="mt-6">
       <p class="text-on-surface-variant font-label text-xs uppercase tracking-widest">Faculty Members</p>
-      <h3 class="text-3xl font-extrabold font-headline mt-1">{{ staff_count }}</h3>
+      <h3 class="text-3xl font-extrabold font-headline mt-1 text-on-surface group-hover:text-secondary transition-colors">{{ staff_count }}</h3>
       <span class="text-xs text-on-surface-variant font-body mt-2 block">Under {{ department_name }}</span>
+      <span class="text-[11px] font-label font-bold text-secondary mt-3 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <span>View faculty directory</span>
+        <span class="material-symbols-outlined text-xs">arrow_forward</span>
+      </span>
     </div>
-  </div>
+  </a>
 
-  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300 border border-outline-variant/10">
-    <div class="p-3 rounded-xl bg-indigo-50 text-indigo-600 w-fit">
-      <span class="material-symbols-outlined text-3xl">account_balance</span>
+  <a href="{% url 'department_hod_peer_directory' %}" class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container hover:border-indigo-400 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border border-outline-variant/10 no-underline cursor-pointer">
+    <div class="flex items-center justify-between">
+      <div class="p-3 rounded-xl bg-indigo-50 text-indigo-600 w-fit">
+        <span class="material-symbols-outlined text-3xl">account_balance</span>
+      </div>
+      <span class="material-symbols-outlined text-outline-variant/50 group-hover:text-indigo-600 group-hover:translate-x-1 transition-all text-xl">arrow_forward</span>
     </div>
     <div class="mt-6">
       <p class="text-on-surface-variant font-label text-xs uppercase tracking-widest">Peer HODs</p>
-      <h3 class="text-3xl font-extrabold font-headline mt-1">{{ other_hods_count }}</h3>
+      <h3 class="text-3xl font-extrabold font-headline mt-1 text-on-surface group-hover:text-indigo-600 transition-colors">{{ other_hods_count }}</h3>
       <span class="text-xs text-on-surface-variant font-body mt-2 block">Other Department Heads</span>
+      <span class="text-[11px] font-label font-bold text-indigo-600 mt-3 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <span>Explore peer HODs</span>
+        <span class="material-symbols-outlined text-xs">arrow_forward</span>
+      </span>
     </div>
-  </div>
+  </a>
 
-  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300 border border-outline-variant/10">
-    <div class="p-3 rounded-xl bg-rose-50 text-rose-600 w-fit">
-      <span class="material-symbols-outlined text-3xl">mark_email_unread</span>
+  <a href="{% url 'department_hod_notifications' %}" class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container hover:border-rose-400 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border border-outline-variant/10 no-underline cursor-pointer">
+    <div class="flex items-center justify-between">
+      <div class="p-3 rounded-xl bg-rose-50 text-rose-600 w-fit">
+        <span class="material-symbols-outlined text-3xl">mark_email_unread</span>
+      </div>
+      <span class="material-symbols-outlined text-outline-variant/50 group-hover:text-rose-600 group-hover:translate-x-1 transition-all text-xl">arrow_forward</span>
     </div>
     <div class="mt-6">
       <p class="text-on-surface-variant font-label text-xs uppercase tracking-widest">Unread Messages</p>
-      <h3 class="text-3xl font-extrabold font-headline mt-1">{{ unread_notifications_count }}</h3>
+      <h3 class="text-3xl font-extrabold font-headline mt-1 text-on-surface group-hover:text-rose-600 transition-colors">{{ unread_notifications_count }}</h3>
       <span class="text-xs text-on-surface-variant font-body mt-2 block">In Your Notification Center</span>
+      <span class="text-[11px] font-label font-bold text-rose-600 mt-3 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <span>Open notification center</span>
+        <span class="material-symbols-outlined text-xs">arrow_forward</span>
+      </span>
     </div>
-  </div>
+  </a>
 </section>
 
 <!-- Communications Hub & Recent Activity -->

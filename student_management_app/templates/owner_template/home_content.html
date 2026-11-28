@@ -6,70 +6,114 @@
 <header class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
   <div>
     <h2 class="text-4xl font-extrabold text-on-surface font-headline tracking-tight">Global Overview</h2>
-    <p class="text-on-surface-variant font-body mt-2 text-lg opacity-80">Institutional management and ecosystem analytics.</p>
+    <p class="text-on-surface-variant font-body mt-2 text-lg opacity-80">Institutional management and ecosystem
+      analytics.</p>
   </div>
   <div class="flex gap-3">
-    <a href="{% url 'add_user' %}" class="flex items-center gap-2 px-6 py-3 bg-surface-container-highest text-primary font-label font-bold rounded-xl active:scale-95 transition-transform no-underline">
+    <a href="{% url 'add_user' %}"
+      class="flex items-center gap-2 px-6 py-3 bg-surface-container-highest text-primary font-label font-bold rounded-xl active:scale-95 transition-transform no-underline">
       <span class="material-symbols-outlined">person_add</span>
       Add User
     </a>
-    <a href="{% url 'add_institution' %}" class="flex items-center gap-2 px-6 py-3 bg-primary text-on-primary font-label font-bold rounded-xl shadow-xl shadow-primary/25 active:scale-95 transition-transform no-underline">
+    <a href="{% url 'add_institution' %}"
+      class="flex items-center gap-2 px-6 py-3 bg-primary text-on-primary font-label font-bold rounded-xl shadow-xl shadow-primary/25 active:scale-95 transition-transform no-underline">
       <span class="material-symbols-outlined">add_business</span>
       Add Institution
     </a>
   </div>
 </header>
 
-<!-- Bento Grid Metrics -->
+<!-- Bento Grid Metrics (Clickable) -->
 <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
   <!-- Metric 1: Institutions -->
-  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+  <a href="{% url 'manage_institutions' %}"
+    class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container hover:border-primary/40 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border border-outline-variant/10 no-underline cursor-pointer">
     <div class="flex justify-between items-start">
       <div class="p-3 rounded-xl bg-primary-container/10 text-primary">
         <span class="material-symbols-outlined text-3xl">account_balance</span>
       </div>
+      <span
+        class="material-symbols-outlined text-outline-variant/50 group-hover:text-primary group-hover:translate-x-1 transition-all text-xl">arrow_forward</span>
     </div>
     <div class="mt-8">
       <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Total Institutions</p>
-      <h3 class="text-4xl font-extrabold font-headline mt-1">{{ institution_count }}</h3>
+      <h3 class="text-4xl font-extrabold font-headline mt-1 text-on-surface group-hover:text-primary transition-colors">
+        {{ institution_count }}</h3>
+      <span
+        class="text-[11px] font-label font-bold text-primary mt-3 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <span>Manage institutions</span>
+        <span class="material-symbols-outlined text-xs">arrow_forward</span>
+      </span>
     </div>
-  </div>
+  </a>
+
   <!-- Metric 2: Students -->
-  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+  <a href="{% url 'manage_student' %}"
+    class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container hover:border-secondary/40 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border border-outline-variant/10 no-underline cursor-pointer">
     <div class="flex justify-between items-start">
       <div class="p-3 rounded-xl bg-secondary-container/10 text-secondary">
         <span class="material-symbols-outlined text-3xl">groups</span>
       </div>
+      <span
+        class="material-symbols-outlined text-outline-variant/50 group-hover:text-secondary group-hover:translate-x-1 transition-all text-xl">arrow_forward</span>
     </div>
     <div class="mt-8">
       <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Global Students</p>
-      <h3 class="text-4xl font-extrabold font-headline mt-1">{{ student_count }}</h3>
+      <h3
+        class="text-4xl font-extrabold font-headline mt-1 text-on-surface group-hover:text-secondary transition-colors">
+        {{ student_count }}</h3>
+      <span
+        class="text-[11px] font-label font-bold text-secondary mt-3 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <span>Manage students</span>
+        <span class="material-symbols-outlined text-xs">arrow_forward</span>
+      </span>
     </div>
-  </div>
+  </a>
+
   <!-- Metric 3: Staff -->
-  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+  <a href="{% url 'manage_staff' %}"
+    class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container hover:border-tertiary/40 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border border-outline-variant/10 no-underline cursor-pointer">
     <div class="flex justify-between items-start">
       <div class="p-3 rounded-xl bg-tertiary-container/10 text-tertiary">
         <span class="material-symbols-outlined text-3xl">badge</span>
       </div>
+      <span
+        class="material-symbols-outlined text-outline-variant/50 group-hover:text-tertiary group-hover:translate-x-1 transition-all text-xl">arrow_forward</span>
     </div>
     <div class="mt-8">
       <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Global Staff</p>
-      <h3 class="text-4xl font-extrabold font-headline mt-1">{{ staff_count }}</h3>
+      <h3
+        class="text-4xl font-extrabold font-headline mt-1 text-on-surface group-hover:text-tertiary transition-colors">
+        {{ staff_count }}</h3>
+      <span
+        class="text-[11px] font-label font-bold text-tertiary mt-3 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <span>Manage staff</span>
+        <span class="material-symbols-outlined text-xs">arrow_forward</span>
+      </span>
     </div>
-  </div>
+  </a>
+
   <!-- Metric 4: Departments -->
-  <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-300">
+  <a href="{% url 'manage_department' %}"
+    class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col justify-between group hover:bg-surface-container hover:border-primary/40 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border border-outline-variant/10 no-underline cursor-pointer">
     <div class="flex justify-between items-start">
       <div class="p-3 rounded-xl bg-surface-container-highest/50 text-on-surface">
         <span class="material-symbols-outlined text-3xl">schema</span>
       </div>
+      <span
+        class="material-symbols-outlined text-outline-variant/50 group-hover:text-on-surface group-hover:translate-x-1 transition-all text-xl">arrow_forward</span>
     </div>
     <div class="mt-8">
       <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Global Departments</p>
-      <h3 class="text-4xl font-extrabold font-headline mt-1">{{ department_count }}</h3>
+      <h3 class="text-4xl font-extrabold font-headline mt-1 text-on-surface transition-colors">{{ department_count }}
+      </h3>
+      <span
+        class="text-[11px] font-label font-bold text-on-surface mt-3 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <span>Manage departments</span>
+        <span class="material-symbols-outlined text-xs">arrow_forward</span>
+      </span>
     </div>
-  </div>
+  </a>
 </section>
 
 <!-- Charts Section -->
@@ -102,56 +146,57 @@
 
 {% block custom_js %}
 <script>
-    $(document).ready(function(){
-           var pieData        = {
-              labels: {{ institution_name_list|safe }},
-              datasets: [
-                {
-                  data: {{ student_count_list }},
-                  backgroundColor : ['#4343d5', '#006a66','#5d5fef', '#20645b', '#82f2eb', '#e3dffe'],
-                  borderWidth: 0
+  $(document).ready(function () {
+    var pieData = {
+      labels: {{ institution_name_list| safe
+  }},
+    datasets: [
+    {
+      data: {{ student_count_list }},
+    backgroundColor : ['#4343d5', '#006a66', '#5d5fef', '#20645b', '#82f2eb', '#e3dffe'],
+    borderWidth: 0
                 }
-              ]
+  ]
             }
 
             var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
-            var pieChart = new Chart(pieChartCanvas, {
-              type: 'doughnut',
-              data: pieData,
-              options: {
-                maintainAspectRatio: false,
-                responsive: true,
-                cutout: '65%',
-                plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 16 } } }
-              }
-            });
+  var pieChart = new Chart(pieChartCanvas, {
+    type: 'doughnut',
+    data: pieData,
+    options: {
+      maintainAspectRatio: false,
+      responsive: true,
+      cutout: '65%',
+      plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 16 } } }
+    }
+  });
 
-            var barChartData = {
-              labels  : {{ institution_name_list|safe }},
-              datasets: [
-                {
-                  label               : 'Staff Count',
-                  backgroundColor     : '#4343d5',
-                  borderColor         : '#4343d5',
-                  borderRadius        : 8,
-                  data                : {{ staff_count_list }}
+  var barChartData = {
+    labels: {{ institution_name_list| safe }},
+  datasets: [
+    {
+      label: 'Staff Count',
+      backgroundColor: '#4343d5',
+      borderColor: '#4343d5',
+      borderRadius: 8,
+      data: {{ staff_count_list }}
                 }
-              ]
+  ]
             }
-            var barChartCanvas = $('#barChart').get(0).getContext('2d')
-            var barChart = new Chart(barChartCanvas, {
-              type: 'bar',
-              data: barChartData,
-              options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                  y: { beginAtZero: true, grid: { display: false } },
-                  x: { grid: { display: false } }
-                }
-              }
-            });
+  var barChartCanvas = $('#barChart').get(0).getContext('2d')
+  var barChart = new Chart(barChartCanvas, {
+    type: 'bar',
+    data: barChartData,
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, grid: { display: false } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
     });
 </script>
 {% endblock custom_js %}

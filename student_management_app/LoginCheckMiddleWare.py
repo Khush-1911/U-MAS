@@ -25,7 +25,7 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                 else:
                     return HttpResponseRedirect(reverse("student_home"))
             elif str(user.user_type) == "4": # Superuser
-                if modulename in ["student_management_app.SuperuserViews", "django.views.static", "student_management_app.views"]:
+                if modulename in ["student_management_app.SuperuserViews", "student_management_app.HodViews", "django.views.static", "student_management_app.views"]:
                     pass
                 else:
                     return HttpResponseRedirect(reverse("superuser_home"))

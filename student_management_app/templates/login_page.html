@@ -45,17 +45,17 @@
   </div>
 
   <!-- Right Side: Login Form -->
-  <div class="lg:col-span-6 flex flex-col justify-center p-8 md:p-16 xl:p-24 bg-surface-container-lowest">
+  <div class="lg:col-span-6 flex flex-col justify-center p-6 sm:p-8 md:p-16 xl:p-24 bg-surface-container-lowest">
     <div class="max-w-md w-full mx-auto">
-      <header class="mb-10 lg:hidden">
+      <header class="mb-6 sm:mb-10 lg:hidden">
         <div class="flex items-center gap-2 mb-2">
           <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">account_balance</span>
           <span class="font-display font-extrabold text-xl text-primary">U-MAS</span>
         </div>
       </header>
-      <div class="mb-10">
-        <h3 class="font-display text-3xl font-extrabold text-on-surface mb-2">Welcome Back</h3>
-        <p class="text-on-surface-variant font-body">Please enter your credentials to continue.</p>
+      <div class="mb-6 sm:mb-10">
+        <h3 class="font-display text-2xl sm:text-3xl font-extrabold text-on-surface mb-2">Welcome Back</h3>
+        <p class="text-on-surface-variant font-body text-sm sm:text-base">Please enter your credentials to continue.</p>
       </div>
       <form action="/doLogin" method="post" id="demo-form" class="space-y-6">
         {% csrf_token %}

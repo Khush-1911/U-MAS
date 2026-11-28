@@ -1,6 +1,10 @@
 {% load static %}
 <!-- SideNavBar -->
-<aside class="h-screen w-72 fixed left-0 top-0 z-50 bg-slate-50/90 backdrop-blur-2xl flex flex-col border-r border-slate-200/50 py-10 shadow-xl shadow-indigo-900/5 hidden md:flex">
+<aside id="mobileSidebar" class="h-screen w-72 fixed left-0 top-0 z-50 bg-slate-50/95 backdrop-blur-2xl flex flex-col border-r border-slate-200/50 py-10 shadow-xl shadow-indigo-900/5 transition-transform duration-300 -translate-x-full md:translate-x-0">
+  <!-- Mobile close button -->
+  <button class="md:hidden absolute top-4 right-4 p-2 rounded-xl text-slate-500 hover:bg-white/70 transition-colors" onclick="closeMobileSidebar()" aria-label="Close menu">
+    <span class="material-symbols-outlined">close</span>
+  </button>
   <div class="px-8 mb-12">
     <h1 class="text-2xl font-black bg-gradient-to-br from-indigo-600 to-indigo-400 bg-clip-text text-transparent font-display">U-MAS</h1>
     <p class="text-xs font-label text-on-surface-variant tracking-wider uppercase mt-1">Principal Suite</p>

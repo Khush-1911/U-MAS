@@ -1,31 +1,21 @@
 {% extends 'student_template/base_template.html' %}
 {% block custom_css %}
 <style>
-.col-lg-3.attendance_div_red {
-    padding: 10px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    background: #f44336;
-    border: 10px solid white;
-    text-align: center;
-    color: #fff;
-    border-radius: 30px;
-    box-shadow: 1px 1px 1px grey;
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-.col-lg-3.attendance_div_green {
-    padding: 10px;
-    padding-top: 20px;
-    padding-bottom: 20px;
+.attendance-card-green {
+    padding: 1rem 0.75rem;
     background: #388e3c;
-    border: 10px solid white;
     text-align: center;
     color: #fff;
-    border-radius: 30px;
-    box-shadow: 1px 1px 1px grey;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(56,142,60,0.2);
+}
+.attendance-card-red {
+    padding: 1rem 0.75rem;
+    background: #f44336;
+    text-align: center;
+    color: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(244,67,54,0.2);
 }
 </style>
 {% endblock custom_css %}
@@ -33,36 +23,30 @@
 Attendance Data
 {% endblock page_title %}
 {% block main_content %}
-    
-            
+
             <div class="bg-surface-container-lowest rounded-2xl overflow-hidden">
-              <div class="px-8 py-5 border-b border-outline-variant/10"><h3 class="font-headline font-bold text-on-surface text-lg">View Attendance</h3></div>
-              
-              
-                <div class="p-8 space-y-6">
-                    <div class="row">
+              <div class="px-5 md:px-8 py-5 border-b border-outline-variant/10"><h3 class="font-headline font-bold text-on-surface text-lg">View Attendance</h3></div>
+
+                <div class="p-4 md:p-8">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
                     {% if attendance_reports %}
                     {% for attendance_report in attendance_reports %}
                        {% if attendance_report.status == True %}
-                        <div class="col-lg-3 attendance_div_green">
-                            <b>Date : {{ attendance_report.attendance_id.attendance_date }}</b>
-                            <br>
-                            <b>[ Status : Present ]</b>
+                        <div class="attendance-card-green">
+                            <b class="text-sm block">{{ attendance_report.attendance_id.attendance_date }}</b>
+                            <span class="text-xs opacity-90 mt-1 block">✓ Present</span>
                         </div>
                         {% else %}
-                        <div class="col-lg-3 attendance_div_red">
-                            <b>Date : {{ attendance_report.attendance_id.attendance_date }}</b>
-                            <br>
-                            <b>[ Status : Absent ]</b>
+                        <div class="attendance-card-red">
+                            <b class="text-sm block">{{ attendance_report.attendance_id.attendance_date }}</b>
+                            <span class="text-xs opacity-90 mt-1 block">✗ Absent</span>
                         </div>
                         {% endif %}
                     {% endfor %}
                     {% else %}
-                        <div class="alert alert-danger text-center">No Attendance Data Found!</div>
+                        <div class="col-span-full px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 bg-error/10 text-error">No Attendance Data Found!</div>
                      {% endif %}
                     </div>
                 </div>
-            
 
-          
 {% endblock main_content %}

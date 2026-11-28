@@ -149,6 +149,37 @@ hr {
     z-index: 9999999999999;
     display: none;
 }
+@media (max-width: 768px) {
+  #widget-container {
+    position: relative !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 45vh !important;
+    top: 0 !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
+  }
+  #live-sidebar {
+    width: 100% !important;
+    position: relative !important;
+    height: auto !important;
+    top: 0 !important;
+    left: 0 !important;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  #live-sidebar > div:last-of-type {
+    position: relative !important;
+    margin-top: 15px !important;
+  }
+  #conversation-panel {
+    width: 100% !important;
+    max-height: 150px !important;
+  }
+  #other-videos video {
+    width: 48% !important;
+  }
+}
 </style>
     <div style="background:#000;color:#fff;text-align:center;padding: 5px;"><h2>Student Management System Live Video Confrencing Class Room</h2></div>
 
@@ -157,7 +188,7 @@ hr {
 <div id="widget-container" style="position: fixed;bottom: 0;right: 0;left: 20%;height: 91%;border: 1px solid black; border-top:0; border-bottom: 0;top:50px;"></div>
 <video id="screen-viewer" controls playsinline autoplay></video>
 
-<div style="width: 20%; height: 91%; position: absolute;left:0;top:60px;">
+<div id="live-sidebar" style="width: 20%; height: 91%; position: absolute;left:0;top:60px;">
     <video id="main-video" controls playsinline autoplay></video>
     <div id="other-videos"></div>
     <hr>

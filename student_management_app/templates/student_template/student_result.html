@@ -3,40 +3,44 @@
 Result
 {% endblock page_title %}
 {% block main_content %}
-    
-            
 
-            
-           <div class="bg-surface-container-lowest rounded-2xl overflow-hidden">
-              <div class="px-8 py-5 border-b border-outline-variant/10"><h3 class="font-headline font-bold text-on-surface text-lg">Result</h3></div>
+           <div class="bg-surface-container-lowest rounded-2xl overflow-hidden border border-outline-variant/10 shadow-xl shadow-indigo-900/5">
+              <div class="px-5 md:px-8 py-5 border-b border-outline-variant/10"><h3 class="font-headline font-bold text-on-surface text-lg">Academic Results</h3></div>
 
-               <div class="table">
-               <table class="w-full text-left border-collapse">
-                   <tr>
-                       <th>ID</th>
-                       <th>Subject</th>
-                       <th>Assignment Marks</th>
-                       <th>Exam Marks</th>
-                       <th>Status</th>
+               <div class="overflow-x-auto">
+               <table class="w-full text-left border-collapse" style="min-width:460px;">
+                   <thead>
+                   <tr class="bg-surface-container-low/50">
+                       <th class="px-5 md:px-8 py-4 text-xs font-label uppercase tracking-widest text-on-surface-variant">ID</th>
+                       <th class="px-5 md:px-8 py-4 text-xs font-label uppercase tracking-widest text-on-surface-variant">Subject</th>
+                       <th class="px-5 md:px-8 py-4 text-xs font-label uppercase tracking-widest text-on-surface-variant">Assignment</th>
+                       <th class="px-5 md:px-8 py-4 text-xs font-label uppercase tracking-widest text-on-surface-variant">Exam</th>
+                       <th class="px-5 md:px-8 py-4 text-xs font-label uppercase tracking-widest text-on-surface-variant text-right">Status</th>
                    </tr>
+                   </thead>
+                   <tbody>
                    {% for row in studentresult %}
-                        <tr>
-                            <td>{{ row.id }}</td>
-                            <td>{{ row.subject_id.subject_name }}</td>
-                            <td>{{ row.subject_assignment_marks }}</td>
-                            <td>{{ row.subject_exam_marks }}</td>
-                            <td>
+                        <tr class="group hover:bg-primary-fixed/20 transition-colors {% if forloop.counter|divisibleby:2 %}bg-surface-container-low/20{% else %}bg-white{% endif %}">
+                            <td class="px-5 md:px-8 py-4 text-sm font-body">{{ row.id }}</td>
+                            <td class="px-5 md:px-8 py-4 font-body font-medium text-on-surface">{{ row.subject_id.subject_name }}</td>
+                            <td class="px-5 md:px-8 py-4 text-sm font-body text-on-surface-variant">{{ row.subject_assignment_marks }}</td>
+                            <td class="px-5 md:px-8 py-4 text-sm font-body text-on-surface-variant">{{ row.subject_exam_marks }}</td>
+                            <td class="px-5 md:px-8 py-4 text-right">
                                 {% if row.subject_exam_marks >= 40 %}
-                                <span class="alert alert-success">PASS</span>
+                                <span class="px-3 py-1 rounded-full bg-secondary/10 text-secondary text-xs font-bold font-label">PASS</span>
                                 {% else %}
-                                 <span class="alert alert-danger">FAIL</span>
+                                <span class="px-3 py-1 rounded-full bg-error/10 text-error text-xs font-bold font-label">FAIL</span>
                                 {% endif %}
                             </td>
                         </tr>
+                   {% empty %}
+                   <tr>
+                       <td colspan="5" class="px-8 py-12 text-center text-on-surface-variant font-body">No results published yet.</td>
+                   </tr>
                    {% endfor %}
+               </tbody>
                </table>
                </div>
             </div>
 
-          
 {% endblock main_content %}

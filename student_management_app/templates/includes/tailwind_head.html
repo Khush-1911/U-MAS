@@ -109,4 +109,95 @@
   .alert-error, .alert-danger { background: rgba(186, 26, 26, 0.1); color: #ba1a1a; }
   .alert-info { background: rgba(67, 67, 213, 0.1); color: #4343d5; }
   .alert-warning { background: rgba(245, 158, 11, 0.1); color: #92400e; }
+
+  /* ===================================================
+     GLOBAL MOBILE RESPONSIVE OVERRIDES
+     Only applies on screens < 768px (Tailwind's md breakpoint)
+     Desktop styles are completely untouched.
+     =================================================== */
+  @media (max-width: 767px) {
+    /* Prevent body overflow when sidebar open */
+    body.sidebar-open { overflow: hidden; }
+
+    /* Shrink page section headings (text-4xl -> ~1.75rem) */
+    h2.text-4xl, header h2.text-4xl { font-size: 1.75rem !important; line-height: 2.1rem !important; }
+    h3.text-4xl { font-size: 1.5rem !important; line-height: 1.9rem !important; }
+    h2.text-5xl { font-size: 2rem !important; line-height: 2.4rem !important; }
+    header h3.text-5xl { font-size: 2rem !important; line-height: 2.4rem !important; }
+
+    /* Reduce section margin/padding */
+    header.mb-10, .mb-10 > header { margin-bottom: 1.25rem !important; }
+    section.mb-12 { margin-bottom: 1.5rem !important; }
+
+    /* Cards: reduce internal padding on small screens */
+    .rounded-2xl.p-8, .rounded-2xl.p-10 { padding: 1.25rem !important; }
+    .rounded-2xl.px-8 { padding-left: 1rem !important; padding-right: 1rem !important; }
+    .rounded-2xl.py-6 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+
+    /* Ensure tables always scroll horizontally */
+    .overflow-x-auto { -webkit-overflow-scrolling: touch; }
+    table { min-width: 480px; }
+
+    /* Smaller table cell padding on mobile */
+    td.px-8, th.px-8 { padding-left: 0.75rem !important; padding-right: 0.75rem !important; }
+    td.py-6 { padding-top: 0.75rem !important; padding-bottom: 0.75rem !important; }
+    th.py-5 { padding-top: 0.75rem !important; padding-bottom: 0.75rem !important; }
+
+    /* Attendance grid: 1-col on very small phones */
+    .grid-cols-2.md\:grid-cols-3 { grid-template-columns: repeat(1, minmax(0, 1fr)) !important; }
+
+    /* Profile forms: reduce padding */
+    .max-w-2xl, .max-w-3xl, .max-w-4xl { max-width: 100% !important; }
+
+    /* Wide flex rows: stack on mobile */
+    .flex.flex-row.items-center.justify-between.gap-4 {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+    }
+
+    /* Button rows: allow wrapping */
+    .flex.items-center.gap-2, .flex.items-center.gap-6 { flex-wrap: wrap; }
+
+    /* Charts: limit height on mobile so they fit */
+    canvas { max-height: 220px !important; }
+
+    /* Sidebar close button positioning */
+    #mobileSidebar .absolute.top-4.right-4 { z-index: 60; }
+
+    /* Toast / notification popups should stay within screen */
+    [class*="toast"], [class*="notification-popup"] { max-width: calc(100vw - 2rem) !important; left: 1rem !important; right: 1rem !important; }
+
+    /* Live class room: ensure video/iframe is responsive */
+    iframe { max-width: 100% !important; height: auto !important; }
+
+    /* Password reset / signup forms */
+    .w-full.max-w-6xl { border-radius: 0 !important; }
+
+    /* Stat number: smaller on mobile */
+    h3.text-4xl.font-extrabold { font-size: 2rem !important; }
+  }
+
+  /* Extra small phones (< 400px) */
+  @media (max-width: 399px) {
+    h2.text-4xl, header h2.text-4xl { font-size: 1.5rem !important; }
+    .grid-cols-1 .rounded-2xl.p-6 { padding: 1rem !important; }
+  }
+
+  /* Notification / detail modal: mobile padding fix */
+  @media (max-width: 767px) {
+    #notificationPopupOverlay > div,
+    [id$="PopupOverlay"] > div { max-height: 95vh; }
+    #notificationPopupOverlay .px-8,
+    [id$="PopupOverlay"] .px-8 { padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
+    #notificationPopupOverlay .p-8,
+    [id$="PopupOverlay"] .p-8 { padding: 1.25rem !important; }
+    #notificationPopupOverlay .p-6,
+    [id$="PopupOverlay"] .p-6 { padding: 1rem !important; }
+
+    /* Attendance grid: 1-col on very small phones */
+    .attendance-student-grid { grid-template-columns: repeat(1, minmax(0, 1fr)) !important; }
+
+    /* Live classroom: full-width video */
+    .live-room-container iframe, .live-room-container video { width: 100% !important; }
+  }
 </style>

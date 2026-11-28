@@ -24,7 +24,15 @@ def principal_home(request):
 def principal_manage_users(request):
     institution = request.user.institution
     users = CustomUser.objects.filter(institution=institution).exclude(id=request.user.id)
-    return render(request, "principal_template/manage_users.html", {"users": users})
+    role = request.GET.get("role")
+    if role:
+        users = users.filter(user_type=role)
+    return render(request, "principal_template/manage_users.html", {"users": users, "active_role": role})
+
+def principal_departments(request):
+    institution = request.user.institution
+    departments = Department.objects.filter(institution=institution).order_by("department_name")
+    return render(request, "principal_template/departments.html", {"departments": departments, "institution": institution})
 
 def principal_edit_user(request, user_id):
     institution = request.user.institution

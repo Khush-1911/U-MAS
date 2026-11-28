@@ -11,35 +11,42 @@
 <body class="bg-background text-on-surface font-body antialiased">
   {% include 'owner_template/sidebar_template.html' with user=user id=id %}
 
+  <!-- Mobile Overlay -->
+  <div id="mobileOverlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden" onclick="closeMobileSidebar()"></div>
+
   <!-- TopNavBar -->
-  <header class="ml-72 bg-white/80 backdrop-blur-xl sticky top-0 z-40 flex justify-between items-center w-auto px-8 py-4 shadow-[0_20px_40px_-10px_rgba(26,25,48,0.06)]">
-    <div class="flex items-center gap-4 flex-1 max-w-xl">
-      <h2 class="text-lg font-bold font-headline text-on-surface">{% block page_title %}{% endblock page_title %}</h2>
+  <header class="md:ml-72 bg-white/80 backdrop-blur-xl sticky top-0 z-30 flex justify-between items-center w-auto px-4 md:px-8 py-3 md:py-4 shadow-[0_20px_40px_-10px_rgba(26,25,48,0.06)]">
+    <div class="flex items-center gap-3 flex-1 max-w-xl">
+      <!-- Hamburger (mobile only) -->
+      <button class="md:hidden p-2 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-colors" onclick="openMobileSidebar()" aria-label="Open menu">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <h2 class="text-base md:text-lg font-bold font-headline text-on-surface truncate max-w-[160px] sm:max-w-xs md:max-w-none">{% block page_title %}{% endblock page_title %}</h2>
     </div>
-    <div class="flex items-center gap-6">
-      <div class="flex items-center gap-4">
+    <div class="flex items-center gap-2 md:gap-6">
+      <div class="flex items-center gap-2 md:gap-4">
         <button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors relative">
           <span class="material-symbols-outlined">notifications</span>
         </button>
       </div>
-      <div class="h-8 w-[1px] bg-outline-variant/30"></div>
-      <a href="{% url 'owner_profile' %}" class="flex items-center gap-3 cursor-pointer group no-underline">
-        <div class="text-right">
+      <div class="h-8 w-[1px] bg-outline-variant/30 hidden sm:block"></div>
+      <a href="{% url 'owner_profile' %}" class="flex items-center gap-2 md:gap-3 cursor-pointer group no-underline">
+        <div class="text-right hidden sm:block">
           <p class="text-sm font-bold text-on-surface">{{ request.user.get_full_name|default:request.user.email }}</p>
           <p class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">{{ user.get_user_type_display }}</p>
         </div>
-        <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-fixed bg-primary flex items-center justify-center text-white font-bold text-sm">
+        <div class="w-9 h-9 md:w-10 md:h-10 rounded-full overflow-hidden border-2 border-primary-fixed bg-primary flex items-center justify-center text-white font-bold text-sm">
           {{ request.user.get_full_name|default:request.user.email|slice:":1"|upper }}
         </div>
       </a>
       <a href="{% url 'logout' %}" class="p-2 text-on-surface-variant hover:text-error hover:bg-error-container rounded-full transition-colors" title="Logout">
-        <span class="material-symbols-outlined">logout</span>
+        <span class="material-symbols-outlined text-xl">logout</span>
       </a>
     </div>
   </header>
 
   <!-- Main Content Canvas -->
-  <main class="ml-72 p-10 min-h-screen bg-surface-container-low">
+  <main class="md:ml-72 p-4 md:p-10 min-h-screen pb-24 md:pb-10 bg-surface-container-low">
     {% if messages %}
       <div class="mb-6 space-y-3">
         {% for message in messages %}
@@ -98,6 +105,23 @@
           }
       }
   });
+
+  // Mobile sidebar functions
+  function openMobileSidebar() {
+    const sidebar = document.getElementById('mobileSidebar');
+    const overlay = document.getElementById('mobileOverlay');
+    if (sidebar) { sidebar.classList.remove('-translate-x-full'); sidebar.classList.add('translate-x-0'); }
+    if (overlay) { overlay.classList.remove('hidden'); }
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMobileSidebar() {
+    const sidebar = document.getElementById('mobileSidebar');
+    const overlay = document.getElementById('mobileOverlay');
+    if (sidebar) { sidebar.classList.add('-translate-x-full'); sidebar.classList.remove('translate-x-0'); }
+    if (overlay) { overlay.classList.add('hidden'); }
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeMobileSidebar(); });
 </script>
 <script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script>
 {% block custom_js %}{% endblock custom_js %}
